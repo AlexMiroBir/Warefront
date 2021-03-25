@@ -3,13 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "@material-ui/x-grid": "^4.0.0-alpha.22",
+    "@react-spring/web": "^9.0.0-rc.3",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "axios": "^0.21.1",
+    "formik": "^2.2.6",
+    "material-table": "^1.69.2",
     "react": "^17.0.1",
+    "react-app-polyfill": "^2.0.0",
     "react-dom": "^17.0.1",
+    "react-redux": "^7.2.2",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "web-vitals": "^1.0.1"
+    "redux": "^4.0.5",
+    "web-vitals": "^1.0.1",
+    "yum": "^0.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -30,9 +43,18 @@
       "not op_mini all"
     ],
     "development": [
+      "ie 9",
+      "ie 11",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@material-ui/data-grid": "^4.0.0-alpha.22",
+    "@material-ui/x-grid-data-generator": "^4.0.0-alpha.22",
+    "@reduxjs/toolkit": "^1.5.0",
+    "prop-types": "^15.7.2",
+    "yup": "^0.32.9"
   }
 }
