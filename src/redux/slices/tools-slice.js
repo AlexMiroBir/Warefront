@@ -1,29 +1,46 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {axiosGetTools} from "../async-thunks/tools-async-thunks"
-
+import {axiosEditTool, axiosGetTools} from "../async-thunks/tools-async-thunks"
 
 
 const ToolsSlice = createSlice({
     name: 'tools-slice',
     initialState: {
 
-        tools:[],
+        tools: [],
+        currentToolData: {}
 
 
     },
     reducers: {
+        setCurrentToolData: {
+            reducer: (state, {payload}) => {
+                state.currentToolData = state.tools.find(tool => tool.Id === payload)
+            }
+        },
     },
     extraReducers: {
 
-        [axiosGetTools.pending]: (state, action, ) => {
+        [axiosGetTools.pending]: (state, action,) => {
             state.isLoading = true
         },
         [axiosGetTools.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
             state.isLoading = false
-            state.tools=payload
+            state.tools = payload
         },
         [axiosGetTools.rejected]: (state, {payload}) => {
+            //  state.message = {message: payload.error.message}
+            state.isLoading = 'false'
+        },
+        [axiosEditTool.pending]: (state, action,) => {
+            state.isLoading = true
+        },
+        [axiosEditTool.fulfilled]: (state, {payload}) => {
+            state.message = {message: "Data was received"}
+            state.isLoading = false
+            // state.tools=payload
+        },
+        [axiosEditTool.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
             state.isLoading = 'false'
         },
@@ -32,5 +49,9 @@ const ToolsSlice = createSlice({
 })
 
 export default ToolsSlice.reducer
-//export const {} = AuthSlice.actions
+export const {
+
+    setCurrentToolData
+
+} = ToolsSlice.actions
 

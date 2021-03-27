@@ -1,0 +1,28 @@
+ItemCard.js 137 row -- GoodsTable / saveChanges / data: 
+
+
+
+
+
+
+
+{"row":{"Id":94,"Name":"keyboard5",
+"Description":"Apple Full - Keyboard","Inventory_BCode":"BC0000000094","Tool_Id":15,"Tool":"PC",
+"Filename":"d53316cd-0705-4714-8282-859ca997b479.png","Filepath":"C:\\Imgs","QTY_In_Stock":2,"QTY_Min":5,
+"Location":"A1"},
+
+"needUpdateItem":false,
+"needUpdateParameters":true,
+"needUpdateSuppliers":false,
+
+
+"parametersTable":"[{\"Id\":-1,\"Parameter_Name\":\"Voltage\",\"Parameter_Value\":\"58\"},{\"Id\":-1,
+\"Parameter_Name\":\"hj\",\"Parameter_Value\":\"hjhj\"},{\"Id\":117,\"Inventory_ID\":94,
+\"Parameter_Name\":\"Type\",\"Parameter_Value\":\"7\"},{\"Id\":118,\"Inventory_ID\":94,
+\"Parameter_Name\":\"Power\",\"Parameter_Value\":\"6\"},{\"Id\":119,\"Inventory_ID\":94,
+\"Parameter_Name\":\"Size\",\"Parameter_Value\":\"11\\\"\"}]",
+
+
+"suppliersTable":"[{\"Id\":-1,
+\"Name\":\"LG\",\"Supplier_ID\":12,\"Description\":\"LG LTD\",\"Phone\":\"056-6780987\",
+\"Contact_Name\":\"David\",\"Supplier_SN\":\"3456\"}]"}

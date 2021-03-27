@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const NavTab = ({handleChange, value}) => {
+const NavTab = ({handleChange, value=0}) => {
     const classes = useStyles()
     const history = useHistory()
     const dispatch = useDispatch()
@@ -154,9 +154,9 @@ const NavTab = ({handleChange, value}) => {
                     >
                         <LinkTab className={classes.linkTab} label="Home" onClick={() => onClickHandler('home')}  {...a11yProps(0)} />
                         <LinkTab className={classes.linkTab} label="Tools" onClick={() => onClickHandler('tools')}  {...a11yProps(1)} />
-                        <LinkTab className={classes.linkTab} label="Suppliers" onClick={() => onClickHandler('suppliers')}  {...a11yProps(3)} />
-                        <LinkTab className={classes.linkTab} label="Users" onClick={() => onClickHandler('users')} {...a11yProps(4)} />
-                        <LinkTab className={classes.linkTab} label="Orders" onClick={() => onClickHandler('orders')}  {...a11yProps(5)} />
+                        <LinkTab className={classes.linkTab} label="Suppliers" onClick={() => onClickHandler('suppliers')}  {...a11yProps(2)} />
+                        <LinkTab className={classes.linkTab} label="Users" onClick={() => onClickHandler('users')} {...a11yProps(3)} />
+                        <LinkTab className={classes.linkTab} label="Orders" onClick={() => onClickHandler('orders')}  {...a11yProps(4)} />
                     </Tabs>
                 </AppBar>
                 {/*<>*/}

@@ -121,7 +121,7 @@ export default ShowInfoModal
 //     },
 // }));
 //
-// const ShowInfoModal = ({itemId, onClickShowInfo}) => {
+// const ShowToolInfoModal = ({itemId, onClickShowInfo}) => {
 //     const classes = useStyles();
 //     // getModalStyle is not a pure function, we roll the style only on the first render
 //     const [modalStyle] = React.useState(getModalStyle);
@@ -157,7 +157,7 @@ export default ShowInfoModal
 //             <p id="simple-modal-description">
 //                 Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
 //             </p>
-//             <ShowInfoModal/>
+//             <ShowToolInfoModal/>
 //
 //         </div>
 //     );
@@ -185,4 +185,4 @@ export default ShowInfoModal
 //     );
 // }
 //
-// export default ShowInfoModal
+// export default ShowToolInfoModal

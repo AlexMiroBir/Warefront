@@ -27,7 +27,29 @@ const axiosGetTools = createAsyncThunk(
 
 
 
+const axiosEditTool = createAsyncThunk(
+    'post/updateTool',
+    async (row, {rejectWithValue}) => {
+        try {
+            const response = await axios.post(API_URL_SERVER + "/updateTool", row)
+            // console.log(response)
+            return response.data
+        } catch (err) {
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+
+
+
+
 export {
-    axiosGetTools
+    axiosGetTools,
+    axiosEditTool
 
 }
