@@ -7,16 +7,12 @@ const ToolsSlice = createSlice({
     initialState: {
 
         tools: [],
-        currentToolData: {}
+
 
 
     },
     reducers: {
-        setCurrentToolData: {
-            reducer: (state, {payload}) => {
-                state.currentToolData = state.tools.find(tool => tool.Id === payload)
-            }
-        },
+
     },
     extraReducers: {
 

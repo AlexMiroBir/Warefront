@@ -3,7 +3,9 @@ import * as React from "react";
 import {DataGrid, GridToolbar} from "@material-ui/data-grid";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
-import Button from '@material-ui/core/Button';
+
+import SupplierInfoModal from "./supplier-info-modal/supplier-info-modal";
+import ButtonGroupAddDelete from "./button-group";
 
 
 const useStyles = makeStyles({
@@ -20,31 +22,27 @@ const SuppliersTable = () => {
     const suppliers = useSelector(state => state.SuppliersSlice.suppliers)
 
 
-    const getItemsRows = (items) => {
-        console.log(items)
+    const getSuppliersRows = (suppliers) => {
+
         let arr = []
-        items.forEach(item => {
+        suppliers.forEach(suppler => {
+
             const obj = {
-                id: item.Id,
-                name: item.Name,
-                description: item.Description,
-                phone: item.Phone,
-                contactName: item.Contact_Name,
-                //bCode: item.Inventory_BCode,
-                //qty: item.QTY_In_Stock,
-                //qtyMin: item.QTY_Min,
-                //location: item.Location,
-                //tool: item.Tool
+                id: suppler.Id,
+                name: suppler.Name,
+                description: suppler.Description,
+                phone: suppler.Phone,
+                contactName: suppler.Contact_Name,
+                info:suppler.Id
+
             }
-
             arr.push(obj)
-
         })
 
         return arr
     }
 
-    const getItemsColumns = () => {
+    const getSuppliersColumns = () => {
         const columns = [
 
 
@@ -73,24 +71,16 @@ const SuppliersTable = () => {
                 flex: 1,
             },
             {
-                field: 'Info',
+                field: 'info',
                 headerName: "Info",
                 description: "Info",
                 width: 150,
                 filterable: false,
                 sortable: false,
                 disableClickEventBubbling: true,
-                renderCell: () => ( ///     TODO разобраться с кнопкой https://material-ui.com/components/data-grid/rendering/
+                renderCell: (params) => ( ///     TODO разобраться с кнопкой https://material-ui.com/components/data-grid/rendering/
 
-                    <Button
-                        className={classes.button}
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        style={{marginLeft: 16}}
-                    >
-                        Show info
-                    </Button>
+                    <SupplierInfoModal supplierId={params.value} />
 
                 ),
             },
@@ -103,10 +93,11 @@ const SuppliersTable = () => {
 
     return (
         <div style={{height: 400, width: "100%"}}>
+            <ButtonGroupAddDelete/>
             <DataGrid
                 //    getRowId={(r) => r.DT_RowId}
-                rows={getItemsRows(suppliers)}
-                columns={getItemsColumns()}
+                rows={getSuppliersRows(suppliers)}
+                columns={getSuppliersColumns()}
                 pageSize={10}
                 pagination
                 rowsPerPageOptions={[5, 10, 50, 100]}

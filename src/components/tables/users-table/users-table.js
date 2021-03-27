@@ -4,6 +4,7 @@ import {DataGrid, GridToolbar} from "@material-ui/data-grid";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
+import UserInfoModal from "./user-info-modal/user-info-modal";
 
 
 const useStyles = makeStyles({
@@ -30,12 +31,7 @@ const UsersTable = () => {
                 name: item.Name,
                 status: item.Status,
                 phone: item.Phone,
-                // contactName: item.Contact_Name,
-                //bCode: item.Inventory_BCode,
-                //qty: item.QTY_In_Stock,
-                //qtyMin: item.QTY_Min,
-                //location: item.Location,
-                //tool: item.Tool
+                info: item.Id
             }
 
             arr.push(obj)
@@ -68,24 +64,16 @@ const UsersTable = () => {
                 flex: 1,
             },
             {
-                field: 'Info',
+                field: 'info',
                 headerName: "Info",
                 description: "Info",
                 width: 150,
                 filterable: false,
                 sortable: false,
                 disableClickEventBubbling: true,
-                renderCell: () => ( ///     TODO разобраться с кнопкой https://material-ui.com/components/data-grid/rendering/
+                renderCell: (params) => (
 
-                    <Button
-                        className={classes.button}
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        style={{marginLeft: 16}}
-                    >
-                        Show info
-                    </Button>
+                   <UserInfoModal userId={params.value}/>
 
                 ),
             },

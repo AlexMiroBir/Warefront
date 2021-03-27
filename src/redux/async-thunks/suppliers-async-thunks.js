@@ -25,7 +25,27 @@ const axiosGetSuppliers = createAsyncThunk(
     }
 )
 
+const axiosEditSupplier = createAsyncThunk(
+    'post/updateSupplier',
+    async (row, {rejectWithValue}) => {
+        try {
+            const response = await axios.post(API_URL_SERVER + "/updateSupplier", row)
+            // console.log(response)
+            return response.data
+        } catch (err) {
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+
+
 
 export {
     axiosGetSuppliers,
+    axiosEditSupplier
 }

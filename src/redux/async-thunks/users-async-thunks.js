@@ -27,10 +27,29 @@ const axiosGetUsers = createAsyncThunk(
     }
 )
 
+const axiosEditUser = createAsyncThunk(
+    'post/updateUser',
+    async (row, {rejectWithValue}) => {
+        try {
+            console.log(row)
+            const response = await axios.post(API_URL_SERVER + "/updateUser", row)
+            // console.log(response)
+            return response.data
+        } catch (err) {
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
 
 
 
 export {
-   axiosGetUsers
+   axiosGetUsers,
+    axiosEditUser
 
 }

@@ -5,7 +5,7 @@ import {DataGrid, GridToolbar} from "@material-ui/data-grid";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
-import ToolInfoModal from "./show-info-modal/tool-info-modal"
+import ToolInfoModal from "./tool-info-modal/tool-info-modal"
 import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -39,7 +39,7 @@ const ToolsTable = () => {
         })
         console.log(`state.isOpenModal :${state.isOpenModal}`)
         console.log(`state.ToolId :${state.toolId}`)
-        history.push(`/tool/id${toolId}`)
+        history.push(`/tool/${toolId}`)
     }
 
     const closeToolInfoModal = () => {
@@ -61,11 +61,7 @@ const ToolsTable = () => {
                 id: tool.Id,
                 name: tool.Name,
                 description: tool.Description,
-                //bCode: item.Inventory_BCode,
-                //qty: item.QTY_In_Stock,
-                //qtyMin: item.QTY_Min,
-                //location: item.Location,
-                //tool: item.Tool
+
                 info: tool.Id,
             }
 

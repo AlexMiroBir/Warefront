@@ -7,7 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import {useHistory} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {axiosGetItems,} from "../../redux/async-thunks/items-async-thunks";
 import {axiosGetTools} from "../../redux/async-thunks/tools-async-thunks";
 import {unwrapResult} from "@reduxjs/toolkit";
@@ -84,6 +84,9 @@ const NavTab = ({handleChange, value=0}) => {
     const history = useHistory()
     const dispatch = useDispatch()
 
+    const currentUserStatus=useSelector(state=>state.AuthSlice.role)
+    const isNotLimited = currentUserStatus!=="LIMITED"
+
     const onClickHandler = (buttonName) => {
         switch (buttonName) {
             case 'home': {
@@ -153,10 +156,10 @@ const NavTab = ({handleChange, value=0}) => {
                         className={classes.tabs}
                     >
                         <LinkTab className={classes.linkTab} label="Home" onClick={() => onClickHandler('home')}  {...a11yProps(0)} />
-                        <LinkTab className={classes.linkTab} label="Tools" onClick={() => onClickHandler('tools')}  {...a11yProps(1)} />
-                        <LinkTab className={classes.linkTab} label="Suppliers" onClick={() => onClickHandler('suppliers')}  {...a11yProps(2)} />
-                        <LinkTab className={classes.linkTab} label="Users" onClick={() => onClickHandler('users')} {...a11yProps(3)} />
-                        <LinkTab className={classes.linkTab} label="Orders" onClick={() => onClickHandler('orders')}  {...a11yProps(4)} />
+                        {isNotLimited &&<LinkTab className={classes.linkTab} label="Tools" onClick={() => onClickHandler('tools')}  {...a11yProps(1)} />}
+                        {isNotLimited &&<LinkTab className={classes.linkTab} label="Suppliers" onClick={() => onClickHandler('suppliers')}  {...a11yProps(2)} />}
+                        {isNotLimited &&<LinkTab className={classes.linkTab} label="Users" onClick={() => onClickHandler('users')} {...a11yProps(3)} />}
+                        {isNotLimited &&<LinkTab className={classes.linkTab} label="Orders" onClick={() => onClickHandler('orders')}  {...a11yProps(4)} />}
                     </Tabs>
                 </AppBar>
                 {/*<>*/}

@@ -1,5 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {axiosGetUsers} from "../async-thunks/users-async-thunks"
+import {axiosGetUsers, axiosEditUser} from "../async-thunks/users-async-thunks"
+
 
 
 
@@ -24,6 +25,18 @@ const UsersSlice = createSlice({
             state.users=payload
         },
         [axiosGetUsers.rejected]: (state, {payload}) => {
+            //  state.message = {message: payload.error.message}
+            state.isLoading = 'false'
+        },
+        [axiosEditUser.pending]: (state, action,) => {
+            state.isLoading = true
+        },
+        [axiosEditUser.fulfilled]: (state, {payload}) => {
+            state.message = {message: "Data was received"}
+            state.isLoading = false
+            // state.tools=payload
+        },
+        [axiosEditUser.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
             state.isLoading = 'false'
         },
