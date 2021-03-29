@@ -15,16 +15,19 @@ function App() {
 
 
     return (
-        <div className="App">
-            <Switch/>
 
-            <Route path="/login"><LoginPage/> </Route>
-            <Route path="/"> <MainPage/></Route>
+        <div className="App">
+
+            <Switch>
+
+            <Route path="/login" exact><LoginPage/> </Route>
+            <Route path="/" > <MainPage/></Route>
             <Redirect from="**" to="/"/>
 
-            <Switch/>
+            </Switch>
             <Toast/>
         </div>
+
     );
 }
 

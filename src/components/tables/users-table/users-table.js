@@ -1,49 +1,81 @@
 import * as React from "react";
+import {useState} from "react";
 
 import {DataGrid, GridToolbar} from "@material-ui/data-grid";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
-import Button from '@material-ui/core/Button';
+import UserInfoModal from "./user-info-modal/user-info-modal";
+import ButtonGroupAddDeleteUsers from "../users-table/button-group-plus-modal/button-group";
+import TextField from "@material-ui/core/TextField";
 
 
 const useStyles = makeStyles({
-    button: {
-        //  width: '200px'
-    },
+    buttonsDiv: {
+        display: 'flex',
+    }
 
 });
 
 
 const UsersTable = () => {
 
+    const [selectionModel, setSelectionModel] = useState([]);
+    const [globalFilterInput, setGlobalFilter] = useState("");
+
     const classes = useStyles()
     const users = useSelector(state => state.UsersSlice.users)
+    const status = useSelector(state => state.AuthSlice.role)
+    const isAdmin = status.toLowerCase() === "admin"
 
 
+    const createObjForRow = (user) => {
+        const obj = {
+            id: user.Id,
+            name: user.Name,
+            status: user.Status,
+            phone: user.Phone,
+            info: user.Id
+        }
+        return obj
+    }
 
-    const getItemsRows = (items) => {
-        console.log(items)
+
+    const getFilteredArr = (users) => {
         let arr = []
-        items.forEach(item => {
-            const obj = {
-                id: item.Id,
-                name: item.Name,
-                status: item.Status,
-                phone: item.Phone,
-                // contactName: item.Contact_Name,
-                //bCode: item.Inventory_BCode,
-                //qty: item.QTY_In_Stock,
-                //qtyMin: item.QTY_Min,
-                //location: item.Location,
-                //tool: item.Tool
-            }
+        users.forEach(user => {
+            let hasName = user.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasStatus = user.Status.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasPhone = user.Phone.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
 
-            arr.push(obj)
+            let hasMatches = (hasName + hasStatus + hasPhone) > -3
+
+            arr = hasMatches ?
+                [...arr, createObjForRow(user)]
+                :
+                [...arr]
 
         })
-
         return arr
     }
+
+
+    const getUnFilteredArr = (users) => {
+        let arr = []
+        users.forEach(user => {
+            arr = [...arr, createObjForRow(user)]
+        })
+        return arr
+    }
+
+
+    const getUsersRows = (users) => {
+
+        return globalFilterInput ?
+            [...getFilteredArr(users)]
+            :
+            [...getUnFilteredArr(users)]
+    }
+
 
     const getItemsColumns = () => {
         const columns = [
@@ -68,24 +100,16 @@ const UsersTable = () => {
                 flex: 1,
             },
             {
-                field: 'Info',
+                field: 'info',
                 headerName: "Info",
                 description: "Info",
                 width: 150,
                 filterable: false,
                 sortable: false,
                 disableClickEventBubbling: true,
-                renderCell: () => ( ///     TODO разобраться с кнопкой https://material-ui.com/components/data-grid/rendering/
+                renderCell: (params) => (
 
-                    <Button
-                        className={classes.button}
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        style={{marginLeft: 16}}
-                    >
-                        Show info
-                    </Button>
+                    <UserInfoModal userId={params.value}/>
 
                 ),
             },
@@ -97,10 +121,23 @@ const UsersTable = () => {
 
 
     return (
+
         <div style={{height: 400, width: "100%"}}>
+            <div className={classes.buttonsDiv}>
+                <TextField
+                    id="global-filter-input"
+                    label="Global filter"
+                    type="text"
+                    variant="outlined"
+                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    value={globalFilterInput}
+                    onKeyDown={(e) => e.stopPropagation()}
+                />
+                {isAdmin && <ButtonGroupAddDeleteUsers selectedUsersId={selectionModel}/>}
+            </div>
             <DataGrid
-                //    getRowId={(r) => r.DT_RowId}
-                rows={getItemsRows(users)}
+
+                rows={getUsersRows(users)}
                 columns={getItemsColumns()}
                 pageSize={10}
                 pagination
@@ -110,6 +147,10 @@ const UsersTable = () => {
                 components={{
                     Toolbar: GridToolbar,
                 }}
+                onSelectionModelChange={(newSelection) => {
+                    setSelectionModel(newSelection.selectionModel);
+                }}
+                selectionModel={selectionModel}
             />
         </div>
     );

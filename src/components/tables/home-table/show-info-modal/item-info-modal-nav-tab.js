@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ShowInfoModalNavTab = () => {
+const ItemInfoModalNavTab = () => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -95,4 +95,4 @@ const ShowInfoModalNavTab = () => {
 }
 
 
-export default ShowInfoModalNavTab
+export default ItemInfoModalNavTab

@@ -4,7 +4,7 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
-import ShowInfoModalGrid from "./show-info-modal-grid";
+import ItemInfoModalGrid from "./item-info-modal-grid";
 import {
     axiosGetItemData,
     axiosGetItemParameters,
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ShowInfoModal = ({itemId}) => {
+const ItemInfoModal = ({itemId}) => {
     const classes = useStyles();
     const history = useHistory()
     const dispatch = useDispatch()
@@ -57,7 +57,7 @@ const ShowInfoModal = ({itemId}) => {
         <div>
             <Button
                 onClick={() => handleOpen(itemId)}
-                variant="contained"
+                variant="outlined"
                 color="primary"
                 size="small"
                 style={{marginLeft: 16}}
@@ -78,7 +78,7 @@ const ShowInfoModal = ({itemId}) => {
             >
                 <Fade in={open}>
                     <div className={classes.paper}>
-                        <ShowInfoModalGrid/>
+                        <ItemInfoModalGrid/>
                     </div>
                 </Fade>
             </Modal>
@@ -87,7 +87,7 @@ const ShowInfoModal = ({itemId}) => {
 }
 
 
-export default ShowInfoModal
+export default ItemInfoModal
 
 
 // import React from 'react';
@@ -121,7 +121,7 @@ export default ShowInfoModal
 //     },
 // }));
 //
-// const ShowInfoModal = ({itemId, onClickShowInfo}) => {
+// const ShowToolInfoModal = ({itemId, onClickShowInfo}) => {
 //     const classes = useStyles();
 //     // getModalStyle is not a pure function, we roll the style only on the first render
 //     const [modalStyle] = React.useState(getModalStyle);
@@ -157,7 +157,7 @@ export default ShowInfoModal
 //             <p id="simple-modal-description">
 //                 Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
 //             </p>
-//             <ShowInfoModal/>
+//             <ShowToolInfoModal/>
 //
 //         </div>
 //     );
@@ -185,4 +185,4 @@ export default ShowInfoModal
 //     );
 // }
 //
-// export default ShowInfoModal
+// export default ShowToolInfoModal

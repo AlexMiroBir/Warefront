@@ -162,6 +162,7 @@ const ItemDataForm = () => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.name}
+                                    onKeyDown={(e) => e.stopPropagation()}
                                 />
                                 {errors.name && touched.name && <Alert severity="error">{errors.name}</Alert>}
 
@@ -181,6 +182,7 @@ const ItemDataForm = () => {
                                     onBlur={handleBlur}
                                     value={values.bCode}
                                     disabled={true}
+                                    onKeyDown={(e) => e.stopPropagation()}
 
 
                                 />
@@ -199,6 +201,7 @@ const ItemDataForm = () => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.description}
+                                    onKeyDown={(e) => e.stopPropagation()}
                                 />
                                 {errors.description && touched.description &&
                                 <Alert severity="error">{errors.description}</Alert>}
@@ -217,6 +220,7 @@ const ItemDataForm = () => {
                                     onBlur={handleBlur}
                                     value={values.forTool}
                                     defaultValue={values.forTool}
+                                    onKeyDown={(e) => e.stopPropagation()}
                                 >
                                     {tools.map((tool) => (
                                         <MenuItem key={tool.id} value={tool.Name}>
@@ -240,6 +244,7 @@ const ItemDataForm = () => {
                                     onBlur={handleBlur}
                                     value={values.location}
                                     defaultValue={values.location}
+                                    onKeyDown={(e) => e.stopPropagation()}
                                 />
 
                                 {errors.forTool && touched.forTool && <Alert severity="error">{errors.forTool}</Alert>}
@@ -257,6 +262,7 @@ const ItemDataForm = () => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.qty}
+                                    onKeyDown={(e) => e.stopPropagation()}
                                 />
                                 {errors.qty && touched.qty && <Alert severity="error">{errors.qty}</Alert>}
                             </Grid>
@@ -272,6 +278,7 @@ const ItemDataForm = () => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     value={values.qtyMin}
+                                    onKeyDown={(e) => e.stopPropagation()}
                                 />
                                 {errors.qtyMin && touched.qtyMin && <Alert severity="error">{errors.qtyMin}</Alert>}
                                 <button type={'submit'}>privet</button>

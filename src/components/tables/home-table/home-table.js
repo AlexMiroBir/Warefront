@@ -2,17 +2,13 @@ import * as React from "react";
 
 import {DataGrid, GridToolbar} from "@material-ui/data-grid";
 import {useDispatch, useSelector} from "react-redux";
-import Button from '@material-ui/core/Button';
 import ImageModal from "./image-modal";
-import {unwrapResult} from "@reduxjs/toolkit";
-import {axiosGetItemData} from "../../../redux/async-thunks/items-async-thunks";
 
 
 //import {makeStyles} from "@material-ui/core/styles";
 import monitor from '../../../images/03d1a674-b686-4c00-a13f-2e8929503f40.png'
 import {useHistory} from "react-router-dom";
-import ShowInfoModal from "./show-info-modal/show-info-modal";
-
+import ItemInfoModal from "./show-info-modal/item-info-modal";
 
 
 // TODO выделять ячйки с нарушенным неснижаемым остатком
@@ -38,7 +34,7 @@ const HomeTable = () => {
                 qtyMin: item.QTY_Min,
                 location: item.Location,
                 tool: item.Tool,
-                info:item.Id,
+                info: item.Id,
             }
 
             arr.push(obj)
@@ -47,7 +43,6 @@ const HomeTable = () => {
 
         return arr
     }
-
 
 
     const getItemsColumns = () => {
@@ -122,12 +117,8 @@ const HomeTable = () => {
                 filterable: false,
                 sortable: false,
                 disableClickEventBubbling: true,
-                renderCell: (params) => ( ///     TODO разобраться с кнопкой https://material-ui.com/components/data-grid/rendering/
-
-
-                    <ShowInfoModal itemId={params.value} />
-
-
+                renderCell: (params) => (
+                    <ItemInfoModal itemId={params.value}/>
                 ),
             },
 

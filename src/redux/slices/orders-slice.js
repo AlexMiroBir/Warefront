@@ -4,7 +4,7 @@ import {axiosGetOrders} from "../async-thunks/orders-async-thunks"
 
 
 const OrdersSlice = createSlice({
-    name: 'items-slice',
+    name: 'orders-slice',
     initialState: {
 
         orders:[],

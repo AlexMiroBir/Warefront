@@ -1,9 +1,8 @@
 import React from 'react';
-import {Formik} from 'formik';
+import {useFormik} from 'formik';
 import {useHistory} from "react-router-dom"
 import * as yup from 'yup';
 import {makeStyles} from '@material-ui/core/styles';
-import Alert from '@material-ui/lab/Alert';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {useDispatch, useSelector} from "react-redux";
@@ -12,10 +11,9 @@ import {axiosGetItems} from "../../../redux/async-thunks/items-async-thunks";
 import {unwrapResult} from "@reduxjs/toolkit";
 
 
-// import './login-form.css'
-
-
-///////////Material UI styles//////////////////
+/**
+ * Material-UI styles:
+ */
 
 const useStyles = makeStyles((theme) => ({
     formDiv: {
@@ -24,14 +22,15 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
     },
 
-
     inputFormAlert: {
         width: '100%',
         padding: '0 25px',
     },
+
     input: {
         marginBottom: '10px',
     },
+
     form: {
         width: '500px',
         '& > *': {
@@ -49,33 +48,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-////////////////////////////////////////////
+/**
+ * YUP validator for forms:  https://github.com/jquense/yup
+ */
 
 
-//////////YUP//////////////
-let schemaYup = yup.object().shape({
-    // login: yup.string().required(),  //.min(4, "msg"),
-    newPassword: yup.string().required('Required'),   //.min(8, "Password is too short (min 8 symbols)")
-    newPasswordRepeat: yup.string()
+const validationSchema = yup.object({
+    newPassword: yup
+        .string()
+        .required('Required'),
+
+    newPasswordRepeat: yup
+        .string()
         .oneOf([yup.ref('newPassword'), null], "Passwords don't match")
-        .required()   //.min(8, "Password is too short (min 8 symbols)")
+        .required('Required')
 
-});
-
-// check validity
-schemaYup
-    .isValid({
-        // login: 'Administrator',
-        newPassword: '12345',
-        newPasswordRepeat: '12345'
-    })
-
-
-// you can try and type cast objects to the defined schema
-schemaYup.cast({
-    //  login: 'Administrator',
-    newPassword: '12345',
-    newPasswordRepeat: '12345'
 });
 
 
@@ -89,14 +76,6 @@ const ChangePasswordForm = ({mod}) => {
     const userId = useSelector(state => state.AuthSlice.id)
     const isLoading = useSelector(state => state.AuthSlice.isLoading)
 
-
-    // const onClickRegister = (login, password) => {
-    //     dispatch(fetchRegister({login, password}))
-    //         .then(unwrapResult)
-    //         .then(response => history.push('/login'))
-    //         .catch(rejectedValueOrSerializedError => {
-    //         })
-    // }
 
     const onClickChangePassword = (newPassword) => {
         console.log(newPassword)
@@ -114,89 +93,75 @@ const ChangePasswordForm = ({mod}) => {
         history.push('/')
     }
 
-    return (
+    const formik = useFormik({
+            initialValues: {
+                newPassword: '',
+                newPasswordRepeat: ''
+            },
+            validationSchema: validationSchema,
+            onSubmit: values => {
 
+                onClickChangePassword(values.newPassword)
+
+            },
+        }
+    )
+
+
+    return (
         <div className={classes.formDiv}>
 
-            <Formik
-                initialValues={{
-                    newPassword: '',
-                    newPasswordRepeat: ''
-                }}
+            <form onSubmit={formik.handleSubmit}
+                  className={classes.form}>
 
-                onSubmit={(values, {setSubmitting}) => {
+                <TextField
+                    id="new-password-filed"
+                    label="New password"
+                    type="password"
+                    name="newPassword"
+                    className={classes.input}
+                    placeholder="Type new password"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.newPassword}
+                    error={formik.touched.newPassword && Boolean(formik.errors.newPassword)}
+                    helperText={formik.touched.newPassword && formik.errors.newPassword}
+                />
 
-                    // if (mod === 'register') {
-                    //     onClickRegister(values.login, values.password)
-                    //
-                    // } else {
-                    onClickChangePassword(values.newPassword)
-                    // }
+                <TextField
+                    id="new-password-repeat-field"
+                    label="Repeat password"
+                    type="password"
+                    name="newPasswordRepeat"
+                    className={classes.input}
+                    placeholder="Repeat new password"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.newPasswordRepeat}
+                    error={formik.touched.newPasswordRepeat && Boolean(formik.errors.newPasswordRepeat)}
+                    helperText={formik.touched.newPasswordRepeat && formik.errors.newPasswordRepeat}
+                />
 
-                }}
-                validationSchema={schemaYup}
-            >
-                {({
-                      values,
-                      errors,
-                      touched,
-                      handleChange,
-                      handleBlur,
-                      handleSubmit,
-                      isSubmitting,
-                      isValid
-                      /* and other goodies */
+                <Button
+                    variant="contained"
+                    color={'primary'}
+                    type={'submit'}
+                    disabled={formik.errors.newPassword || formik.errors.newPasswordRepeat}
+                >
+                    Change password
+                </Button>
+                <Button
+                    variant="contained"
+                    color={'secondary'}
+                    onClick={() => onClickCancel()}
+                    disabled={isLoading}
+                >
+                    Cancel
+                </Button>
+            </form>
 
-                  }) => (
-                    <form onSubmit={handleSubmit}
-                          className={classes.form}>
-
-                        <TextField
-                            id="standard-basic-password-filed"
-                            label="New password"
-                            type="password"
-                            name="newPassword"
-                            className={classes.input}
-                            placeholder="Type new password"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.newPassword}
-                        />
-                        {errors.newPassword && touched.newPassword &&
-                        <Alert severity="error">{errors.newPassword}</Alert>}
-                        <TextField
-                            id="standard-basic-password-repeat-field"
-                            label="Repeat password"
-                            type="password"
-                            name="newPasswordRepeat"
-                            className={classes.input}
-                            placeholder="Repeat new password"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.newPasswordRepeat}
-                        />
-                        {errors.newPasswordRepeat && touched.newPasswordRepeat &&
-                        <Alert severity="error">{errors.newPasswordRepeat}</Alert>}
-                        <Button
-                            variant="contained"
-                            color={'primary'}
-                            type={'submit'}
-                            disabled={isLoading}
-                        >
-                            Change password
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color={'secondary'}
-                            onClick={() => onClickCancel()}
-                            disabled={isLoading}
-                        >
-                            Cancel
-                        </Button>
-                    </form>
-                )}
-            </Formik>
         </div>)
+
 };
 
 export default ChangePasswordForm;

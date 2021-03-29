@@ -2,8 +2,9 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import ItemDataForm from "./item-data-form";
-import ShowInfoModalNavTab from "./show-info-modal-nav-tab";
+import Divider from '@material-ui/core/Divider';
+
+import ToolDataForm from "./tool-data-form";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -14,31 +15,33 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(2),
         textAlign: 'center',
-        color: theme.palette.text.secondary,
+       // color: 'rgb(141, 255, 129)',
+        backgroundColor: 'rgb(141, 255, 129)',
+        fontWeight:"bold",
+        fontSize:'1.5rem'
+
     },
+
+
 }));
 
-const ShowInfoModalGrid=()=> {
+const ToolInfoModalGrid=({toolId,handleCloseModal})=> {
+
+
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <Paper className={classes.paper}>Edit item</Paper>
+                    <Paper className={classes.paper}>Edit Tool</Paper>
+                    <Divider/>
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper className={classes.paper}>Avatar</Paper>
+                   <ToolDataForm toolId={toolId} handleCloseModal={handleCloseModal} />
                 </Grid>
-                <Grid item xs={12}>
-                    <ItemDataForm/>
-                </Grid>
-                <Grid item xs={12}>
-                   <ShowInfoModalNavTab/>
-                </Grid>
-                <Grid item xs={12}>
-                    <Paper className={classes.paper}>xs=3</Paper>
-                </Grid>
+
+
 
             </Grid>
         </div>
@@ -46,4 +49,4 @@ const ShowInfoModalGrid=()=> {
 }
 
 
-export default ShowInfoModalGrid
+export default ToolInfoModalGrid
