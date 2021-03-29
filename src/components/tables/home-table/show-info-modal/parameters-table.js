@@ -10,11 +10,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {addToCandidatesToUpdateParameters} from "../../../../redux/slices/items-slice"
 import "./some.css" // at the request of the library, these classes are needed for icons
 
-const ParametersTable = () => {
+const ParametersTable = ({itemId,parameters, addItemParameter,delItemParameter, updateItemParameter}) => {
 
     const dispatch = useDispatch()
-    const itemData = useSelector(state => state.ItemsSlice.itemData.data.Id)
-    const itemDataParameters = useSelector(state => state.ItemsSlice.itemData.parameters)
+    const itemData = useSelector(state => state.ItemsSlice.itemData.data)
+    //  const itemDataParameters = useSelector(state => state.ItemsSlice.itemData.parameters)
 
 
     const [data, setData] = useState([]);
@@ -22,17 +22,18 @@ const ParametersTable = () => {
 
     useEffect(() => {
         const arr = []
-        itemDataParameters.forEach(parameter => arr.push({
+        //itemDataParameters.forEach(parameter => arr.push({
+        parameters.forEach(parameter => arr.push({
             Id: parameter.Id,
             Inventory_ID: parameter.Inventory_ID,
             Parameter_Name: parameter.Parameter_Name,
             Parameter_Value: parameter.Parameter_Value
         }))
-        setData(JSON.parse(JSON.stringify(arr)))
-    }, [itemDataParameters])
+        // setData(JSON.parse(JSON.stringify(arr)))
+        setData(arr)
+    }, [parameters])
 
-
-
+    console.log(`parameters:${parameters}`)
 
     return (
         <div className="App">
@@ -55,7 +56,7 @@ const ParametersTable = () => {
 
                     ]}
                     data={data}
-                    title="AutoFocus"
+                    title={`${itemData.Name} ${itemData.Inventory_BCode}`}
                     options={{
                         exportButton: true
                     }}
@@ -73,25 +74,25 @@ const ParametersTable = () => {
                             new Promise((resolve, reject) => {
                                 setTimeout(() => {
                                     newData.Id = -1
-                                    newData.Inventory_ID = itemData.Id
-                                    setData([...data, newData]);
+                                    newData.Inventory_ID = itemData
+                                    //setData([...data, newData]);
 
-                                    resolve(dispatch(addToCandidatesToUpdateParameters(data)));
+                                    resolve(addItemParameter(newData))
                                 }, 1000);
                             }),
-                                //.then(response => dispatch(addToCandidatesToUpdateParameters(data))),
+                        //.then(response => addItemParameter(newData)),
 
                         onRowUpdate: (newData, oldData) =>
                             new Promise((resolve, reject) => {
                                 setTimeout(() => {
                                     const dataUpdate = [...data];
                                     const index = oldData.tableData.id;
-                                    // newData.Id = -1
-                                    // newData.Inventory_ID = itemData.Id
+                                    newData.Id = -1
+                                    newData.Inventory_ID = itemData.Id
                                     dataUpdate[index] = newData;
-                                    setData([...dataUpdate]);
+                                   // setData([...dataUpdate]);
 
-                                    resolve();
+                                    resolve(updateItemParameter(dataUpdate));
                                 }, 1000);
                             }),
                         onRowDelete: oldData =>
@@ -99,12 +100,10 @@ const ParametersTable = () => {
                                 setTimeout(() => {
                                     const dataDelete = [...data];
                                     const index = oldData.tableData.id;
-                                    dataDelete.splice(index, 1);
-                                    setData([...dataDelete]);
 
-                                    resolve();
+                                    resolve(delItemParameter(index));
                                 }, 1000);
-                            }).then(response => dispatch(addToCandidatesToUpdateParameters(data))),
+                            }),
                     }}
                 />
             </div>

@@ -1,14 +1,13 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import {Formik} from 'formik';
+import {useFormik} from 'formik';
 import * as yup from 'yup';
 import Alert from '@material-ui/lab/Alert';
 import TextField from '@material-ui/core/TextField';
 //import {axiosGetItems, axiosLogin} from "../../../../redux/async-thunks";
 import MenuItem from '@material-ui/core/MenuItem';
 import {useDispatch, useSelector} from "react-redux";
-import {addToCandidatesToUpdateMainItemData} from "../../../../redux/slices/items-slice";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,46 +49,44 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-//-----------------YUP----------------- Form validation library
-let schemaYup = yup.object().shape({
-    name: yup.string().required(),  //.min(4, "Email is too short"),
-    bCode: yup.string().required(),   //.min(8, "Password is too short (min 8 symbols)")
-    description: yup.string().required(),   //.min(8, "Password is too short (min 8 symbols)")
-    forTool: yup.string().required(),   //.min(8, "Password is too short (min 8 symbols)")
-    location: yup.string().required(),   //.min(8, "Password is too short (min 8 symbols)")
-    qty: yup.number().required(),   //.min(8, "Password is too short (min 8 symbols)")
-    qtyMin: yup.number().required(),   //.min(8, "Password is too short (min 8 symbols)")
+/**
+ * YUP validator for forms:  https://github.com/jquense/yup
+ */
+
+const validationSchema = yup.object({
+    name: yup
+        .string()
+        .required(),
+
+    bCode: yup
+        .string()
+        .required(),
+
+    description: yup
+        .string()
+        .required(),
+
+    forTool: yup
+        .string()
+        .required(),
+
+    location: yup
+        .string()
+        .required(),
+
+    qty: yup
+        .number()
+        .required(),
+
+    qtyMin: yup
+        .number()
+        .required(),
 
 });
 
-// check validity
-schemaYup
-    .isValid({
-        name: 'keyboard',
-        bCode: 'BC0000000094',
-        description: 'Apple Full - Keyboard',
-        forTool: 'PC',
-        location: 'A1',
-        qty: '3',
-        qtyMin: '5',
 
-    })
-
-
-// you can try and type cast objects to the defined schema
-schemaYup.cast({
-    name: 'keyboard',
-    bCode: 'BC0000000094',
-    description: 'Apple Full - Keyboard',
-    forTool: 'PC',
-    location: 'A1',
-    qty: '3',
-    qtyMin: '5',
-});
-//----------------------------------------
-
-
-const ItemDataForm = () => {
+// const ItemDataForm = ({setId,setName,setBCode,setDescription,setForTool,setLocation,setQty,setQtyMin}) => {
+const ItemDataForm = ({updateItemMainData}) => {
     const classes = useStyles();
 
     const dispatch = useDispatch()
@@ -97,197 +94,195 @@ const ItemDataForm = () => {
     const tools = useSelector(state => state.ToolsSlice.tools)
 
 
+    const formik = useFormik({
+            initialValues: {
+                name: itemData.Name,
+                bCode: itemData.Inventory_BCode,
+                description: itemData.Description,
+                forTool: itemData.Tool,
+                location: itemData.Location,
+                qty: itemData.QTY_In_Stock,
+                qtyMin: itemData.QTY_Min,
+            },
+            validationSchema: validationSchema,
+
+            onSubmit: values => {
+                const newRow = {
+                    Id: itemData.Id,
+                    Name: values.name,
+                    Description: values.description,
+                    Inventory_BCode: values.bCode,
+                    Tool_Id: itemData.Tool_Id,
+                    Tool: values.forTool,
+                    Filename: itemData.Filename,
+                    Filepath: itemData.Filepath,
+                    QTY_In_Stock: values.qty,
+                    QTY_Min: values.qty,
+                    Location: values.location
+                }
+
+                updateItemMainData(newRow)
+
+            },
+        }
+    )
+
     return (
         <div className={classes.formDiv}>
+            <form onSubmit={formik.handleSubmit}
+                  className={classes.form}>
 
 
-            <Formik
-                initialValues={{
-                    name: itemData.Name,
-                    bCode: itemData.Inventory_BCode,
-                    description: itemData.Description,
-                    forTool: itemData.Tool,
-                    location: itemData.Location,
-                    qty: itemData.QTY_In_Stock,
-                    qtyMin: itemData.QTY_Min,
-                }}
+                <Grid container spacing={3}>
+                    <Grid item xs={6}>
 
-                onSubmit={(values, {setSubmitting}) => {
-                    let candidateToUpdate = {
-                        Id: itemData.Id,
-                        Name: values.name,
-                        Description: values.description,
-                        Inventory_BCode: values.bCode,
-                        Tool_Id: itemData.Tool_Id,
-                        Tool: values.forTool,
-                        Filename: itemData.Filename,
-                        Filepath: itemData.Filepath,
-                        QTY_In_Stock: values.qty,
-                        QTY_Min: values.qty,
-                        Location: values.location
-                    }
-                    dispatch(addToCandidatesToUpdateMainItemData(candidateToUpdate))
+                        <TextField
+                            variant="outlined"
+                            label="Name"
+                            id="name-input"
+                            type="text"
+                            name="name"
+                            className={classes.input}
+                            placeholder="Type login"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            defaultValue={formik.values.name}
+                            error={formik.touched.name && Boolean(formik.errors.name)}
+                            helperText={formik.touched.name && formik.errors.name}
 
+                            onKeyDown={(e) => e.stopPropagation()}
+                        />
 
-                }}
-                validationSchema={schemaYup}
-            >
-                {({
-                      values,
-                      errors,
-                      touched,
-                      handleChange,
-                      handleBlur,
-                      handleSubmit,
-                      isSubmitting,
-                      isValid
-                      /* and other goodies */
+                    </Grid>
+                    <Grid item xs={6}>
 
-                  }) => (
-                    <form onSubmit={handleSubmit}
-                          className={classes.form}>
+                        <TextField
+                            variant="outlined"
+                            label="BCode"
+                            id="bCode-input"
+                            type="text"
+                            name="bCode"
+                            className={classes.input}
+                            placeholder="Type login"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            defaultValue={formik.values.bCode}
+                            disabled={true}
+                            error={formik.touched.bCode && Boolean(formik.errors.bCode)}
+                            helperText={formik.touched.bCode && formik.errors.bCode}
+
+                            onKeyDown={(e) => e.stopPropagation()}
 
 
-                        <Grid container spacing={3}>
-                            <Grid item xs={6}>
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
 
-                                <TextField
-                                    variant="outlined"
-                                    label="Name"
-                                    id="name-input"
-                                    type="text"
-                                    name="name"
-                                    className={classes.input}
-                                    placeholder="Type login"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.name}
-                                    onKeyDown={(e) => e.stopPropagation()}
-                                />
-                                {errors.name && touched.name && <Alert severity="error">{errors.name}</Alert>}
+                        <TextField
+                            variant="outlined"
+                            label="Description"
+                            id="description-input"
+                            type="text"
+                            name="description"
+                            className={classes.input}
+                            placeholder="Type login"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            defaultValue={formik.values.description}
+                            error={formik.touched.description && Boolean(formik.errors.description)}
+                            helperText={formik.touched.description && formik.errors.description}
+
+                            onKeyDown={(e) => e.stopPropagation()}
+                        />
+
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+                            select
+                            variant="outlined"
+                            label="For Tools"
+                            id="forTool-input"
+                            type="text"
+                            name="forTool"
+                            className={classes.input}
+                            placeholder="Type login"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            defaultValue={formik.values.forTool}
+                            error={formik.touched.forTool && Boolean(formik.errors.forTool)}
+                            helperText={formik.touched.forTool && formik.errors.forTool}
+
+                            onKeyDown={(e) => e.stopPropagation()}
+                        >
+                            {tools.map((tool) => (
+                                <MenuItem key={tool.id} value={tool.Name}>
+                                    {tool.Name}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+
+                            variant="outlined"
+                            label='Location'
+                            id="forTool-input"
+                            type="text"
+                            name="location"
+                            className={classes.input}
+                            placeholder="Type login"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            defaultValue={formik.values.location}
+                            error={formik.touched.location && Boolean(formik.errors.location)}
+                            helperText={formik.touched.location && formik.errors.location}
+
+                            onKeyDown={(e) => e.stopPropagation()}
+                        />
+
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+
+                            variant="outlined"
+                            id="qty-input"
+                            label="QTY"
+                            type="text"
+                            name="qty"
+                            className={classes.input}
+                            placeholder="Type login"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            defaultValue={formik.values.qty}
+                            error={formik.touched.qty && Boolean(formik.errors.qty)}
+                            helperText={formik.touched.qty && formik.errors.qty}
+                            onKeyDown={(e) => e.stopPropagation()}
+                        />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+                            variant="outlined"
+                            label="QTY Min"
+                            id="qtyMin-input"
+                            type="text"
+                            name="qtyMin"
+                            className={classes.input}
+                            placeholder="Type login"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            defaultValue={formik.values.qtyMin}
+                            error={formik.touched.qtyMin && Boolean(formik.errors.qtyMin)}
+                            helperText={formik.touched.qtyMin && formik.errors.qtyMin}
+
+                            onKeyDown={(e) => e.stopPropagation()}
+                        />
+                        <button type={'submit'}>submit</button>
+                    </Grid>
+
+                </Grid>
+            </form>
 
 
-                            </Grid>
-                            <Grid item xs={6}>
-
-                                <TextField
-                                    variant="outlined"
-                                    label="BCode"
-                                    id="bCode-input"
-                                    type="text"
-                                    name="bCode"
-                                    className={classes.input}
-                                    placeholder="Type login"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.bCode}
-                                    disabled={true}
-                                    onKeyDown={(e) => e.stopPropagation()}
-
-
-                                />
-                                {errors.bCode && touched.bCode && <Alert severity="error">{errors.bCode}</Alert>}
-                            </Grid>
-                            <Grid item xs={12}>
-
-                                <TextField
-                                    variant="outlined"
-                                    label="Description"
-                                    id="description-input"
-                                    type="text"
-                                    name="description"
-                                    className={classes.input}
-                                    placeholder="Type login"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.description}
-                                    onKeyDown={(e) => e.stopPropagation()}
-                                />
-                                {errors.description && touched.description &&
-                                <Alert severity="error">{errors.description}</Alert>}
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    select
-                                    variant="outlined"
-                                    label="For Tools"
-                                    id="forTool-input"
-                                    type="text"
-                                    name="forTool"
-                                    className={classes.input}
-                                    placeholder="Type login"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.forTool}
-                                    defaultValue={values.forTool}
-                                    onKeyDown={(e) => e.stopPropagation()}
-                                >
-                                    {tools.map((tool) => (
-                                        <MenuItem key={tool.id} value={tool.Name}>
-                                            {tool.Name}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                                {errors.forTool && touched.forTool && <Alert severity="error">{errors.forTool}</Alert>}
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-
-                                    variant="outlined"
-                                    label='Location'
-                                    id="forTool-input"
-                                    type="text"
-                                    name="location"
-                                    className={classes.input}
-                                    placeholder="Type login"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.location}
-                                    defaultValue={values.location}
-                                    onKeyDown={(e) => e.stopPropagation()}
-                                />
-
-                                {errors.forTool && touched.forTool && <Alert severity="error">{errors.forTool}</Alert>}
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-
-                                    variant="outlined"
-                                    id="qty-input"
-                                    label="QTY"
-                                    type="text"
-                                    name="qty"
-                                    className={classes.input}
-                                    placeholder="Type login"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.qty}
-                                    onKeyDown={(e) => e.stopPropagation()}
-                                />
-                                {errors.qty && touched.qty && <Alert severity="error">{errors.qty}</Alert>}
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    variant="outlined"
-                                    label="QTY Min"
-                                    id="standard-basic2"
-                                    type="text"
-                                    name="qtyMin"
-                                    className={classes.input}
-                                    placeholder="Type login"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.qtyMin}
-                                    onKeyDown={(e) => e.stopPropagation()}
-                                />
-                                {errors.qtyMin && touched.qtyMin && <Alert severity="error">{errors.qtyMin}</Alert>}
-                                <button type={'submit'}>privet</button>
-                            </Grid>
-
-                        </Grid>
-                    </form>
-                )}
-            </Formik>
         </div>
     );
 }

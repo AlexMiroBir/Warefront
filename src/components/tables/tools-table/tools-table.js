@@ -4,83 +4,104 @@ import {useState} from "react";
 import {DataGrid, GridToolbar} from "@material-ui/data-grid";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
-import Button from '@material-ui/core/Button';
 import ToolInfoModal from "./tool-info-modal/tool-info-modal"
-import {useHistory} from "react-router-dom";
+import TextField from "@material-ui/core/TextField";
+import ButtonGroupAddDeleteTools from "./button-group-plus-modal/button-group";
 
 const useStyles = makeStyles({
-    button: {
-        //  width: '200px'
-    },
+    buttonsDiv: {
+        display: 'flex',
+    }
 
 });
 
 
 const ToolsTable = () => {
 
-
-    const [state, setState] = useState({
-        isOpenModal: false,
-        toolId: ''
-    })
-
-
     const classes = useStyles()
+
+    const [selectionModel, setSelectionModel] = useState([]);
+    const [globalFilterInput, setGlobalFilter] = useState("");
+
+
     const tools = useSelector(state => state.ToolsSlice.tools)
-    const history = useHistory()
+    const status = useSelector(state => state.AuthSlice.status)
+    const isAdmin = status.toLowerCase() === "admin"
 
 
-    const showToolInfoModal = (toolId) => {
-        console.log(`ShowInfoToolModal with Id:${toolId}`)
+    // const showToolInfoModal = (toolId) => {
+    //     console.log(`ShowInfoToolModal with Id:${toolId}`)
+    //
+    //     setState({
+    //         isOpenModal: true,
+    //         toolId: toolId
+    //     })
+    //     console.log(`state.isOpenModal :${state.isOpenModal}`)
+    //     console.log(`state.ToolId :${state.toolId}`)
+    //     history.push(`/tool/${toolId}`)
+    // }
+    //
+    // const closeToolInfoModal = () => {
+    //
+    //     setState({
+    //         isOpenModal: false,
+    //         toolId: state.toolId
+    //     })
+    //     history.push(`/tools`)
+    //
+    // }
 
-        setState({
-            isOpenModal: true,
-            toolId: toolId
-        })
-        console.log(`state.isOpenModal :${state.isOpenModal}`)
-        console.log(`state.ToolId :${state.toolId}`)
-        history.push(`/tool/${toolId}`)
+
+    const createObjForRow = (tool) => {
+
+        const obj = {
+            id: tool.Id,
+            name: tool.Name,
+            description: tool.Description,
+            info: tool.Id
+        }
+        return obj
     }
 
-    const closeToolInfoModal = () => {
-
-        setState({
-            isOpenModal: false,
-            toolId: state.toolId
-        })
-        history.push(`/tools`)
-
-    }
-
-
-    const getToolsRows = (tool) => {
-        console.log(tool)
+    const getFilteredArr = (tools) => {
         let arr = []
         tools.forEach(tool => {
-            const obj = {
-                id: tool.Id,
-                name: tool.Name,
-                description: tool.Description,
+            const hasName = tool.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasDescription = tool.Description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasMatches = (hasName + hasDescription) > -2
 
-                info: tool.Id,
-            }
-
-            arr.push(obj)
+            arr = hasMatches ?
+                [...arr, createObjForRow(tool)]
+                :
+                [...arr]
 
         })
-
         return arr
     }
+
+
+    const getUnFilteredArr = (tools) => {
+        let arr = []
+        tools.forEach(tool => {
+            arr = [...arr, createObjForRow(tool)]
+        })
+        return arr
+    }
+
+
+    const getToolsRows = (tools) => {
+
+        return globalFilterInput ?
+            [...getFilteredArr(tools)]
+            :
+            [...getUnFilteredArr(tools)]
+    }
+
 
     const getToolsColumns = () => {
         const columns = [
 
-            // {
-            //     field: 'id',
-            //     headerName: "Id",
-            //     description: "Id",
-            //     width: 100
-            // },
+
             {
                 field: 'name',
                 headerName: "Name",
@@ -101,9 +122,9 @@ const ToolsTable = () => {
                 filterable: false,
                 sortable: false,
                 disableClickEventBubbling: true,
-                renderCell: (params) => ( ///     TODO разобраться с кнопкой https://material-ui.com/components/data-grid/rendering/
+                renderCell: (params) => ( ///
 
-                    <Button variant="outlined" onClick={() => showToolInfoModal(params.value)}>Show info</Button>
+                    <ToolInfoModal toolId={params.value}/>
 
                 ),
             },
@@ -113,11 +134,21 @@ const ToolsTable = () => {
         return columns
     }
 
-
     return (
         <div style={{height: 400, width: "100%"}}>
+            <div className={classes.buttonsDiv}>
+                <TextField
+                    id="global-filter-input"
+                    label="Global filter"
+                    type="text"
+                    variant="outlined"
+                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    value={globalFilterInput}
+                    onKeyDown={(e) => e.stopPropagation()}
+                />
+                {isAdmin && <ButtonGroupAddDeleteTools selectedToolsId={selectionModel}/>}
+            </div>
             <DataGrid
-                //    getRowId={(r) => r.DT_RowId}
                 rows={getToolsRows(tools)}
                 columns={getToolsColumns()}
                 pageSize={10}
@@ -128,10 +159,11 @@ const ToolsTable = () => {
                 components={{
                     Toolbar: GridToolbar,
                 }}
+                onSelectionModelChange={(newSelection) => {
+                    setSelectionModel(newSelection.selectionModel);
+                }}
+                selectionModel={selectionModel}
             />
-            {state.isOpenModal &&
-            <ToolInfoModal toolId={state.toolId} showInfoModal={showToolInfoModal} closeInfoModal={closeToolInfoModal}
-                           isOpenModal={state.isOpenModal}/>}
         </div>
     );
 }

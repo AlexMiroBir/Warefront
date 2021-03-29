@@ -4,15 +4,13 @@ import * as yup from 'yup';
 import {useFormik} from 'formik';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import {useDispatch, useSelector} from "react-redux";
-import Select from '@material-ui/core/Select';
+import {useDispatch} from "react-redux";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {useHistory} from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelPresentationSharpIcon from '@material-ui/icons/CancelPresentationSharp';
-
-import {axiosGetUsers,axiosEditUser} from "../../../../redux/async-thunks/users-async-thunks";
+import {axiosEditTool, axiosGetTools} from "../../../../../redux/async-thunks/tools-async-thunks";
 
 
 /**
@@ -75,29 +73,17 @@ const validationSchema = yup.object({
         .string()
         .required(),
 
-    status: yup
-        .string()
-        .required(),
+    description: yup
+        .string(),
 
-    phone: yup
-        .string()
-        .required()
 
 });
 
 
-const UserDataForm = ({userId, closeModal}) => {
+const AddToolModalForm = ({closeModal}) => {
 
     const classes = useStyles();
-
-
     const dispatch = useDispatch()
-    const users = useSelector(state => state.UsersSlice.users)
-    const currentUserData = users.find(user => user.Id === userId)
-    const status = useSelector(state => state.AuthSlice.status)
-    const isAdmin = status.toLowerCase() === "admin"
-
-
     const history = useHistory()
 
 
@@ -107,30 +93,28 @@ const UserDataForm = ({userId, closeModal}) => {
 
     const formik = useFormik({
             initialValues: {
-                name: currentUserData.Name,
-                status: currentUserData.Status,
-                phone: currentUserData.Phone,
+                name: '',
+                description: ''
             },
+
             validationSchema: validationSchema,
             onSubmit: values => {
 
                 const row = {
-                    Id: currentUserData.Id,
+
+                    Id: -1,
                     Name: values.name,
-                    Status: values.status,
-                    Phone: values.phone,
-                    Password:currentUserData.Password
+                    Description: values.description,
+
                 }
 
-                dispatch(axiosEditUser(row))
+                dispatch(axiosEditTool(row))
                     .then(unwrapResult)
-                    .then(response => dispatch(axiosGetUsers({})))
-                    .then(response => history.push('/users'))
-                    .then(response =>  closeModal())
+                    .then(response => dispatch(axiosGetTools({})))
+                    .then(response => history.push('/tools'))
+                    .then(response => closeModal())
                     .catch(rejectedValueOrSerializedError => {
                     })
-
-
             },
         }
     )
@@ -154,61 +138,37 @@ const UserDataForm = ({userId, closeModal}) => {
                             className={classes.input}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            defaultValue={formik.values.name}
+                            value={formik.values.name}
                             error={formik.touched.name && Boolean(formik.errors.name)}
                             helperText={formik.touched.name && formik.errors.name}
                             onKeyDown={(e) => e.stopPropagation()}
                         />
                     </Grid>
 
-                    <Grid item xs={12}>
 
-                        <Select
-                            id="status-select"
-                            name="status"
-                            label="status"
-                            type="text"
-                            variant="outlined"
-                            native
-                            className={classes.input}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.status}
-                            onChange={formik.handleChange}
-                            error={formik.touched.status && Boolean(formik.errors.status)}
-                            helperText={formik.touched.status && formik.errors.status}
-                            onKeyDown={(e) => e.stopPropagation()}
-                        >
-
-                            <option value={'LIMITED'}>LIMITED</option>
-                            <option value={'READER'}>READER</option>
-                            <option value={'ADMIN'}>ADMIN</option>
-                        </Select>
-
-
-                    </Grid>
                     <Grid item xs={12}>
 
                         <TextField
-                            id="phone-input"
-                            name="phone"
-                            label="Phone"
+                            id="description-input"
+                            name="description"
+                            label="Description"
                             type="text"
                             variant="outlined"
                             className={classes.input}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            defaultValue={formik.values.phone}
-                            error={formik.touched.phone && Boolean(formik.errors.phone)}
-                            helperText={formik.touched.phone && formik.errors.phone}
+                            value={formik.values.description}
+                            error={formik.touched.description && Boolean(formik.errors.description)}
+                            helperText={formik.touched.description && formik.errors.description}
                             onKeyDown={(e) => e.stopPropagation()}
                         />
 
                     </Grid>
 
+
                     <Grid item xs={12}>
 
-                        {isAdmin && <Button
+                        <Button
                             className={classes.button}
                             startIcon={<SaveIcon/>}
                             size='small'
@@ -216,16 +176,11 @@ const UserDataForm = ({userId, closeModal}) => {
                             variant="contained"
                             fullWidth
                             type="submit"
-                            disabled={currentUserData.Name === formik.values.name
-                            &&
-                            currentUserData.Status === formik.values.status
-                            &&
-                            currentUserData.Phone === formik.values.phone
+                            disabled={false}>
 
-                            }>
+                            Add
 
-                            Save
-                        </Button>}
+                        </Button>
                         <Button
                             className={classes.button}
                             startIcon={<CancelPresentationSharpIcon/>}
@@ -233,10 +188,10 @@ const UserDataForm = ({userId, closeModal}) => {
                             color="secondary"
                             variant="contained"
                             fullWidth
-                           onClick={() => closeModal()}
-                        >
+                            onClick={() => closeModal()}>
 
                             Close
+
                         </Button>
                     </Grid>
                 </Grid>
@@ -246,5 +201,5 @@ const UserDataForm = ({userId, closeModal}) => {
 }
 
 
-export default UserDataForm
+export default AddToolModalForm
 

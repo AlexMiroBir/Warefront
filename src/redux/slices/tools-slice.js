@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {axiosEditTool, axiosGetTools} from "../async-thunks/tools-async-thunks"
+import {axiosEditTool, axiosGetTools, axiosDeleteTool} from "../async-thunks/tools-async-thunks"
 
 
 const ToolsSlice = createSlice({
@@ -37,6 +37,18 @@ const ToolsSlice = createSlice({
             // state.tools=payload
         },
         [axiosEditTool.rejected]: (state, {payload}) => {
+            //  state.message = {message: payload.error.message}
+            state.isLoading = 'false'
+        },
+        [axiosDeleteTool.pending]: (state, action,) => {
+            state.isLoading = true
+        },
+        [axiosDeleteTool.fulfilled]: (state, {payload}) => {
+            state.message = {message: "Data was received"}
+            state.isLoading = false
+            // state.tools=payload
+        },
+        [axiosDeleteTool.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
             state.isLoading = 'false'
         },

@@ -78,7 +78,7 @@ const ItemInfoModal = ({itemId}) => {
             >
                 <Fade in={open}>
                     <div className={classes.paper}>
-                        <ItemInfoModalGrid/>
+                        <ItemInfoModalGrid itemId={itemId}/>
                     </div>
                 </Fade>
             </Modal>

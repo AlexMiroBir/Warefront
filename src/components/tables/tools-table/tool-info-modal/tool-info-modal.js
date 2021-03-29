@@ -9,12 +9,11 @@ import ToolInfoModalGrid from "./tool-info-modal-grid";
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setCurrentToolData} from "../../../../redux/slices/tools-slice";
-import {BatteryUnknown} from "@material-ui/icons";
+
 
 
 const useStyles = makeStyles((theme) => ({
     modal: {
-
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -29,40 +28,36 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ToolInfoModal = ({toolId,showInfoModal,closeInfoModal,isOpenModal}) => {
+const ToolInfoModal = ({toolId}) => {
     const classes = useStyles();
     const history = useHistory()
     const dispatch = useDispatch()
-    const [open, setOpen] = React.useState(isOpenModal);
+    const [open, setOpen] = React.useState(false);
 
-    // const handleOpen = (toolId) => {
-    //
-    //     showInfoModal(toolId)
-    //     dispatch(setCurrentToolData(toolId))
-    //     history.push(`/data/tool/${toolId}`)
-    //     setOpen({open: true})
-    //
-    // }
+    const handleOpen = (toolId) => {
+
+        history.push(`/data/tool/${toolId}`)
+        setOpen(true)
+
+    }
 
 
+    const handleClose = () => {
+        setOpen(false)
 
-
-    // const handleClose = () => {
-    //     closeInfoModal()
-    //     setOpen({open: false})
-    // };
+    };
 
     return (
         <div>
-            {/*<Button*/}
-            {/*    onClick={() => handleOpen(toolId)}*/}
-            {/*    variant="contained"*/}
-            {/*    color="primary"*/}
-            {/*    size="small"*/}
-            {/*    style={{marginLeft: 16}}*/}
-            {/*>*/}
-            {/*    Show info*/}
-            {/*</Button>*/}
+            <Button
+                onClick={() => handleOpen(toolId)}
+                variant="contained"
+                color="primary"
+                size="small"
+                style={{marginLeft: 16}}
+            >
+                Show info
+            </Button>
             <Modal
 
                 aria-labelledby="transition-modal-title"
@@ -79,7 +74,7 @@ const ToolInfoModal = ({toolId,showInfoModal,closeInfoModal,isOpenModal}) => {
                 <Fade in={open}>
                     <div className={classes.paper}>
 
-                        <ToolInfoModalGrid  toolId={toolId} handleCloseModal={closeInfoModal}/>
+                        <ToolInfoModalGrid  toolId={toolId} closeModal={handleClose}/>
                     </div>
                 </Fade>
             </Modal>

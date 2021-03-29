@@ -7,18 +7,14 @@ const AuthSlice = createSlice({
     name: 'auth-slice',
     initialState: {
 
-        /////Authorization/////
-        isAuthorized: 'true',
-        username: 'Administrator',
-        id: '17',
-        role: 'ADMIN',
+
+        isAuthorized: '',
+        username: '',
+        id: '',
+        status: '',
         message: {},
 
-        // ///////////////////
-        // items:[],
-        // tools:[],
-        //
-      //  isLoading: '',
+
 
     },
     reducers: {
@@ -34,20 +30,20 @@ const AuthSlice = createSlice({
             state.isAuthorized = true
             state.username = payload.Name
             state.id = payload.Id
-            state.role = payload.Status
+            state.status = payload.Status
             state.message = {message: "Authorized"}
 
 
             localStorage.setItem("isAuthorized", "true");
             localStorage.setItem("currentUserName", payload.Name);
-            localStorage.setItem("currentRole", payload.Status);
+            localStorage.setItem("currentStatus", payload.Status);
             localStorage.setItem('currentUserId', payload.Id);
         },
         [axiosLogin.rejected]: (state, {payload}) => {
             state.isAuthorized = false
             state.username = false
             state.id = false
-            state.role = false
+            state.status = false
             state.message = {message: payload}
          //   state.isLoading = 'false'
         },
@@ -58,7 +54,7 @@ const AuthSlice = createSlice({
             state.isAuthorized = false
             state.username = false
             state.id = false
-            state.role = false
+            state.status = false
             state.message = {message: "LogOut completed"}
          //   state.isLoading = false
             localStorage.clear()

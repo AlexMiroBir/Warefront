@@ -93,7 +93,7 @@ const SupplierDataForm = ({supplierId, closeModal}) => {
     const dispatch = useDispatch()
     const suppliers = useSelector(state => state.SuppliersSlice.suppliers)
     const currentSupplierData = suppliers.find(supplier => supplier.Id === supplierId)
-    const status = useSelector(state => state.AuthSlice.role)
+    const status = useSelector(state => state.AuthSlice.status)
     const isAdmin = status.toLowerCase() === "admin"
 
     const history = useHistory()

@@ -79,7 +79,7 @@ const validationSchema = yup.object({
 });
 
 
-const ToolDataForm = ({toolId, handleCloseModal}) => {
+const ToolDataForm = ({toolId, closeModal}) => {
 
     const classes = useStyles();
 
@@ -87,7 +87,8 @@ const ToolDataForm = ({toolId, handleCloseModal}) => {
     const dispatch = useDispatch()
     const tools = useSelector(state => state.ToolsSlice.tools)
     const currentToolData = tools.find(tool => tool.Id === toolId)
-
+    const status = useSelector(state => state.AuthSlice.status)
+    const isAdmin = status.toLowerCase() === "admin"
 
     const history = useHistory()
 
@@ -119,7 +120,7 @@ const ToolDataForm = ({toolId, handleCloseModal}) => {
                     Description: values.description,
                 }
                 onClickEditToolsData(row)
-                handleCloseModal()
+                closeModal()
             },
         }
     )
@@ -146,6 +147,8 @@ const ToolDataForm = ({toolId, handleCloseModal}) => {
                             defaultValue={formik.values.name}
                             error={formik.touched.name && Boolean(formik.errors.name)}
                             helperText={formik.touched.name && formik.errors.name}
+                            onKeyDown={(e) => e.stopPropagation()}
+
                         />
                     </Grid>
 
@@ -163,13 +166,15 @@ const ToolDataForm = ({toolId, handleCloseModal}) => {
                             defaultValue={formik.values.description}
                             error={formik.touched.description && Boolean(formik.errors.description)}
                             helperText={formik.touched.description && formik.errors.description}
+                            onKeyDown={(e) => e.stopPropagation()}
+
                         />
 
                     </Grid>
 
                     <Grid item xs={12}>
 
-                        <Button
+                        {isAdmin && <Button
                             className={classes.button}
                             startIcon={<SaveIcon/>}
                             size='small'
@@ -182,7 +187,7 @@ const ToolDataForm = ({toolId, handleCloseModal}) => {
                             currentToolData.Description === formik.values.description}>
 
                             Save
-                        </Button>
+                        </Button>}
                         <Button
                             className={classes.button}
                             startIcon={<CancelPresentationSharpIcon/>}
@@ -190,7 +195,7 @@ const ToolDataForm = ({toolId, handleCloseModal}) => {
                             color="secondary"
                             variant="contained"
                             fullWidth
-                            onClick={() => handleCloseModal()}>
+                            onClick={() => closeModal()}>
 
                             Close
                         </Button>

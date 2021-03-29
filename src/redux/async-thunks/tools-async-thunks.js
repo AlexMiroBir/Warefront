@@ -44,12 +44,31 @@ const axiosEditTool = createAsyncThunk(
     }
 )
 
+const axiosDeleteTool = createAsyncThunk(
+    'put/deleteTool',
+    async (toolId, {rejectWithValue}) => {
+        try {
+            const data = {Id: toolId}
+            const response = await axios.put(API_URL_SERVER + "/deleteTool", data
+            )
+            return response.data
+        } catch (err) {
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
 
 
 
 
 export {
     axiosGetTools,
-    axiosEditTool
+    axiosEditTool,
+    axiosDeleteTool
 
 }

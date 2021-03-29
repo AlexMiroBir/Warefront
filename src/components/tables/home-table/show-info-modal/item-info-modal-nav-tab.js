@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ItemInfoModalNavTab = () => {
+const ItemInfoModalNavTab = ({parameters, addItemParameter,delItemParameter, itemId, updateItemParameter}) => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -84,7 +84,8 @@ const ItemInfoModalNavTab = () => {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-              <ParametersTable/>
+              <ParametersTable itemId={itemId} parameters={parameters} addItemParameter={addItemParameter} delItemParameter={delItemParameter} updateItemParameter={updateItemParameter}/>
+              {/*TODO сократить пропсы у посредников*/}
             </TabPanel>
             <TabPanel value={value} index={1}>
                 Suppliers

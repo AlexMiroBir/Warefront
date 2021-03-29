@@ -24,7 +24,7 @@ const SuppliersTable = () => {
 
     const classes = useStyles()
     const suppliers = useSelector(state => state.SuppliersSlice.suppliers)
-    const status = useSelector(state => state.AuthSlice.role)
+    const status = useSelector(state => state.AuthSlice.status)
     const isAdmin = status.toLowerCase() === "admin"
 
 
@@ -148,7 +148,6 @@ const SuppliersTable = () => {
                 rowsPerPageOptions={[5, 10, 50, 100]}
                 checkboxSelection
                 autoPageSize={false}
-                hideFooterPagination /// TODO убрать если забуду
                 components={{
                     Toolbar: GridToolbar,
                 }}
