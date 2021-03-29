@@ -5,17 +5,12 @@ import {useFormik} from 'formik';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import {useDispatch, useSelector} from "react-redux";
-import {axiosEditTool, axiosGetTools} from "../../../../redux/async-thunks/tools-async-thunks";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {useHistory} from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelPresentationSharpIcon from '@material-ui/icons/CancelPresentationSharp';
 import {axiosEditSupplier, axiosGetSuppliers} from "../../../../redux/async-thunks/suppliers-async-thunks";
-import {axiosLogin} from "../../../../redux/async-thunks/auth-async-thunks";
-import {axiosGetItems} from "../../../../redux/async-thunks/items-async-thunks";
-import {axiosGetUsers} from "../../../../redux/async-thunks/users-async-thunks";
-import {axiosGetOrders} from "../../../../redux/async-thunks/orders-async-thunks";
 
 /**
  * Material-UI styles:
@@ -79,7 +74,13 @@ const validationSchema = yup.object({
 
     description: yup
         .string()
-        .required()
+        .required(),
+
+    phone: yup
+        .string(),
+
+    contactName: yup
+        .string()
 
 });
 
@@ -92,11 +93,10 @@ const SupplierDataForm = ({supplierId, closeModal}) => {
     const dispatch = useDispatch()
     const suppliers = useSelector(state => state.SuppliersSlice.suppliers)
     const currentSupplierData = suppliers.find(supplier => supplier.Id === supplierId)
-
+    const status = useSelector(state => state.AuthSlice.role)
+    const isAdmin = status.toLowerCase() === "admin"
 
     const history = useHistory()
-
-
 
 
     /**
@@ -128,7 +128,6 @@ const SupplierDataForm = ({supplierId, closeModal}) => {
                     .then(response => closeModal())
                     .catch(rejectedValueOrSerializedError => {
                     })
-
 
 
             },
@@ -198,26 +197,26 @@ const SupplierDataForm = ({supplierId, closeModal}) => {
 
                     </Grid> <Grid item xs={12}>
 
-                        <TextField
-                            id="contact-name-input"
-                            name="contactName"
-                            label="Contact Name"
-                            type="text"
-                            variant="outlined"
-                            className={classes.input}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            defaultValue={formik.values.contactName}
-                            error={formik.touched.contactName && Boolean(formik.errors.contactName)}
-                            helperText={formik.touched.contactName && formik.errors.contactName}
-                            onKeyDown={(e) => e.stopPropagation()}
-                        />
+                    <TextField
+                        id="contact-name-input"
+                        name="contactName"
+                        label="Contact Name"
+                        type="text"
+                        variant="outlined"
+                        className={classes.input}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        defaultValue={formik.values.contactName}
+                        error={formik.touched.contactName && Boolean(formik.errors.contactName)}
+                        helperText={formik.touched.contactName && formik.errors.contactName}
+                        onKeyDown={(e) => e.stopPropagation()}
+                    />
 
-                    </Grid>
+                </Grid>
 
                     <Grid item xs={12}>
 
-                        <Button
+                        {isAdmin && <Button
                             className={classes.button}
                             startIcon={<SaveIcon/>}
                             size='small'
@@ -235,7 +234,7 @@ const SupplierDataForm = ({supplierId, closeModal}) => {
                             }>
 
                             Save
-                        </Button>
+                        </Button>}
                         <Button
                             className={classes.button}
                             startIcon={<CancelPresentationSharpIcon/>}
@@ -243,7 +242,7 @@ const SupplierDataForm = ({supplierId, closeModal}) => {
                             color="secondary"
                             variant="contained"
                             fullWidth
-                           onClick={() => closeModal()}
+                            onClick={() => closeModal()}
                         >
 
                             Close

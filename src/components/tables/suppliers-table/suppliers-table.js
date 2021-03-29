@@ -1,46 +1,81 @@
-import * as React from "react";
+import React, {useState} from "react";
 
 import {DataGrid, GridToolbar} from "@material-ui/data-grid";
 import {useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 
 import SupplierInfoModal from "./supplier-info-modal/supplier-info-modal";
-import ButtonGroupAddDelete from "./button-group";
+import ButtonGroupAddDeleteSuppliers from "./button-group-plus-modal/button-group";
+import TextField from "@material-ui/core/TextField";
 
 
 const useStyles = makeStyles({
-    button: {
-        //  width: '200px'
-    },
+    buttonsDiv: {
+        display: 'flex',
+    }
 
 });
 
 
 const SuppliersTable = () => {
 
+    const [selectionModel, setSelectionModel] = useState([]);
+    const [globalFilterInput, setGlobalFilter] = useState("");
+
     const classes = useStyles()
     const suppliers = useSelector(state => state.SuppliersSlice.suppliers)
+    const status = useSelector(state => state.AuthSlice.role)
+    const isAdmin = status.toLowerCase() === "admin"
+
+
+    const createObjForRow = (supplier) => {
+        const obj = {
+            id: supplier.Id,
+            name: supplier.Name,
+            description: supplier.Description,
+            phone: supplier.Phone,
+            contactName: supplier.Contact_Name,
+            info: supplier.Id
+        }
+        return obj
+    }
+
+
+    const getFilteredArr = (suppliers) => {
+        let arr = []
+        suppliers.forEach(supplier => {
+            let hasName = supplier.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasDescription = supplier.Description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasPhone = supplier.Phone.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasContactName = supplier.Contact_Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasMatches = (hasName + hasDescription + hasPhone + hasContactName) > -4
+
+            arr = hasMatches ?
+                [...arr, createObjForRow(supplier)]
+                :
+                [...arr]
+        })
+        return arr
+    }
+
+
+    const getUnFilteredArr = (suppliers) => {
+        let arr = []
+        suppliers.forEach(supplier => {
+            arr = [...arr, createObjForRow(supplier)]
+        })
+        return arr
+    }
 
 
     const getSuppliersRows = (suppliers) => {
 
-        let arr = []
-        suppliers.forEach(suppler => {
-
-            const obj = {
-                id: suppler.Id,
-                name: suppler.Name,
-                description: suppler.Description,
-                phone: suppler.Phone,
-                contactName: suppler.Contact_Name,
-                info:suppler.Id
-
-            }
-            arr.push(obj)
-        })
-
-        return arr
+        return globalFilterInput ?
+            [...getFilteredArr(suppliers)]
+            :
+            [...getUnFilteredArr(suppliers)]
     }
+
 
     const getSuppliersColumns = () => {
         const columns = [
@@ -80,7 +115,7 @@ const SuppliersTable = () => {
                 disableClickEventBubbling: true,
                 renderCell: (params) => ( ///     TODO разобраться с кнопкой https://material-ui.com/components/data-grid/rendering/
 
-                    <SupplierInfoModal supplierId={params.value} />
+                    <SupplierInfoModal supplierId={params.value}/>
 
                 ),
             },
@@ -93,9 +128,19 @@ const SuppliersTable = () => {
 
     return (
         <div style={{height: 400, width: "100%"}}>
-            <ButtonGroupAddDelete/>
+            <div className={classes.buttonsDiv}>
+                <TextField
+                    id="global-filter-input"
+                    label="Global filter"
+                    type="text"
+                    variant="outlined"
+                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    value={globalFilterInput}
+                    onKeyDown={(e) => e.stopPropagation()}
+                />
+                {isAdmin && <ButtonGroupAddDeleteSuppliers selectedItemsId={selectionModel}/>}
+            </div>
             <DataGrid
-                //    getRowId={(r) => r.DT_RowId}
                 rows={getSuppliersRows(suppliers)}
                 columns={getSuppliersColumns()}
                 pageSize={10}
@@ -103,10 +148,16 @@ const SuppliersTable = () => {
                 rowsPerPageOptions={[5, 10, 50, 100]}
                 checkboxSelection
                 autoPageSize={false}
+                hideFooterPagination /// TODO убрать если забуду
                 components={{
                     Toolbar: GridToolbar,
                 }}
+                onSelectionModelChange={(newSelection) => {
+                    setSelectionModel(newSelection.selectionModel);
+                }}
+                selectionModel={selectionModel}
             />
+
         </div>
     );
 }

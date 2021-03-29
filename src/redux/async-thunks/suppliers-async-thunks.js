@@ -42,10 +42,28 @@ const axiosEditSupplier = createAsyncThunk(
     }
 )
 
-
+const axiosDeleteSupplier = createAsyncThunk(
+    'put/deleteSupplier',
+    async (supplierId, {rejectWithValue}) => {
+        try {
+            const data = {Id: supplierId}
+            const response = await axios.put(API_URL_SERVER + "/deleteSupplier", data
+            )
+            // console.log(response)
+            return response.data
+        } catch (err) {
+            let error = err // cast the error for access
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
 
 
 export {
     axiosGetSuppliers,
-    axiosEditSupplier
+    axiosEditSupplier,
+    axiosDeleteSupplier
 }

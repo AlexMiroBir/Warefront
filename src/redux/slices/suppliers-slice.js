@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {axiosGetSuppliers, axiosEditSupplier} from "../async-thunks/suppliers-async-thunks"
+import {axiosGetSuppliers, axiosEditSupplier, axiosDeleteSupplier} from "../async-thunks/suppliers-async-thunks"
 
 
 
@@ -36,6 +36,18 @@ const SuppliersSlice = createSlice({
             // state.tools=payload
         },
         [axiosEditSupplier.rejected]: (state, {payload}) => {
+            //  state.message = {message: payload.error.message}
+            state.isLoading = 'false'
+        },
+        [axiosDeleteSupplier.pending]: (state, action,) => {
+            state.isLoading = true
+        },
+        [axiosDeleteSupplier.fulfilled]: (state, {payload}) => {
+            state.message = {message: "Data was received"}
+            state.isLoading = false
+            // state.tools=payload
+        },
+        [axiosDeleteSupplier.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
             state.isLoading = 'false'
         },

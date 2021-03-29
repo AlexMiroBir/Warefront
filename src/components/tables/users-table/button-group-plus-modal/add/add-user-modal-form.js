@@ -4,15 +4,14 @@ import * as yup from 'yup';
 import {useFormik} from 'formik';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import {useDispatch, useSelector} from "react-redux";
-import Select from '@material-ui/core/Select';
+import {useDispatch} from "react-redux";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {useHistory} from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelPresentationSharpIcon from '@material-ui/icons/CancelPresentationSharp';
-
-import {axiosGetUsers,axiosEditUser} from "../../../../redux/async-thunks/users-async-thunks";
+import {axiosEditUser, axiosGetUsers} from "../../../../../redux/async-thunks/users-async-thunks";
+import Select from "@material-ui/core/Select";
 
 
 /**
@@ -76,28 +75,24 @@ const validationSchema = yup.object({
         .required(),
 
     status: yup
-        .string()
-        .required(),
+        .string(),
+
 
     phone: yup
         .string()
-        .required()
+        .required(),
+
+    password: yup
+        .string()
+        .required(),
 
 });
 
 
-const UserDataForm = ({userId, closeModal}) => {
+const AddUserModalForm = ({closeModal}) => {
 
     const classes = useStyles();
-
-
     const dispatch = useDispatch()
-    const users = useSelector(state => state.UsersSlice.users)
-    const currentUserData = users.find(user => user.Id === userId)
-    const status = useSelector(state => state.AuthSlice.role)
-    const isAdmin = status.toLowerCase() === "admin"
-
-
     const history = useHistory()
 
 
@@ -107,30 +102,29 @@ const UserDataForm = ({userId, closeModal}) => {
 
     const formik = useFormik({
             initialValues: {
-                name: currentUserData.Name,
-                status: currentUserData.Status,
-                phone: currentUserData.Phone,
+                name: '',
+                status: 'LIMITED',
+                phone: '',
+                password: '',
             },
             validationSchema: validationSchema,
             onSubmit: values => {
 
                 const row = {
-                    Id: currentUserData.Id,
+                    Id: -1,
                     Name: values.name,
                     Status: values.status,
                     Phone: values.phone,
-                    Password:currentUserData.Password
+                    Password: values.password,
                 }
 
                 dispatch(axiosEditUser(row))
                     .then(unwrapResult)
                     .then(response => dispatch(axiosGetUsers({})))
                     .then(response => history.push('/users'))
-                    .then(response =>  closeModal())
+                    .then(response => closeModal())
                     .catch(rejectedValueOrSerializedError => {
                     })
-
-
             },
         }
     )
@@ -154,7 +148,7 @@ const UserDataForm = ({userId, closeModal}) => {
                             className={classes.input}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            defaultValue={formik.values.name}
+                            value={formik.values.name}
                             error={formik.touched.name && Boolean(formik.errors.name)}
                             helperText={formik.touched.name && formik.errors.name}
                             onKeyDown={(e) => e.stopPropagation()}
@@ -185,7 +179,6 @@ const UserDataForm = ({userId, closeModal}) => {
                             <option value={'ADMIN'}>ADMIN</option>
                         </Select>
 
-
                     </Grid>
                     <Grid item xs={12}>
 
@@ -198,9 +191,27 @@ const UserDataForm = ({userId, closeModal}) => {
                             className={classes.input}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            defaultValue={formik.values.phone}
+                            value={formik.values.phone}
                             error={formik.touched.phone && Boolean(formik.errors.phone)}
                             helperText={formik.touched.phone && formik.errors.phone}
+                            onKeyDown={(e) => e.stopPropagation()}
+                        />
+
+                    </Grid>
+                    <Grid item xs={12}>
+
+                        <TextField
+                            id="password-input"
+                            name="password"
+                            label="Password"
+                            type="text"
+                            variant="outlined"
+                            className={classes.input}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.password}
+                            error={formik.touched.password && Boolean(formik.errors.password)}
+                            helperText={formik.touched.password && formik.errors.password}
                             onKeyDown={(e) => e.stopPropagation()}
                         />
 
@@ -208,7 +219,7 @@ const UserDataForm = ({userId, closeModal}) => {
 
                     <Grid item xs={12}>
 
-                        {isAdmin && <Button
+                        <Button
                             className={classes.button}
                             startIcon={<SaveIcon/>}
                             size='small'
@@ -216,16 +227,11 @@ const UserDataForm = ({userId, closeModal}) => {
                             variant="contained"
                             fullWidth
                             type="submit"
-                            disabled={currentUserData.Name === formik.values.name
-                            &&
-                            currentUserData.Status === formik.values.status
-                            &&
-                            currentUserData.Phone === formik.values.phone
+                            disabled={false}>
 
-                            }>
+                            Add
 
-                            Save
-                        </Button>}
+                        </Button>
                         <Button
                             className={classes.button}
                             startIcon={<CancelPresentationSharpIcon/>}
@@ -233,10 +239,10 @@ const UserDataForm = ({userId, closeModal}) => {
                             color="secondary"
                             variant="contained"
                             fullWidth
-                           onClick={() => closeModal()}
-                        >
+                            onClick={() => closeModal()}>
 
                             Close
+
                         </Button>
                     </Grid>
                 </Grid>
@@ -246,5 +252,5 @@ const UserDataForm = ({userId, closeModal}) => {
 }
 
 
-export default UserDataForm
+export default AddUserModalForm
 
