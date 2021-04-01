@@ -1,5 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {
+    axiosDeleteItem,
+    axiosEditItem,
     axiosGetItemData,
     axiosGetItemParameters,
     axiosGetItems,
@@ -111,6 +113,30 @@ const ItemsSlice = createSlice({
             state.itemData.suppliers = payload
         },
         [axiosGetItemSuppliers.rejected]: (state, {payload}) => {
+            //  state.message = {message: payload.error.message}
+            state.isLoading = 'false'
+        },
+        [axiosEditItem.pending]: (state, action) => {
+            state.isLoading = true
+        },
+        [axiosEditItem.fulfilled]: (state, {payload}) => {
+            state.message = {message: "Data was received"}
+            state.isLoading = false
+          //  state.itemData.suppliers = payload
+        },
+        [axiosEditItem.rejected]: (state, {payload}) => {
+            //  state.message = {message: payload.error.message}
+            state.isLoading = 'false'
+        },
+        [axiosDeleteItem.pending]: (state, action) => {
+            state.isLoading = true
+        },
+        [axiosDeleteItem.fulfilled]: (state, {payload}) => {
+            state.message = {message: "Data was received"}
+            state.isLoading = false
+          //  state.itemData.suppliers = payload
+        },
+        [axiosDeleteItem.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
             state.isLoading = 'false'
         },

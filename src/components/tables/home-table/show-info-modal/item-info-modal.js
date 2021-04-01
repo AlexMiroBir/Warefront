@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+
     },
     paper: {
         backgroundColor: theme.palette.background.paper,
@@ -78,7 +79,7 @@ const ItemInfoModal = ({itemId}) => {
             >
                 <Fade in={open}>
                     <div className={classes.paper}>
-                        <ItemInfoModalGrid itemId={itemId}/>
+                        <ItemInfoModalGrid itemId={itemId} closeMadal={handleClose}/>
                     </div>
                 </Fade>
             </Modal>

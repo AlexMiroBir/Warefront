@@ -138,7 +138,7 @@ const SuppliersTable = () => {
                     value={globalFilterInput}
                     onKeyDown={(e) => e.stopPropagation()}
                 />
-                {isAdmin && <ButtonGroupAddDeleteSuppliers selectedItemsId={selectionModel}/>}
+                {isAdmin && <ButtonGroupAddDeleteSuppliers selectedSuppliersId={selectionModel}/>}
             </div>
             <DataGrid
                 rows={getSuppliersRows(suppliers)}

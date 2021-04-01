@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {useFormik} from 'formik';
@@ -93,6 +93,26 @@ const ItemDataForm = ({updateItemMainData}) => {
     const itemData = useSelector(state => state.ItemsSlice.itemData.data)
     const tools = useSelector(state => state.ToolsSlice.tools)
 
+    const [row,setRow]=useState({})
+
+    const handleSubmit=(values)=>{
+        const newRow = {
+            Id: itemData.Id,
+            Name: values.name,
+            Description: values.description,
+            Inventory_BCode: values.bCode,
+            Tool_Id: itemData.Tool_Id,
+            Tool: values.forTool,
+            Filename: itemData.Filename,
+            Filepath: itemData.Filepath,
+            QTY_In_Stock: values.qty,
+            QTY_Min: values.qty,
+            Location: values.location
+        }
+        updateItemMainData(newRow)
+
+
+    }
 
     const formik = useFormik({
             initialValues: {
@@ -106,22 +126,28 @@ const ItemDataForm = ({updateItemMainData}) => {
             },
             validationSchema: validationSchema,
 
-            onSubmit: values => {
-                const newRow = {
-                    Id: itemData.Id,
-                    Name: values.name,
-                    Description: values.description,
-                    Inventory_BCode: values.bCode,
-                    Tool_Id: itemData.Tool_Id,
-                    Tool: values.forTool,
-                    Filename: itemData.Filename,
-                    Filepath: itemData.Filepath,
-                    QTY_In_Stock: values.qty,
-                    QTY_Min: values.qty,
-                    Location: values.location
-                }
+            // onSubmit: values => {
+            //     const newRow = {
+            //         Id: itemData.Id,
+            //         Name: values.name,
+            //         Description: values.description,
+            //         Inventory_BCode: values.bCode,
+            //         Tool_Id: itemData.Tool_Id,
+            //         Tool: values.forTool,
+            //         Filename: itemData.Filename,
+            //         Filepath: itemData.Filepath,
+            //         QTY_In_Stock: values.qty,
+            //         QTY_Min: values.qty,
+            //         Location: values.location
+            //     }
+            //
+            //     updateItemMainData(newRow)
+            //
+            // },
+            onSubmit: values => {handleSubmit(values)
 
-                updateItemMainData(newRow)
+
+
 
             },
         }

@@ -8,10 +8,10 @@ import Button from "@material-ui/core/Button";
 import {useDispatch, useSelector} from "react-redux";
 import Box from '@material-ui/core/Box';
 import Alert from '@material-ui/lab/Alert';
-import AccordionSuppliers from "./accordion";
+import AccordionItems from "./accordion";
 import CancelPresentationSharpIcon from "@material-ui/icons/CancelPresentationSharp";
 import DeleteForeverSharpIcon from '@material-ui/icons/DeleteForeverSharp';
-import {axiosDeleteSupplier, axiosGetSuppliers} from "../../../../../redux/async-thunks/suppliers-async-thunks";
+import {axiosDeleteItem, axiosGetItems} from "../../../../../redux/async-thunks/items-async-thunks";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {useHistory} from "react-router-dom";
 import Typography from '@material-ui/core/Typography';
@@ -49,14 +49,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const DeleteSupplierModal = ({selectedSuppliersId}) => {
-
+const DeleteItemModal = ({selectedItemsId}) => {
     const classes = useStyles();
 
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const suppliers = useSelector(state => state.SuppliersSlice.suppliers)
+    const items = useSelector(state => state.ItemsSlice.items)
 
 
     const [open, setOpen] = useState(false);
@@ -65,36 +64,36 @@ const DeleteSupplierModal = ({selectedSuppliersId}) => {
 
     const handleOpen = () => {
         setOpen(true);
-        history.push('/suppliers/delete')
+        history.push('/items/delete')
     };
 
     const handleClose = () => {
         setOpen(false);
     };
 
-    const getArrWithSuppliersForDelete = (arrWithId) => {
+    const getArrWithItemsForDelete = (arrWithId) => {
         let arr = []
         arrWithId.forEach(id => {
             // eslint-disable-next-line eqeqeq
-            let supplier = suppliers.find(supplier => supplier.Id == id)
+            let item = items.find(item => item.Id == id)
             {
-                arr = [...arr, supplier]
+                arr = [...arr, item]
             }
         })
         return arr
     }
 
-    const deleteSuppliers = async (suppliersId) => {
-        for (const id of suppliersId) {
-            await dispatch(axiosDeleteSupplier(id))
+    const deleteUsers = async (usersId) => {
+        for (const id of usersId) {
+            await dispatch(axiosDeleteItem(id))
                 .then(unwrapResult)
-                .then(response => dispatch(axiosGetSuppliers({})))
+                .then(response => dispatch(axiosGetItems({})))
                 .catch(rejectedValueOrSerializedError => {
                 })
         }
 
         handleClose()
-        history.push('/suppliers')
+        history.push('/home')
         setSure(false)
     }
 
@@ -107,7 +106,7 @@ const DeleteSupplierModal = ({selectedSuppliersId}) => {
                 className={classes.button}
                 startIcon={<DeleteIcon/>}
                 onClick={handleOpen}
-                disabled={selectedSuppliersId.length < 1}>
+                disabled={selectedItemsId.length < 1}>
 
                 Delete
 
@@ -128,15 +127,15 @@ const DeleteSupplierModal = ({selectedSuppliersId}) => {
 
                         <Alert
                             severity="error">
-                            {`Are you sure you want to delete ${selectedSuppliersId.length} follow suppliers:`}
+                            {`Are you sure you want to delete ${selectedItemsId.length} follow items:`}
                         </Alert>
 
                         <SureSlider setSure={setSure}/>
 
                         <Divider className={classes.divider}/>
 
-                        Suppliers for deleting:
-                        <AccordionSuppliers suppliersForDelete={getArrWithSuppliersForDelete(selectedSuppliersId)}/>
+                        Users for deleting:
+                        <AccordionItems itemsForDelete={getArrWithItemsForDelete(selectedItemsId)}/>
 
                         <Button
                             className={classes.button}
@@ -145,7 +144,7 @@ const DeleteSupplierModal = ({selectedSuppliersId}) => {
                             color="secondary"
                             variant="contained"
                             fullWidth
-                            onClick={() => deleteSuppliers(selectedSuppliersId)}
+                            onClick={() => deleteUsers(selectedItemsId)}
                             disabled={!sure}>
 
                             Delete
@@ -173,7 +172,7 @@ const DeleteSupplierModal = ({selectedSuppliersId}) => {
 }
 
 
-export default DeleteSupplierModal
+export default DeleteItemModal
 
 
 const SureSlider = ({setSure}) => {

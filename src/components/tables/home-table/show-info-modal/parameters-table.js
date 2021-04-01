@@ -7,14 +7,14 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import CheckIcon from "@material-ui/icons/Check";
 import SearchIcon from "@material-ui/icons/Search";
 import {useDispatch, useSelector} from "react-redux";
-import {addToCandidatesToUpdateParameters} from "../../../../redux/slices/items-slice"
+
 import "./some.css" // at the request of the library, these classes are needed for icons
 
-const ParametersTable = ({itemId,parameters, addItemParameter,delItemParameter, updateItemParameter}) => {
+const ParametersTable = ({parameters, addItemParameter,delItemParameter, updateItemParameter}) => {
 
-    const dispatch = useDispatch()
+
     const itemData = useSelector(state => state.ItemsSlice.itemData.data)
-    //  const itemDataParameters = useSelector(state => state.ItemsSlice.itemData.parameters)
+
 
 
     const [data, setData] = useState([]);
@@ -29,17 +29,18 @@ const ParametersTable = ({itemId,parameters, addItemParameter,delItemParameter, 
             Parameter_Name: parameter.Parameter_Name,
             Parameter_Value: parameter.Parameter_Value
         }))
-        // setData(JSON.parse(JSON.stringify(arr)))
+
         setData(arr)
     }, [parameters])
 
-    console.log(`parameters:${parameters}`)
+
 
     return (
         <div className="App">
 
             <div style={{maxWidth: "100%", paddingTop: "12px"}}>
                 <MaterialTable
+                    onKeyDown={(e) => e.stopPropagation()}
                     columns={[
                         {
                             title: "Parameter's name",
@@ -48,6 +49,7 @@ const ParametersTable = ({itemId,parameters, addItemParameter,delItemParameter, 
                                 <Input
                                     autoFocus={true}
                                     onChange={e => editProps.onChange(e.target.value)}
+
                                 />
                             )
                         },
@@ -58,7 +60,12 @@ const ParametersTable = ({itemId,parameters, addItemParameter,delItemParameter, 
                     data={data}
                     title={`${itemData.Name} ${itemData.Inventory_BCode}`}
                     options={{
-                        exportButton: true
+                        exportButton: true,
+                        search: false,
+                        pageSize:3,
+                        emptyRowsWhenPaging: true,
+                        pageSizeOptions:[3,5,7],
+
                     }}
                     icons={{
                         Add: props => <AddIcon/>,
@@ -74,27 +81,27 @@ const ParametersTable = ({itemId,parameters, addItemParameter,delItemParameter, 
                             new Promise((resolve, reject) => {
                                 setTimeout(() => {
                                     newData.Id = -1
-                                    newData.Inventory_ID = itemData
+                                    newData.Inventory_ID = itemData.Id
                                     //setData([...data, newData]);
 
                                     resolve(addItemParameter(newData))
                                 }, 1000);
                             }),
-                        //.then(response => addItemParameter(newData)),
 
-                        onRowUpdate: (newData, oldData) =>
-                            new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    const dataUpdate = [...data];
-                                    const index = oldData.tableData.id;
-                                    newData.Id = -1
-                                    newData.Inventory_ID = itemData.Id
-                                    dataUpdate[index] = newData;
-                                   // setData([...dataUpdate]);
 
-                                    resolve(updateItemParameter(dataUpdate));
-                                }, 1000);
-                            }),
+                        // onRowUpdate: (newData, oldData) =>
+                        //     new Promise((resolve, reject) => {
+                        //         setTimeout(() => {
+                        //             const dataUpdate = [...data];
+                        //             const index = oldData.tableData.id;
+                        //             newData.Id = -1
+                        //             newData.Inventory_ID = itemData.Id
+                        //             dataUpdate[index] = newData;
+                        //            // setData([...dataUpdate]);
+                        //
+                        //             resolve(updateItemParameter(dataUpdate));
+                        //         }, 1000);
+                        //     }),
                         onRowDelete: oldData =>
                             new Promise((resolve, reject) => {
                                 setTimeout(() => {

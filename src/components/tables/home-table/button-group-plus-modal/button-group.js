@@ -1,8 +1,8 @@
 import React from 'react';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles';
-import DeleteSupplierModal from "./del/delete-supplier-modal";
-import AddModal from "./add/add-supplier-modal";
+import DeleteItemModal from "./del/delete-item-modal";
+import AddItemModal from "./add/add-item-modal";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -28,10 +28,9 @@ const theme = createMuiTheme({
 });
 
 
-const ButtonGroupAddDeleteSuppliers = ({selectedSuppliersId}) => {
+const ButtonGroupAddDeleteItems = ({selectedItemsId}) => {
     const classes = useStyles();
 
-    console.log(selectedSuppliersId)
 
     return (
 
@@ -40,12 +39,12 @@ const ButtonGroupAddDeleteSuppliers = ({selectedSuppliersId}) => {
                 size="large"
                 aria-label="small outlined button group">
                 <ThemeProvider theme={theme}>
-                    <AddModal/>
-                    <DeleteSupplierModal selectedSuppliersId={selectedSuppliersId}/>
+                    {/*<AddItemModal/>*/}
+                    <DeleteItemModal selectedItemsId={selectedItemsId}/>
                 </ThemeProvider>
             </ButtonGroup>
         </div>
     );
 }
 
-export default ButtonGroupAddDeleteSuppliers
+export default ButtonGroupAddDeleteItems

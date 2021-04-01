@@ -1,51 +1,124 @@
 import * as React from "react";
+import {useState} from "react";
 
 import {DataGrid, GridToolbar} from "@material-ui/data-grid";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import ImageModal from "./image-modal";
 
 
-//import {makeStyles} from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import monitor from '../../../images/03d1a674-b686-4c00-a13f-2e8929503f40.png'
-import {useHistory} from "react-router-dom";
 import ItemInfoModal from "./show-info-modal/item-info-modal";
+
+import TextField from "@material-ui/core/TextField";
+import ButtonGroupAddDeleteItems from "./button-group-plus-modal/button-group";
+
+
+const useStyles = makeStyles({
+    buttonsDiv: {
+        display: 'flex',
+    }
+
+});
 
 
 // TODO выделять ячйки с нарушенным неснижаемым остатком
 
 const HomeTable = () => {
 
-    const history = useHistory()
-    const dispatch = useDispatch()
+    const classes = useStyles()
+
+    const [selectionModel, setSelectionModel] = useState([]);
+    const [globalFilterInput, setGlobalFilter] = useState("");
+
     const items = useSelector(state => state.ItemsSlice.items)
-    const itemData = useSelector(state => state.ItemsSlice.itemData.data)
+    // const itemData = useSelector(state => state.ItemsSlice.itemData.data)
+    const status = useSelector(state => state.AuthSlice.status)
+    const isAdmin = status.toLowerCase() === "admin"
 
 
-    const getItemsRows = (items) => {
-        console.log(items)
-        let arr = []
-        items.forEach(item => {
-            const obj = {
-                id: item.Id,
-                name: item.Name,
-                description: item.Description,
-                bCode: item.Inventory_BCode,
-                qty: item.QTY_In_Stock,
-                qtyMin: item.QTY_Min,
-                location: item.Location,
-                tool: item.Tool,
-                info: item.Id,
-            }
 
-            arr.push(obj)
-
-        })
-
-        return arr
+    const createObjForRow = (item) => {
+        const obj = {
+            id: item.Id,
+            name: item.Name,
+            description: item.Description,
+            bCode: item.Inventory_BCode,
+            qty: item.QTY_In_Stock,
+            qtyMin: item.QTY_Min,
+            location: item.Location,
+            tool: item.Tool,
+            info: item.Id,
+        }
+        return obj
     }
 
 
+    const getFilteredArr = (items) => {
+        let arr = []
+        items.forEach(item => {
+            const hasName = item.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasDescription = item.Description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasBCode = item.Inventory_BCode.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasTool = item.Tool.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasQty = item.QTY_In_Stock.toString().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasQtyMin = item.QTY_Min.toString().indexOf(globalFilterInput.toLowerCase().trim())
+
+            const hasMatches = (hasName + hasDescription + hasBCode + hasTool + hasQty + hasQtyMin) > -6
+
+            arr = hasMatches ?
+                [...arr, createObjForRow(item)]
+                :
+                [...arr]
+
+        })
+        return arr
+    }
+
+    const getUnFilteredArr = (items) => {
+        let arr = []
+        items.forEach(item => {
+            arr = [...arr, createObjForRow(item)]
+        })
+        return arr
+    }
+
+    const getItemsRows = (items) => {
+
+        return globalFilterInput ?
+            [...getFilteredArr(items)]
+            :
+            [...getUnFilteredArr(items)]
+    }
+
+
+    // const getItemsRows = (items) => {
+    //     console.log(items)
+    //     let arr = []
+    //     items.forEach(item => {
+    //         const obj = {
+    //             id: item.Id,
+    //             name: item.Name,
+    //             description: item.Description,
+    //             bCode: item.Inventory_BCode,
+    //             qty: item.QTY_In_Stock,
+    //             qtyMin: item.QTY_Min,
+    //             location: item.Location,
+    //             tool: item.Tool,
+    //             info: item.Id,
+    //         }
+    //
+    //         arr.push(obj)
+    //
+    //     })
+    //
+    //     return arr
+    // }
+
+
     const getItemsColumns = () => {
+
+
         const columns = [
             {
                 field: 'Image',
@@ -129,8 +202,20 @@ const HomeTable = () => {
 
     return (
         <div style={{height: 400, width: "100%"}}>
+            <div className={classes.buttonsDiv}>
+                <TextField
+                    id="global-filter-input"
+                    label="Global filter"
+                    type="text"
+                    variant="outlined"
+                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    value={globalFilterInput}
+                    onKeyDown={(e) => e.stopPropagation()}
+                />
+                {isAdmin && <ButtonGroupAddDeleteItems selectedItemsId={selectionModel} />}
+            </div>
             <DataGrid
-                //    getRowId={(r) => r.DT_RowId}
+
                 rows={getItemsRows(items)}
                 columns={getItemsColumns()}
                 pageSize={10}
@@ -141,10 +226,14 @@ const HomeTable = () => {
                 components={{
                     Toolbar: GridToolbar,
                 }}
+                onSelectionModelChange={(newSelection) => {
+                    setSelectionModel(newSelection.selectionModel);
+                }}
+                selectionModel={selectionModel}
             />
         </div>
     );
-}
 
+}
 
 export default HomeTable
