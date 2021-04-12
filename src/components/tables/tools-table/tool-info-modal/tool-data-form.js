@@ -86,9 +86,9 @@ const ToolDataForm = ({toolId, closeModal}) => {
 
     const dispatch = useDispatch()
     const tools = useSelector(state => state.ToolsSlice.tools)
-    const currentToolData = tools.find(tool => tool.Id === toolId)
-    const status = useSelector(state => state.AuthSlice.status)
-    const isAdmin = status.toLowerCase() === "admin"
+    const currentToolData = tools.find(tool => tool.id === toolId)
+    const role = useSelector(state => state.AuthSlice.role)
+    const isAdmin = role.toLowerCase() === "admin"
 
     const history = useHistory()
 
@@ -108,16 +108,16 @@ const ToolDataForm = ({toolId, closeModal}) => {
 
     const formik = useFormik({
             initialValues: {
-                name: currentToolData.Name,
-                description: currentToolData.Description,
+                name: currentToolData.name,
+                description: currentToolData.description,
             },
             validationSchema: validationSchema,
             onSubmit: values => {
 
                 const row = {
-                    Id: currentToolData.Id,
-                    Name: values.name,
-                    Description: values.description,
+                    id: currentToolData.id,
+                    name: values.name,
+                    description: values.description,
                 }
                 onClickEditToolsData(row)
                 closeModal()

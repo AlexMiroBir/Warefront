@@ -26,17 +26,17 @@ const UsersTable = () => {
 
 
     const users = useSelector(state => state.UsersSlice.users)
-    const status = useSelector(state => state.AuthSlice.status)
-    const isAdmin = status.toLowerCase() === "admin"
+    const role = useSelector(state => state.AuthSlice.role)
+    const isAdmin = role.toLowerCase() === "admin"
 
 
     const createObjForRow = (user) => {
         const obj = {
-            id: user.Id,
-            name: user.Name,
-            status: user.Status,
-            phone: user.Phone,
-            info: user.Id
+            id: user.id,
+            name: user.name,
+            status: user.role,
+            phone: user.phone,
+            info: user.id
         }
         return obj
     }
@@ -45,9 +45,9 @@ const UsersTable = () => {
     const getFilteredArr = (users) => {
         let arr = []
         users.forEach(user => {
-            const hasName = user.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            const hasStatus = user.Status.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            const hasPhone = user.Phone.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasName = user.name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasStatus = user.role.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasPhone = user.phone.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
 
             const hasMatches = (hasName + hasStatus + hasPhone) > -3
 

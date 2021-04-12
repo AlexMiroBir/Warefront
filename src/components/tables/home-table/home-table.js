@@ -33,8 +33,8 @@ const HomeTable = () => {
 
     const items = useSelector(state => state.ItemsSlice.items)
     // const itemData = useSelector(state => state.ItemsSlice.itemData.data)
-    const status = useSelector(state => state.AuthSlice.status)
-    const isAdmin = status.toLowerCase() === "admin"
+    const role = useSelector(state => state.AuthSlice.role)
+    const isAdmin = role.toLowerCase() === "admin"
 
 
 

@@ -25,40 +25,18 @@ const ToolsTable = () => {
 
 
     const tools = useSelector(state => state.ToolsSlice.tools)
-    const status = useSelector(state => state.AuthSlice.status)
-    const isAdmin = status.toLowerCase() === "admin"
+    const role = useSelector(state => state.AuthSlice.role)
+    const isAdmin = role.toLowerCase() === "admin"
 
-
-    // const showToolInfoModal = (toolId) => {
-    //     console.log(`ShowInfoToolModal with Id:${toolId}`)
-    //
-    //     setState({
-    //         isOpenModal: true,
-    //         toolId: toolId
-    //     })
-    //     console.log(`state.isOpenModal :${state.isOpenModal}`)
-    //     console.log(`state.ToolId :${state.toolId}`)
-    //     history.push(`/tool/${toolId}`)
-    // }
-    //
-    // const closeToolInfoModal = () => {
-    //
-    //     setState({
-    //         isOpenModal: false,
-    //         toolId: state.toolId
-    //     })
-    //     history.push(`/tools`)
-    //
-    // }
 
 
     const createObjForRow = (tool) => {
 
         const obj = {
-            id: tool.Id,
-            name: tool.Name,
-            description: tool.Description,
-            info: tool.Id
+            id: tool.id,
+            name: tool.name,
+            description: tool.description,
+            info: tool.id
         }
         return obj
     }
@@ -66,8 +44,8 @@ const ToolsTable = () => {
     const getFilteredArr = (tools) => {
         let arr = []
         tools.forEach(tool => {
-            const hasName = tool.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            const hasDescription = tool.Description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasName = tool.name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasDescription = tool.description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
             const hasMatches = (hasName + hasDescription) > -2
 
             arr = hasMatches ?

@@ -45,7 +45,7 @@ const AccordionUsers = ({usersForDelete}) => {
 
     return (
         <div className={classes.root}> {usersForDelete.map(user => user &&
-            <Accordion expanded={expanded === `panel${user.Id}`} onChange={handleChange(`panel${user.Id}`)}>
+            <Accordion expanded={expanded === `panel${user.id}`} onChange={handleChange(`panel${user.id}`)}>
 
 
                 <AccordionSummary
@@ -54,13 +54,13 @@ const AccordionUsers = ({usersForDelete}) => {
                     id={user.Id}
                 >
 
-                    <Typography className={classes.heading}>{user.Name}</Typography>
+                    <Typography className={classes.heading}>{user.name}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Box className={classes.info}>
-                        <Typography> Name: <span className={classes.bold}>{user.Name}</span></Typography>
-                        <Typography> Status: <span className={classes.bold}>{user.Status}</span></Typography>
-                        <Typography> phone: <span className={classes.bold}>{user.Phone}</span></Typography>
+                        <Typography> Name: <span className={classes.bold}>{user.name}</span></Typography>
+                        <Typography> Status: <span className={classes.bold}>{user.role}</span></Typography>
+                        <Typography> phone: <span className={classes.bold}>{user.phone}</span></Typography>
                     </Box>
                 </AccordionDetails>
 

@@ -45,20 +45,20 @@ const AccordionTools = ({toolsForDelete}) => {
 
     return (
         <div className={classes.root}> {toolsForDelete.map(tool => tool &&
-            <Accordion expanded={expanded === `panel${tool.Id}`} onChange={handleChange(`panel${tool.Id}`)}>
+            <Accordion expanded={expanded === `panel${tool.id}`} onChange={handleChange(`panel${tool.id}`)}>
 
 
                 <AccordionSummary
                     expandIcon={<InfoSharpIcon/>}
                     aria-controls="panel1bh-content"
-                    id={tool.Id}
+                    id={tool.id}
                 >
 
-                    <Typography className={classes.heading}>{tool.Name}</Typography>
+                    <Typography className={classes.heading}>{tool.name}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Box className={classes.info}>
-                        <Typography> Description: <span className={classes.bold}>{tool.Description}</span></Typography>
+                        <Typography> Description: <span className={classes.bold}>{tool.description}</span></Typography>
                     </Box>
                 </AccordionDetails>
 

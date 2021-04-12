@@ -108,11 +108,11 @@ const AddSupplierModalForm = ({closeModal}) => {
             onSubmit: values => {
 
                 const row = {
-                    Id: -1,
-                    Name: values.name,
-                    Description: values.description,
-                    Phone: values.phone,
-                    Contact_Name: values.contactName,
+                    id: -1,
+                    name: values.name,
+                    description: values.description,
+                    phone: values.phone,
+                    contact_name: values.contactName,
                 }
 
                 dispatch(axiosEditSupplier(row))

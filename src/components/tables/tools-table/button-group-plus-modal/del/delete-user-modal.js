@@ -76,7 +76,7 @@ const DeleteToolModal = ({selectedToolsId}) => {
         let arr = []
         arrWithId.forEach(id => {
             // eslint-disable-next-line eqeqeq
-            let tool = tools.find(tool => tool.Id == id)
+            let tool = tools.find(tool => tool.id == id)
             {
                 arr = [...arr, tool]
             }

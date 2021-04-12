@@ -24,18 +24,18 @@ const SuppliersTable = () => {
 
     const classes = useStyles()
     const suppliers = useSelector(state => state.SuppliersSlice.suppliers)
-    const status = useSelector(state => state.AuthSlice.status)
-    const isAdmin = status.toLowerCase() === "admin"
+    const role = useSelector(state => state.AuthSlice.role)
+    const isAdmin = role.toLowerCase() === "admin"
 
 
     const createObjForRow = (supplier) => {
         const obj = {
-            id: supplier.Id,
-            name: supplier.Name,
-            description: supplier.Description,
-            phone: supplier.Phone,
-            contactName: supplier.Contact_Name,
-            info: supplier.Id
+            id: supplier.id,
+            name: supplier.name,
+            description: supplier.description,
+            phone: supplier.phone,
+            contactName: supplier.contact_name,
+            info: supplier.id
         }
         return obj
     }
@@ -44,10 +44,10 @@ const SuppliersTable = () => {
     const getFilteredArr = (suppliers) => {
         let arr = []
         suppliers.forEach(supplier => {
-            let hasName = supplier.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            let hasDescription = supplier.Description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            let hasPhone = supplier.Phone.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            let hasContactName = supplier.Contact_Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasName = supplier.name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasDescription = supplier.description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasPhone = supplier.phone.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasContactName = supplier.contact_Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
             let hasMatches = (hasName + hasDescription + hasPhone + hasContactName) > -4
 
             arr = hasMatches ?

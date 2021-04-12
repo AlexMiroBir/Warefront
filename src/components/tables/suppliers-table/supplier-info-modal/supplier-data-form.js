@@ -92,9 +92,9 @@ const SupplierDataForm = ({supplierId, closeModal}) => {
 
     const dispatch = useDispatch()
     const suppliers = useSelector(state => state.SuppliersSlice.suppliers)
-    const currentSupplierData = suppliers.find(supplier => supplier.Id === supplierId)
-    const status = useSelector(state => state.AuthSlice.status)
-    const isAdmin = status.toLowerCase() === "admin"
+    const currentSupplierData = suppliers.find(supplier => supplier.id === supplierId)
+    const role = useSelector(state => state.AuthSlice.role)
+    const isAdmin = role.toLowerCase() === "admin"
 
     const history = useHistory()
 
@@ -105,20 +105,20 @@ const SupplierDataForm = ({supplierId, closeModal}) => {
 
     const formik = useFormik({
             initialValues: {
-                name: currentSupplierData.Name,
-                description: currentSupplierData.Description,
-                phone: currentSupplierData.Phone,
-                contactName: currentSupplierData.Contact_Name,
+                name: currentSupplierData.name,
+                description: currentSupplierData.description,
+                phone: currentSupplierData.phone,
+                contactName: currentSupplierData.contact_name,
             },
             validationSchema: validationSchema,
             onSubmit: values => {
 
                 const row = {
-                    Id: currentSupplierData.Id,
-                    Name: values.name,
-                    Description: values.description,
-                    Phone: values.phone,
-                    Contact_Name: values.contactName,
+                    id: currentSupplierData.id,
+                    name: values.name,
+                    description: values.description,
+                    phone: values.phone,
+                    contact_name: values.contactName,
                 }
 
                 dispatch(axiosEditSupplier(row))

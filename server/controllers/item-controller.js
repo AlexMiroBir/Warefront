@@ -1,7 +1,7 @@
 const chalk = require("chalk");
 
 const uuid = require('uuid')
-const {Item, Tool, Supplier:suppliers, Parameter:parameters} = require('../DB/models/models')
+const {Item, Tool, Supplier, Parameter} = require('../DB/models/models')
 const ApiError = require('../error/api-error')
 const path = require('path')
 
@@ -19,43 +19,62 @@ class ItemController {
 
     }
 
-    async create(req, res, next) {
+    async createOrUpdateItem(req, res, next) {
+        console.log(req.body)
         try {
 
-            let {name, description, toolId, parameters, suppliers} = req.body
-            const tool = await Tool.findOne({where: {id:toolId}})
-            const toolName = tool.name
-
-            const {img} = req.files
-            let fileName = uuid.v4() + '.jpg'
-            await img.mv(path.resolve(__dirname, '..', 'static', fileName))
-            const item = await Item.create({name, description, toolId, toolName, img: fileName})
-            // if(parameters){
-            //    parameters = JSON.parse(parameters)
-            //     parameters.forEach(param=>
-            //         parameters.create({
-            //
-            //         })
-            //
-            //     )
-            // }
+            let {
+                id, name, description,
+                inventory_bCode, location,
+                qtyInStock, qtyMin, img,
+                parameters, suppliers
+            } = req.body
 
 
+            if (id === -1) {
+                const newItemId = await Item.max('id') + 1
+if(parameters){
+    parameters = JSON.parse(parameters)
+    parameters.forEach(param=>
+        Parameter.create({name:param.name, value:param.value})
+    )
 
-            return res.json(item)
+
+}
+
+            } else {
+
+                // const tool = await Tool.findOne({where: {id: toolId}})
+                // const toolName = tool.name
+                //
+                // const {img} = req.files
+                // let fileName = uuid.v4() + '.jpg'
+                // await img.mv(path.resolve(__dirname, '..', 'static', fileName))
+                // const item = await Item.create({name, description, toolId, toolName, img: fileName})
+                // if(parameters){
+                //    parameters = JSON.parse(parameters)
+                //     parameters.forEach(param=>
+                //         parameters.create({
+                //
+                //         })
+                //
+                //     )
+                // }
+
+
+            }
+            return res.json('ok')
 
         } catch (err) {
             next(ApiError.badRequest(err.message))
         }
 
-
     }
-
 
     async getOne(req, res) {
 
         const {id} = req.params
-        const item = await Item.findOne({where:{id}})
+        const item = await Item.findOne({where: {id}})
         return res.json(item)
     }
 

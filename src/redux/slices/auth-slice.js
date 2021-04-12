@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {axiosLogin, axiosLogOut, axiosChangePassword} from "../async-thunks/auth-async-thunks"
-
+import {axiosChangePassword, axiosLogin, axiosLogOut} from "../async-thunks/auth-async-thunks"
+import jwtDecode from "jwt-decode";
 
 const AuthSlice = createSlice({
 
@@ -11,69 +11,69 @@ const AuthSlice = createSlice({
         isAuthorized: '',
         username: '',
         id: '',
-        status: '',
+        role: '',
         message: {},
-
-
-
-    },
-    reducers: {
+        token: '',
 
 
     },
+    reducers: {},
     extraReducers: {
 
         [axiosLogin.pending]: (state, {payload}) => {
-           // isLoading = true
+            // isLoading = true
         },
-        [axiosLogin.fulfilled]: (state,{payload}) => {
+        [axiosLogin.fulfilled]: (state, {payload}) => {
+            const userData = jwtDecode(payload)
             state.isAuthorized = true
-            state.username = payload.Name
-            state.id = payload.Id
-            state.status = payload.Status
+            state.username = userData.name
+            state.id = userData.id
+            state.role = userData.role
             state.message = {message: "Authorized"}
+            state.token = payload
 
 
             localStorage.setItem("isAuthorized", "true");
-            localStorage.setItem("currentUserName", payload.Name);
-            localStorage.setItem("currentStatus", payload.Status);
-            localStorage.setItem('currentUserId', payload.Id);
+            localStorage.setItem("currentUserName", userData.name);
+            localStorage.setItem("currentRole", userData.role);
+            localStorage.setItem('currentUserId', userData.id);
+            localStorage.setItem('currentUserToken', payload);
         },
         [axiosLogin.rejected]: (state, {payload}) => {
             state.isAuthorized = false
             state.username = false
             state.id = false
-            state.status = false
+            state.role = false
             state.message = {message: payload}
-         //   state.isLoading = 'false'
+            //   state.isLoading = 'false'
         },
         [axiosLogOut.pending]: (state, action) => {
-          //  state.isLoading = true
+            //  state.isLoading = true
         },
         [axiosLogOut.fulfilled]: (state, {payload}) => {
             state.isAuthorized = false
             state.username = false
             state.id = false
-            state.status = false
+            state.role = false
             state.message = {message: "LogOut completed"}
-         //   state.isLoading = false
+            //   state.isLoading = false
             localStorage.clear()
         },
         [axiosLogOut.rejected]: (state, {payload}) => {
             state.message = {message: payload.error.message}
-          //  state.isLoading = 'false'
+            //  state.isLoading = 'false'
         },
         [axiosChangePassword.pending]: (state, action) => {
-         //   state.isLoading = true
+            //   state.isLoading = true
         },
         [axiosChangePassword.fulfilled]: (state, {payload}) => {
 
             state.message = {message: "Password was changed successfully"}
-          //  state.isLoading = false
+            //  state.isLoading = false
         },
         [axiosChangePassword.rejected]: (state, {payload}) => {
             state.message = {message: payload.error.message}
-           // state.isLoading = 'false'
+            // state.isLoading = 'false'
         },
 
     }
