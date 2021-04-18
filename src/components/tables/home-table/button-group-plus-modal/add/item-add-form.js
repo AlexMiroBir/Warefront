@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import { useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-       flexGrow: 1,
+        flexGrow: 1,
     },
     paper: {
         padding: theme.spacing(2),
@@ -29,12 +29,12 @@ const useStyles = makeStyles((theme) => ({
 
     form: {
         width: '93%',
-        fontSize:'0.5rem',
+        fontSize: '0.5rem',
 
         '& > *': {
             margin: 0,
             width: '93%',
-            padding:0
+            padding: 0
 
         },
     },
@@ -78,7 +78,7 @@ const validationSchema = yup.object({
 });
 
 
-const ItemDataForm = ({updateItemMainData}) => {
+const ItemAddForm = ({updateItemMainData, Name,Description}) => {
     const classes = useStyles();
 
 
@@ -87,16 +87,17 @@ const ItemDataForm = ({updateItemMainData}) => {
 
     const formik = useFormik({
         initialValues: {
-            name: itemData.Name,
-            bCode: itemData.Inventory_BCode,
-            description: itemData.Description,
-            forTool: itemData.Tool.Name,
-            location: itemData.Inventory_Status.Location,
-            qty: itemData.Inventory_Status.QTY_In_Stock,
-            qtyMin: itemData.Inventory_Status.QTY_Min,
+            name: '',
+            bCode: '',
+            description: '',
+            forTool: '',
+            location: '',
+            qty: '',
+            qtyMin: '',
         },
         validationSchema: validationSchema,
     });
+
 
     return (
         <div className={classes.formDiv}>
@@ -210,7 +211,8 @@ const ItemDataForm = ({updateItemMainData}) => {
                             name="location"
                             className={classes.input}
                             placeholder="Type login"
-                            onChange={(e) => updateItemMainData('Location', e.target.value)}
+                            onChange={formik.handleChange}
+                            onKeyUp={(e) => updateItemMainData('Location', e.target.value)}
                             onBlur={formik.handleBlur}
                             defaultValue={formik.values.location}
                             error={formik.touched.location && Boolean(formik.errors.location)}
@@ -271,6 +273,6 @@ const ItemDataForm = ({updateItemMainData}) => {
 }
 
 
-export default ItemDataForm
+export default ItemAddForm
 
 

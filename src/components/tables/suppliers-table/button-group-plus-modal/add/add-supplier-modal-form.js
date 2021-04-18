@@ -108,11 +108,11 @@ const AddSupplierModalForm = ({closeModal}) => {
             onSubmit: values => {
 
                 const row = {
-                    id: -1,
-                    name: values.name,
-                    description: values.description,
-                    phone: values.phone,
-                    contact_name: values.contactName,
+                    Id: -1,
+                    Name: values.name,
+                    Description: values.description,
+                    Phone: values.phone,
+                    Contact_Name: values.contactName,
                 }
 
                 dispatch(axiosEditSupplier(row))
@@ -189,20 +189,20 @@ const AddSupplierModalForm = ({closeModal}) => {
 
                     </Grid> <Grid item xs={12}>
 
-                     <TextField
-                            id="contact-name-input"
-                            name="contactName"
-                            label="Contact Name"
-                            type="text"
-                            variant="outlined"
-                            className={classes.input}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.contactName}
-                            error={formik.touched.contactName && Boolean(formik.errors.contactName)}
-                            helperText={formik.touched.contactName && formik.errors.contactName}
-                            onKeyDown={(e) => e.stopPropagation()}
-                      />
+                    <TextField
+                        id="contact-name-input"
+                        name="contactName"
+                        label="Contact Name"
+                        type="text"
+                        variant="outlined"
+                        className={classes.input}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.contactName}
+                        error={formik.touched.contactName && Boolean(formik.errors.contactName)}
+                        helperText={formik.touched.contactName && formik.errors.contactName}
+                        onKeyDown={(e) => e.stopPropagation()}
+                    />
 
                 </Grid>
 

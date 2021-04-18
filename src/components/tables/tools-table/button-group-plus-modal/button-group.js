@@ -1,7 +1,7 @@
 import React from 'react';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles';
-import DeleteToolModal from "./del/delete-user-modal";
+import DeleteToolModal from "./del/delete-tool-modal";
 import AddToolModal from "./add/add-tool-modal";
 
 

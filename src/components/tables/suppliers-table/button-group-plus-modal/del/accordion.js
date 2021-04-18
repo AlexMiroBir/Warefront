@@ -45,22 +45,22 @@ const AccordionSuppliers = ({suppliersForDelete}) => {
 
     return (
         <div className={classes.root}> {suppliersForDelete.map(supplier => supplier &&
-            <Accordion expanded={expanded === `panel${supplier.id}`} onChange={handleChange(`panel${supplier.id}`)}>
+            <Accordion expanded={expanded === `panel${supplier.Id}`} onChange={handleChange(`panel${supplier.Id}`)}>
 
 
                 <AccordionSummary
                     expandIcon={<InfoSharpIcon/>}
                     aria-controls="panel1bh-content"
-                    id={supplier.id}
+                    id={supplier.Id}
                 >
 
-                    <Typography className={classes.heading}>{supplier.name}</Typography>
+                    <Typography className={classes.heading}>{supplier.Name}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Box className={classes.info}>
-                        <Typography> Description: <span className={classes.bold}>{supplier.description}</span></Typography>
-                        <Typography> Phone: <span className={classes.bold}>{supplier.phone}</span></Typography>
-                        <Typography> Contact: <span className={classes.bold}>{supplier.contact_name}</span></Typography>
+                        <Typography> Description: <span className={classes.bold}>{supplier.Description}</span></Typography>
+                        <Typography> Phone: <span className={classes.bold}>{supplier.Phone}</span></Typography>
+                        <Typography> Contact: <span className={classes.bold}>{supplier.Contact_Name}</span></Typography>
                     </Box>
                 </AccordionDetails>
 

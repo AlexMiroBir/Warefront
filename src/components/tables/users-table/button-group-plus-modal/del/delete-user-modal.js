@@ -55,9 +55,9 @@ const DeleteUserModal = ({selectedUsersId}) => {
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const users = useSelector(state => state.UsersSlice.users)
-    const admin = users.find(user => user.name.toLowerCase() === 'administrator')
-    const adminId = admin ? admin.id : -1
+    const users = useSelector(state => state.UsersSlice.Users)
+    const admin = users.find(user => user.Name.toLowerCase() === 'administrator')
+    const adminId = admin ? admin.Id : -1
 
     const [open, setOpen] = useState(false);
     const [sure, setSure] = useState(false);        // TODO при повтороном открытии крнпка delete активна
@@ -75,7 +75,7 @@ const DeleteUserModal = ({selectedUsersId}) => {
     const getArrWithUsersForDelete = (arrWithId) => {
         let arr = []
         arrWithId.forEach(id => {
-            let user = users.find(user => user.id == id)
+            let user = users.find(user => user.Id == id)
             {
                 arr = [...arr, user]
             }

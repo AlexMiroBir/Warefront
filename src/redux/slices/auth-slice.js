@@ -9,9 +9,9 @@ const AuthSlice = createSlice({
 
 
         isAuthorized: '',
-        username: '',
-        id: '',
-        role: '',
+        Username: '',
+        Id: '',
+        Status: '',
         message: {},
         token: '',
 
@@ -26,24 +26,24 @@ const AuthSlice = createSlice({
         [axiosLogin.fulfilled]: (state, {payload}) => {
             const userData = jwtDecode(payload)
             state.isAuthorized = true
-            state.username = userData.name
-            state.id = userData.id
-            state.role = userData.role
+            state.Username = userData.Name
+            state.Id = userData.Id
+            state.Status = userData.Status
             state.message = {message: "Authorized"}
             state.token = payload
 
 
             localStorage.setItem("isAuthorized", "true");
-            localStorage.setItem("currentUserName", userData.name);
-            localStorage.setItem("currentRole", userData.role);
-            localStorage.setItem('currentUserId', userData.id);
+            localStorage.setItem("currentUserName", userData.Name);
+            localStorage.setItem("currentStatus", userData.Status);
+            localStorage.setItem('currentUserId', userData.Id);
             localStorage.setItem('currentUserToken', payload);
         },
         [axiosLogin.rejected]: (state, {payload}) => {
             state.isAuthorized = false
-            state.username = false
-            state.id = false
-            state.role = false
+            state.Username = false
+            state.Id = false
+            state.Status = false
             state.message = {message: payload}
             //   state.isLoading = 'false'
         },
@@ -52,9 +52,9 @@ const AuthSlice = createSlice({
         },
         [axiosLogOut.fulfilled]: (state, {payload}) => {
             state.isAuthorized = false
-            state.username = false
-            state.id = false
-            state.role = false
+            state.Username = false
+            state.Id = false
+            state.Status = false
             state.message = {message: "LogOut completed"}
             //   state.isLoading = false
             localStorage.clear()

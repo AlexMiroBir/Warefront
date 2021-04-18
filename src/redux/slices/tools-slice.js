@@ -6,7 +6,7 @@ const ToolsSlice = createSlice({
     name: 'tools-slice',
     initialState: {
 
-        tools: [],
+        Tools: [],
 
 
 
@@ -22,7 +22,7 @@ const ToolsSlice = createSlice({
         [axiosGetTools.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
             state.isLoading = false
-            state.tools = payload
+            state.Tools = payload
         },
         [axiosGetTools.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
@@ -34,7 +34,7 @@ const ToolsSlice = createSlice({
         [axiosEditTool.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
             state.isLoading = false
-            // state.tools=payload
+            // state.Tools=payload
         },
         [axiosEditTool.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
@@ -46,7 +46,7 @@ const ToolsSlice = createSlice({
         [axiosDeleteTool.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
             state.isLoading = false
-            // state.tools=payload
+            // state.Tools=payload
         },
         [axiosDeleteTool.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}

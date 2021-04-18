@@ -54,7 +54,7 @@ const axiosDeleteTool = createAsyncThunk(
     'put/deleteTool',
     async (toolId, {rejectWithValue}) => {
         try {
-            const data = {id: toolId}
+            const data = {Id: toolId}
             const response = await axios.put(API_URL_SERVER + "/api/tool/delete", data, {
                 headers: {
                     'Authorization': token

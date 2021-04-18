@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 const UserAvatar=()=> {
 
 
-    const userName = useSelector(state => state.AuthSlice.username)
+    const userName = useSelector(state => state.AuthSlice.Username)
     const classes = useStyles();
 
     return (

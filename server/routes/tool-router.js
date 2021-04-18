@@ -1,7 +1,7 @@
 const Router = require('express')
 const router = new Router()
 const ToolController = require('../controllers/tool-controller')
-const checkRole = require ('../middleware/check-role-middleware')
+const checkRole = require ('../middleware/check-status-middleware')
 const authMiddleware = require('../middleware/auth-middleware')
 
 

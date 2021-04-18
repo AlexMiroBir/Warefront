@@ -13,10 +13,11 @@ axios.defaults.withCredentials = true;  ////TODO разобраться с эт�
 
 const axiosLogin = createAsyncThunk(
     'post/login',
-    async ({username, password}, {rejectWithValue}) => {
+    async ({Name, Password}, {rejectWithValue}) => {
         try {
-            const name = username
-            const {data} = await axios.post(API_URL_SERVER + "/api/user/login", {name, password})
+
+            const {data} = await axios.post(API_URL_SERVER + "/api/user/login",
+                {Name, Password})
             return data.token
 
         } catch (err) {
@@ -53,11 +54,11 @@ const axiosLogOut = createAsyncThunk(
 
 const axiosChangePassword = createAsyncThunk(
     'post/ChangePassword',
-    async ({userId, newpassword}, {rejectWithValue}) => {
+    async ({Id, NewPassword}, {rejectWithValue}) => {
         try {
             const response = await axios.post(API_URL_SERVER + "/api/user/changePassword", {
-                id: userId,
-                newPassword: newpassword
+                Id,
+                NewPassword
             }, {
                 headers: {
                     'Authorization': token

@@ -92,10 +92,10 @@ const UserDataForm = ({userId, closeModal}) => {
 
 
     const dispatch = useDispatch()
-    const users = useSelector(state => state.UsersSlice.users)
-    const currentUserData = users.find(user => user.id === userId)
-    const role = useSelector(state => state.AuthSlice.role)
-    const isAdmin = role.toLowerCase() === "admin"
+    const users = useSelector(state => state.UsersSlice.Users)
+    const currentUserData = users.find(user => user.Id === userId)
+    const status = useSelector(state => state.AuthSlice.Status)
+    const isAdmin = status.toLowerCase() === "admin"
 
 
     const history = useHistory()
@@ -107,18 +107,18 @@ const UserDataForm = ({userId, closeModal}) => {
 
     const formik = useFormik({
             initialValues: {
-                name: currentUserData.name,
-                status: currentUserData.role,
-                phone: currentUserData.phone,
+                name: currentUserData.Name,
+                status: currentUserData.Status,
+                phone: currentUserData.Phone,
             },
             validationSchema: validationSchema,
             onSubmit: values => {
 
                 const row = {
-                    id: currentUserData.id,
-                    name: values.name,
-                    role: values.status,
-                    phone: values.phone,
+                    Id: currentUserData.Id,
+                    Name: values.name,
+                    Status: values.status,
+                    Phone: values.phone,
                 }
 
                 dispatch(axiosEditUser(row))

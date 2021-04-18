@@ -102,9 +102,9 @@ const AddToolModalForm = ({closeModal}) => {
 
                 const row = {
 
-                    id: -1,
-                    name: values.name,
-                    description: values.description,
+                    Id: -1,
+                    Name: values.name,
+                    Description: values.description,
 
                 }
 

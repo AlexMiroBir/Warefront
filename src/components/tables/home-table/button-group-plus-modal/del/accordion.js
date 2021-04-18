@@ -11,13 +11,13 @@ import Box from '@material-ui/core/Box';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        marginBottom:'5px'
+        marginBottom: '5px'
     },
     heading: {
         fontSize: theme.typography.pxToRem(20),
         flexBasis: '33.33%',
         flexShrink: 0,
-        fontWeight:'bold'
+        fontWeight: 'bold'
 
 
     },
@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexFlow: 'column'
     },
-    bold:{
-        fontWeight:'bold'
+    bold: {
+        fontWeight: 'bold'
     }
 }));
 
@@ -42,6 +42,10 @@ const AccordionItems = ({itemsForDelete}) => {
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
+
+    const hasInventoryStatus=(item)=>{
+        return item.Inventory_Status ? item.Inventory_Status : -1
+    }
 
     return (
         <div className={classes.root}> {itemsForDelete.map(item => item &&
@@ -58,12 +62,25 @@ const AccordionItems = ({itemsForDelete}) => {
                 </AccordionSummary>
                 <AccordionDetails>
                     <Box className={classes.info}>
-                        <Typography> Name: <span className={classes.bold}>{item.Name}</span></Typography>
-                        <Typography> Description: <span className={classes.bold}>{item.Description}</span></Typography>
-                        <Typography> BCode: <span className={classes.bold}>{item.Inventory_BCode}</span></Typography>
-                        <Typography> Location: <span className={classes.bold}>{item.Location}</span></Typography>
-                        <Typography> QTY: <span className={classes.bold}>{item.QTY_In_Stock}</span></Typography>
-                        <Typography> QTY Min: <span className={classes.bold}>{item.QTY_Min}</span></Typography>
+                        <Typography> Name:
+                            <span className={classes.bold}>{item.Name}</span>
+                        </Typography>
+                        <Typography> Description:
+                            <span className={classes.bold}>{item.Description}</span>
+                        </Typography>
+                        <Typography>BCode:
+                            <span className={classes.bold}>{item.Inventory_BCode}</span>
+                        </Typography>
+                        <Typography> Location:
+                            <span className={classes.bold}>{hasInventoryStatus(item).Location }</span>
+                        </Typography>
+                        <Typography> QTY:
+                            <span
+                                className={classes.bold}>{hasInventoryStatus(item).QTY_In_Stock}</span>
+                        </Typography>
+                        <Typography> QTY Min:
+                            <span
+                                className={classes.bold}>{hasInventoryStatus(item).QTY_Min}</span></Typography>
                     </Box>
                 </AccordionDetails>
 

@@ -1,49 +1,89 @@
 const chalk = require("chalk");
 
 const uuid = require('uuid')
-const {Item, Tool, Supplier, Parameter} = require('../DB/models/models')
 const ApiError = require('../error/api-error')
 const path = require('path')
+const {
+    getAllItemsFromDB,
+    getItemById,
+    deleteItemById,
+    updateItem,
+    updateItemParameters,
+    updateItemSuppliers,
+    newItem
+} = require("../DB/SQL/items-sql-scripts")
 
 
 class ItemController {
-    async getAll(req, res) {
-        const {toolId} = req.query
-        let items;
-        if (!toolId) {
-            items = await Item.findAll()
-        } else {
-            items = await Item.findAll({where: {toolId}})
-        }
-        return res.json(items)
 
+    async getAll(req, res) {
+        const AllItems = await getAllItemsFromDB()
+        return res.json(AllItems)
     }
+
+    async getOne(req, res, next) {
+
+        try {
+            const {Id} = req.params
+            if (!Id) {
+                return next(ApiError.badRequest("Wrong Id"))
+            }
+            const item = await getItemById(Id)
+            if (!item) {
+                return next(ApiError.badRequest("Item not found"))
+            }
+            return res.json(item)
+        } catch (err) {
+            return next(ApiError.internal(err.message))
+        }
+    }
+
+    async deleteItem(req, res, next) {
+        try {
+            const {Id} = req.body
+            if (!Id) {
+                return next(ApiError.badRequest("Id not found"))
+            }
+            await deleteItemById(Id)
+                .then(response => {
+                    return res.json("Item has been removed")
+                })
+
+        } catch (err) {
+            return next(ApiError.internal(err.message))
+        }
+    }
+
 
     async createOrUpdateItem(req, res, next) {
         console.log(req.body)
         try {
 
-            let {
-                id, name, description,
-                inventory_bCode, location,
-                qtyInStock, qtyMin, img,
-                parameters, suppliers
+            const {
+                Id, needUpdateItem, needUpdateParameters, needUpdateSuppliers,
+                row, parametersTable, suppliersTable,
+                parametersIdForDelete, suppliersIdForDelete,
             } = req.body
 
 
-            if (id === -1) {
-                const newItemId = await Item.max('id') + 1
-if(parameters){
-    parameters = JSON.parse(parameters)
-    parameters.forEach(param=>
-        Parameter.create({name:param.name, value:param.value})
-    )
+            if (Id === -1) {
 
+                await newItem(Id, row, parametersTable, suppliersTable)
 
-}
 
             } else {
 
+                if (needUpdateItem) {
+                    await updateItem(Id, row)
+                }
+                if (needUpdateParameters) {
+                    await updateItemParameters(Id, parametersTable, parametersIdForDelete)
+                }
+                if (needUpdateSuppliers) {
+                    await updateItemSuppliers(Id, suppliersTable, suppliersIdForDelete)
+                }
+
+                //
                 // const tool = await Tool.findOne({where: {id: toolId}})
                 // const toolName = tool.name
                 //
@@ -51,32 +91,23 @@ if(parameters){
                 // let fileName = uuid.v4() + '.jpg'
                 // await img.mv(path.resolve(__dirname, '..', 'static', fileName))
                 // const item = await Item.create({name, description, toolId, toolName, img: fileName})
-                // if(parameters){
-                //    parameters = JSON.parse(parameters)
-                //     parameters.forEach(param=>
-                //         parameters.create({
-                //
-                //         })
-                //
+                // if (parameters) {
+                //     parameters = JSON.parse(parameters)
+                //     parameters.forEach(param =>
+                //         parameters.create({})
                 //     )
                 // }
-
+                //
 
             }
             return res.json('ok')
 
         } catch (err) {
-            next(ApiError.badRequest(err.message))
+            next(ApiError.internal(err))
         }
 
     }
 
-    async getOne(req, res) {
-
-        const {id} = req.params
-        const item = await Item.findOne({where: {id}})
-        return res.json(item)
-    }
 
 }
 

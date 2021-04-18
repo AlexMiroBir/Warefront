@@ -73,14 +73,13 @@ const ChangePasswordForm = ({mod}) => {
 
     const dispatch = useDispatch();
     const history = useHistory();
-    const userId = useSelector(state => state.AuthSlice.id)
+    const userId = useSelector(state => state.AuthSlice.Id)
     const isLoading = useSelector(state => state.AuthSlice.isLoading)
 
 
     const onClickChangePassword = (newPassword) => {
-        console.log(newPassword)
-        const newpassword = newPassword
-        dispatch(axiosChangePassword({userId, newpassword}))
+
+        dispatch(axiosChangePassword({Id:userId, NewPassword:newPassword}))
             .then(unwrapResult)
             // .then(response => dispatch(fetchAllContacts()))
             .then(response => history.push('/'))

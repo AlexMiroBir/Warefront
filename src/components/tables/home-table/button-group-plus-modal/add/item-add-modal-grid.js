@@ -2,15 +2,13 @@ import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import ItemDataForm from "./item-data-form";
-import ItemInfoModalNavTab from "./item-info-modal-nav-tab";
+import{axiosGetItems,axiosEditItem} from "../../../../../redux/async-thunks/items-async-thunks";
+import ItemAddModalNavTab from "./item-add-modal-nav-tab";
 import {useDispatch, useSelector} from "react-redux";
 import Button from "@material-ui/core/Button";
 import {unwrapResult} from "@reduxjs/toolkit";
-import {axiosEditItem, axiosGetItems} from "../../../../redux/async-thunks/items-async-thunks";
-import {axiosGetTools} from "../../../../redux/async-thunks/tools-async-thunks";
-import {axiosGetSuppliers} from "../../../../redux/async-thunks/suppliers-async-thunks";
-import {axiosGetUsers} from "../../../../redux/async-thunks/users-async-thunks";
+import ItemAddForm from './item-add-form'
+
 import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ItemInfoModalGrid = ({itemId, closeModal}) => {
+const ItemAddModalGrid = ({itemId, closeModal}) => {
 
 
     const dispatch = useDispatch()
@@ -42,22 +40,21 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
 
 
     const [needUpdateItem, setNeedUpdateItem] = useState(false)
-    const [Name, setNewName] = useState(itemData.Name )
-    const [Description, setNewDesc] = useState(itemData.Description)
-    const [Inventory_BCode, setNewBCode] = useState(itemData.Inventory_BCode)
-    const [Tool, setNewTool] = useState(itemData.Tool.Name)
-    const [Tool_Id, setNewTool_Id] = useState(itemData.Tool.Id)
-    const [Location, setNewLocation] = useState(itemData.Location)
-    const [QTY_In_Stock, setNewQty] = useState(itemData.QTY_In_Stock)
-    const [QTY_Min, setNewQtyMin] = useState(itemData.QTY_Min)
+    const [Name, setNewName] = useState('')
+    const [Description, setNewDesc] = useState('')
+    const [Inventory_BCode, setNewBCode] = useState('')
+    const [Tool, setNewTool] = useState('')
+    const [Location, setNewLocation] = useState("")
+    const [QTY_In_Stock, setNewQty] = useState("")
+    const [QTY_Min, setNewQtyMin] = useState("")
 
 
     const [needUpdateParameters, setNeedUpdateParameters] = useState(false)
-    const [parameters, setParameters] = useState(itemDataParameters);
+    const [parameters, setParameters] = useState("");
     const [parametersIdForDelete, setParametersIdForDelete] = useState([])
 
     const [needUpdateSuppliers, setNeedUpdateSuppliers] = useState(false)
-    const [suppliers, setSuppliers] = useState(itemDataSuppliers);
+    const [suppliers, setSuppliers] = useState("");
     const [suppliersIdForDelete, setSuppliersIdForDelete] = useState([])
 
     const dispatchData = (obj) => {
@@ -65,10 +62,6 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
             .then(unwrapResult)
             .then(response => history.push('/home'))
             .then(response => dispatch(axiosGetItems({})))
-            .then(response => dispatch(axiosGetTools({})))
-            .then(response => dispatch(axiosGetSuppliers({})))
-            .then(response => dispatch(axiosGetUsers({})))
-            // .then(response => dispatch(axiosGetOrders({})))
             .then(response => closeModal())
             .catch(rejectedValueOrSerializedError => {
             })
@@ -76,7 +69,7 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
 
     const newRow = () => {
         return {
-            Id: itemData.Id,
+            Id: -1,
             Name,
             Description,
             Filename: itemData.Filename,
@@ -86,7 +79,7 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
             QTY_In_Stock,
             QTY_Min,
             Tool,
-            Tool_Id: Tool_Id
+            Tool_Id: tools.find(tool => tool.Name === Tool).Id
         }
     }
 
@@ -109,6 +102,7 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
 
 
     const updateItemMainData = (itemFieldName, value) => {
+
         setNeedUpdateItem(true)
         switch (itemFieldName) {
             case 'Name':
@@ -118,9 +112,7 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
                 setNewDesc(value)
                 break;
             case 'Tool':
-                console.log("Tool_Id:"+Tool_Id + "Value:"+value)
                 setNewTool(value)
-                setNewTool_Id(tools.find(tool=>tool.Name===value).Id)
                 break;
             case 'BCode':
                 setNewBCode(value)
@@ -159,7 +151,6 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
     const addItemSupplier = (newSupplier) => {
         setNeedUpdateSuppliers(true)
         try {
-
             const supplier = allSuppliers.find(supp => supp.Name === newSupplier.supplier)
             newSupplier.Supplier_ID = supplier.Id
             newSupplier.Supplier_SN = newSupplier.serial_number
@@ -195,10 +186,16 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
                 </Grid>
                 <Grid item xs={12} >
                     {/*<ItemDataForm setName={setName} setBCode={setBCode} setDescription={setDescription} setForTool={setForTool} setLocation={setLocation} setQty={setQty} setQtyMin={setQtyMin} />*/}
-                    <ItemDataForm updateItemMainData={updateItemMainData}/>
+                    <ItemAddForm
+                        updateItemMainData={updateItemMainData}
+                        Name={Name}
+                        Description
+
+
+                    />
                 </Grid>
                 <Grid item xs={12}>
-                    <ItemInfoModalNavTab
+                    <ItemAddModalNavTab
                         itemId={itemId}
                         // Parameters
                         parameters={parameters}
@@ -225,4 +222,4 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
 }
 
 
-export default ItemInfoModalGrid
+export default ItemAddModalGrid

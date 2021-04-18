@@ -13,12 +13,10 @@ const ItemsSlice = createSlice({
     name: 'items-slice',
     initialState: {
 
-        items: [],
-        itemData: {
-            data: {},
-            parameters: {},
-            suppliers: {}
-        },
+        Items: [],
+        ItemData: {},
+
+
 
         responseDataToSave: {
             row: {},
@@ -74,7 +72,7 @@ const ItemsSlice = createSlice({
         [axiosGetItems.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
             state.isLoading = false
-            state.items = JSON.parse(payload.data).items
+            state.Items = payload
         },
         [axiosGetItems.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
@@ -86,7 +84,8 @@ const ItemsSlice = createSlice({
         [axiosGetItemData.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
             state.isLoading = false
-            state.itemData.data = JSON.parse(JSON.parse(payload.data).item) ///TODO странно как-то выглядет
+            state.ItemData=payload
+
         },
         [axiosGetItemData.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
@@ -98,7 +97,7 @@ const ItemsSlice = createSlice({
         [axiosGetItemParameters.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
             state.isLoading = false
-            state.itemData.parameters = payload
+
         },
         [axiosGetItemParameters.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}

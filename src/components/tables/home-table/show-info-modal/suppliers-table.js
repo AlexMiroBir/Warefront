@@ -13,8 +13,8 @@ import "./some.css" // at the request of the library, these classes are needed f
 const ItemSuppliersTable = ({suppliers, addItemSupplier, updateItemSuppliers, delItemSupplier}) => {
 
 
-    const itemData = useSelector(state => state.ItemsSlice.itemData.data)
-    const allSuppliers = useSelector(state => state.SuppliersSlice.suppliers)
+    const itemData = useSelector(state => state.ItemsSlice.ItemData)
+    const allSuppliers = useSelector(state => state.SuppliersSlice.Suppliers)
 
 
     const [data, setData] = useState([]);
@@ -47,6 +47,8 @@ const ItemSuppliersTable = ({suppliers, addItemSupplier, updateItemSuppliers, de
         <div className="App">
             <div style={{maxWidth: "100%", paddingTop: "12px"}}>
                 <MaterialTable
+                    onKeyDown={(e) => e.stopPropagation()}
+                    onKeyUp={(e) => e.stopPropagation()}
                     columns={[
                         {
                             title: "Supplier",
@@ -96,6 +98,7 @@ const ItemSuppliersTable = ({suppliers, addItemSupplier, updateItemSuppliers, de
                             new Promise((resolve, reject) => {
                                 setTimeout(() => {
                                     newData.Id = -1
+                                    newData.Inventory_ID = itemData.Id
 
                                     resolve(addItemSupplier(newData))
                                 }, 1000);

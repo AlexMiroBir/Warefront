@@ -5,9 +5,9 @@ const {User} = require('../DB/models/models')
 const authMiddleware = require('../middleware/auth-middleware')
 const chalk = require('chalk')
 
-const generateJwt = (id, name, role) => {
+const generateJwt = (Id, Name, Status) => {
     return jwt.sign(
-        {id, name, role},
+        {Id, Name, Status},
         process.env.SECRET_KEY,
         {expiresIn: '24h'}
     )
@@ -26,20 +26,20 @@ class UserController {
     }
 
 
-
     async login(req, res, next) {
-        const {name, password} = req.body
-        const user = await User.findOne({where: {name}})
-        const id = user.id
-        const role = user.role
+        const {Name, Password} = req.body
+        const user = await User.findOne({where: {Name}})
+        const Id = user.Id
+        const Status = user.Status
         if (!user) {
             return next(ApiError.badRequest('User not found'))
         }
-        let comparePassword = bcrypt.compareSync(password, user.password)
-        if (!comparePassword) {
-            return next(ApiError.badRequest('Wrong password'))
+        let comparePasswordIfHashed = bcrypt.compareSync(Password, user.Password)
+        let comparePassword = Password === user.Password
+        if (!comparePassword && !comparePasswordIfHashed) {
+            return next(ApiError.badRequest('Wrong password or username'))
         }
-        const token = generateJwt(id, name, role)
+        const token = generateJwt(Id, Name, Status)
         //return res.json({id, name, password, role, token})
         return res.json({token})
     }
@@ -51,11 +51,11 @@ class UserController {
 
     async changPassword(req, res, next) {
 
-        const {id, newPassword} = req.body
-        const hashPassword = await bcrypt.hash(newPassword, 3)
-        const user = await User.findOne({where: {id}})
+        const {Id, NewPassword} = req.body
+        const hashPassword = await bcrypt.hash(NewPassword, 5)
+        const user = await User.findOne({where: {Id}})
         if (user) {
-            await user.update({password: hashPassword})
+            await user.update({Password: hashPassword})
             return res.status(202).json({message: "Password has been changed"})
         }
         return next(ApiError.badRequest('User not found'))
@@ -63,43 +63,43 @@ class UserController {
 
     async addOrUpdateUser(req, res, next) {
 
-        const {id, name, role, phone, password} = req.body
-
-        if (!name || !role) {
+        const {Id, Name, Status, Phone, Password} = req.body
+        console.log(chalk.red(Id, Name, Status, Phone, Password))
+        if (!Name || !Status) {
             return next(ApiError.badRequest('Wrong data'))
         }
-        if (id === -1) {
-            if (!password) {
+        if (Id === -1) {
+            if (!Password) {
                 return next(ApiError.badRequest('Wrong data'))
             }
-            const candidate = await User.findOne({where: {name}})
+            const candidate = await User.findOne({where: {Name}})
             if (candidate) {
-                return next(ApiError.badRequest('User with such name already exists'))
+                return next(ApiError.badRequest('User with such Name already exists'))
             }
-            let hashPassword
-            if(name==="Administrator"){
-                hashPassword = await bcrypt.hash(password, 10)
-            } else {
-                hashPassword = await bcrypt.hash(password, 5)
-            }
-            const user = await User.create({name, role, phone, password: hashPassword})
+            console.log(chalk.red(Name, Status, Phone, Password))
+            const hashPassword = await bcrypt.hash(Password, 5)
+
+            await User.create({Name, Status, Phone, Password: hashPassword})
             return res.json('New user has been created!')
 
         } else {
-            const user = await User.findOne({where: {id}})
+            const user = await User.findOne({where: {Id}})
             if (user) {
-                await user.update({name: name, role: role, phone: phone})
+                await user.update({Name, Status, Phone})
                 return res.status(202).json({message: "User data has been changed"})
             }
             return next(ApiError.badRequest('User not found'))
         }
     }
 
-    async deleteUser (req, res, next){
-        const {id} = req.body
+    async deleteUser(req, res, next) {
+        const {Id} = req.body
 
-        const user = await User.findOne({where:{id}})
-        if(user){
+        const user = await User.findOne({where: {Id}})
+        if (user) {
+            if(user.name.toLowerCase() === "administrator"){
+                return next(ApiError.badRequest(`You can't remove Administrator`))
+            }
             await user.destroy()
             return res.status(202).json('User has been removed')
         }
@@ -107,10 +107,10 @@ class UserController {
 
     }
 
-    async check(req, res, next) {
-        const token = generateJwt(req.user.id, req.user.name, req.user.role)
-        return res.json({token})
-    }
+//     async check(req, res, next) {
+//         const token = generateJwt(req.user.id, req.user.name, req.user.Status)
+//         return res.json({token})
+//     }
 }
 
 module.exports = new UserController()

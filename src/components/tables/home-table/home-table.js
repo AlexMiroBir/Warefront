@@ -31,11 +31,10 @@ const HomeTable = () => {
     const [selectionModel, setSelectionModel] = useState([]);
     const [globalFilterInput, setGlobalFilter] = useState("");
 
-    const items = useSelector(state => state.ItemsSlice.items)
+    const items = useSelector(state => state.ItemsSlice.Items)
     // const itemData = useSelector(state => state.ItemsSlice.itemData.data)
-    const role = useSelector(state => state.AuthSlice.role)
-    const isAdmin = role.toLowerCase() === "admin"
-
+    const Status = useSelector(state => state.AuthSlice.Status)
+    const isAdmin = Status.toLowerCase() === "admin"
 
 
     const createObjForRow = (item) => {
@@ -44,10 +43,10 @@ const HomeTable = () => {
             name: item.Name,
             description: item.Description,
             bCode: item.Inventory_BCode,
-            qty: item.QTY_In_Stock,
-            qtyMin: item.QTY_Min,
-            location: item.Location,
-            tool: item.Tool,
+            qty: item.Inventory_Status ? item.Inventory_Status.QTY_In_Stock : '',
+            qtyMin: item.Inventory_Status ? item.Inventory_Status.QTY_Min : '',
+            location: item.Inventory_Status ? item.Inventory_Status.Location : '',
+            tool: item.Tool ? item.Tool.Name : '',
             info: item.Id,
         }
         return obj
@@ -57,14 +56,32 @@ const HomeTable = () => {
     const getFilteredArr = (items) => {
         let arr = []
         items.forEach(item => {
-            const hasName = item.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            const hasDescription = item.Description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            const hasBCode = item.Inventory_BCode.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            const hasTool = item.Tool.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            const hasQty = item.QTY_In_Stock.toString().indexOf(globalFilterInput.toLowerCase().trim())
-            const hasQtyMin = item.QTY_Min.toString().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasName =
+                item.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
 
-            const hasMatches = (hasName + hasDescription + hasBCode + hasTool + hasQty + hasQtyMin) > -6
+            const hasDescription =
+                item.Description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+
+            const hasBCode =
+                item.Inventory_BCode.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+
+            const hasTool = item.Tool ?
+                item.Tool.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+                : -1
+
+            const hasQty = item.Inventory_Status ?
+                item.Inventory_Status.QTY_In_Stock.toString().indexOf(globalFilterInput.toLowerCase().trim())
+                : -1
+
+            const hasQtyMin = item.Inventory_Status ?
+                item.Inventory_Status.QTY_Min.toString().indexOf(globalFilterInput.toLowerCase().trim())
+                : -1
+
+            const hasLocation = item.Inventory_Status ?
+                item.Inventory_Status.Location.indexOf(globalFilterInput.toLowerCase().trim())
+                : -1
+
+            const hasMatches = (hasName + hasDescription + hasBCode + hasTool + hasQty + hasQtyMin + hasLocation) > -7
 
             arr = hasMatches ?
                 [...arr, createObjForRow(item)]
@@ -212,7 +229,7 @@ const HomeTable = () => {
                     value={globalFilterInput}
                     onKeyDown={(e) => e.stopPropagation()}
                 />
-                {isAdmin && <ButtonGroupAddDeleteItems selectedItemsId={selectionModel} />}
+                {isAdmin && <ButtonGroupAddDeleteItems selectedItemsId={selectionModel}/>}
             </div>
             <DataGrid
 

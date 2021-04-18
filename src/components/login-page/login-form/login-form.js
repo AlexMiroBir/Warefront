@@ -79,8 +79,8 @@ const LoginForm = () => {
 
 
     const onClickLogin = (username, password) => {
-        console.log(username)
-        dispatch(axiosLogin({username, password}))
+
+        dispatch(axiosLogin({Name:username, Password:password}))
             .then(unwrapResult)
             .then(response => dispatch(axiosGetItems({})))
             .then(response => history.push('/home'))

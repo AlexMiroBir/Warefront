@@ -111,11 +111,11 @@ const AddUserModalForm = ({closeModal}) => {
             onSubmit: values => {
 
                 const row = {
-                    id: -1,
-                    name: values.name,
-                    role: values.status,
-                    phone: values.phone,
-                    password: values.password,
+                    Id: -1,
+                    Name: values.name,
+                    Status: values.status,
+                    Phone: values.phone,
+                    Password: values.password,
                 }
 
                 dispatch(axiosEditUser(row))

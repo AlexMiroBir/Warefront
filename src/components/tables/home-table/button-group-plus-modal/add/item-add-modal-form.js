@@ -4,15 +4,12 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
-import ItemInfoModalGrid from "./item-info-modal-grid";
-import {
-    axiosGetItemData,
-    axiosGetItemParameters,
-    axiosGetItemSuppliers
-} from "../../../../redux/async-thunks/items-async-thunks";
+import ItemAddModalGrid from './item-add-modal-grid'
 import {unwrapResult} from "@reduxjs/toolkit";
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
+import AddBoxSharpIcon from "@material-ui/icons/AddBoxSharp";
+
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -22,38 +19,26 @@ const useStyles = makeStyles((theme) => ({
         maxHeight:'100vh',
         maxWidth:'1020px',
         overflowY:'auto',
-       // position:'absolute !important',
-       // top:"1vh !important",
         margin:"5px auto auto auto"
 
     },
 
     paper: {
         backgroundColor: theme.palette.background.paper,
-        //border: '2px solid #000',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(1, 1, 1),
 
     },
 }));
 
-const ItemInfoModal = ({itemId}) => {
+const ItemAddForm = ({itemId}) => {
     const classes = useStyles();
     const history = useHistory()
     const dispatch = useDispatch()
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = (itemId) => {
-        console.log(itemId)
-        dispatch(axiosGetItemData(itemId))
-            .then(unwrapResult)
-            .then(response => dispatch(axiosGetItemParameters(itemId)))
-            .then(response => dispatch(axiosGetItemSuppliers(itemId)))
-            .then(response => history.push(`/data/item/${itemId}`))
-            .then(response => setOpen(true))
-            .catch(rejectedValueOrSerializedError => {
-            })
-
+            setOpen(true)
     }
 
 
@@ -64,13 +49,13 @@ const ItemInfoModal = ({itemId}) => {
     return (
         <div>
             <Button
-                onClick={() => handleOpen(itemId)}
-                variant="outlined"
+                variant="contained"
                 color="primary"
-                size="small"
-                style={{marginLeft: 16}}
+                className={classes.button}
+                startIcon={<AddBoxSharpIcon/>}
+                onClick={handleOpen}
             >
-                Show info
+                Add new
             </Button>
             <Modal
                 aria-labelledby="transition-modal-title"
@@ -86,7 +71,7 @@ const ItemInfoModal = ({itemId}) => {
             >
                 <Fade in={open}>
                     <div className={classes.paper}>
-                        <ItemInfoModalGrid itemId={itemId} closeMadal={handleClose}/>
+                        <ItemAddModalGrid itemId={itemId} closeMadal={handleClose}/>
                     </div>
                 </Fade>
             </Modal>
@@ -95,7 +80,7 @@ const ItemInfoModal = ({itemId}) => {
 }
 
 
-export default ItemInfoModal
+export default ItemAddForm
 
 
 // import React from 'react';

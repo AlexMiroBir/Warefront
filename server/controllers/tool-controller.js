@@ -10,28 +10,28 @@ class ToolController {
     }
 
     async createOrUpdateTool(req, res, next) {
-        const {id, name, description} = req.body
-        console.log(chalk.red(id, name, description))
-        if (!name || !id || !description) {
+        const {Id, Name, Description} = req.body
+        // console.log(chalk.red(Id, Name, Description))
+        if (!Name || !Id || !Description) {
             return next(ApiError.badRequest('Wrong data'))
         }
-            if (id === -1) {
-                const tool = await Tool.create({name, description})
+            if (Id === -1) {
+                await Tool.create({Name, Description})
                 return res.json('New user has been created!')
             } else {
 
-                const tool = await Tool.findOne({where: {id}})
+                const tool = await Tool.findOne({where: {Id}})
                 if (tool) {
-                    await tool.update({name: name, description: description})
+                    await tool.update({Name, Description})
                     return res.status(202).json({message: "Tool data has been changed"})
                 }
             }
         }
 
         async deleteTool(req, res,next){
-        const {id} = req.body
-            const tool = await Tool.findOne({where:{id}})
-            if(id){
+        const {Id} = req.body
+            const tool = await Tool.findOne({where:{Id}})
+            if(Id){
                 await tool.destroy()
                 return res.status(202).json('Tool has been removed')
             }
@@ -42,8 +42,8 @@ class ToolController {
 
 
     async getOne(req, res) {
-        const {id} = req.params
-        const item = await Tool.findOne({where: {id}})
+        const {Id} = req.params
+        const item = await Tool.findOne({where: {Id}})
         return res.json(item)
     }
 

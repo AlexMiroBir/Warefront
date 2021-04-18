@@ -52,7 +52,7 @@ const axiosDeleteSupplier = createAsyncThunk(
     'put/deleteSupplier',
     async (supplierId, {rejectWithValue}) => {
         try {
-            const data = {id: supplierId}
+            const data = {Id: supplierId}
             const response = await axios.put(API_URL_SERVER + "/api/supplier/delete", data,{
                 headers: {
                     'Authorization': token

@@ -20,12 +20,14 @@ import {useHistory} from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        zIndex:'1000'
     },
     paper: {
         marginRight: theme.spacing(2),
     },
     menuList:{
-      marginLeft:"-115px"
+      marginLeft:"-115px",
+
     },
 }));
 

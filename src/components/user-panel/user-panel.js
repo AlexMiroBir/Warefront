@@ -48,7 +48,7 @@ const useStyles = makeStyles({
 
 const UserPanel = () => {
 
-    const userName = useSelector(state => state.AuthSlice.username)
+    const userName = useSelector(state => state.AuthSlice.Username)
     const classes = useStyles();
 
 

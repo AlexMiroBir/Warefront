@@ -73,7 +73,7 @@ const classes = useStyles()
 
                     }
                     data={data}
-                    title={`${itemData.Name} ${itemData.Inventory_BCode}`}
+                    title={`New parameters`}
                     options={{
                         exportButton: true,
                         search: false,

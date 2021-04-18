@@ -56,7 +56,7 @@ const DeleteSupplierModal = ({selectedSuppliersId}) => {
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const suppliers = useSelector(state => state.SuppliersSlice.suppliers)
+    const suppliers = useSelector(state => state.SuppliersSlice.Suppliers)
 
 
     const [open, setOpen] = useState(false);
@@ -76,7 +76,7 @@ const DeleteSupplierModal = ({selectedSuppliersId}) => {
         let arr = []
         arrWithId.forEach(id => {
             // eslint-disable-next-line eqeqeq
-            let supplier = suppliers.find(supplier => supplier.Id == id)
+            let supplier = suppliers.find(supplier => supplier.Id == id)  // no change!
             {
                 arr = [...arr, supplier]
             }

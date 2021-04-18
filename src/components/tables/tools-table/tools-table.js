@@ -24,19 +24,19 @@ const ToolsTable = () => {
     const [globalFilterInput, setGlobalFilter] = useState("");
 
 
-    const tools = useSelector(state => state.ToolsSlice.tools)
-    const role = useSelector(state => state.AuthSlice.role)
-    const isAdmin = role.toLowerCase() === "admin"
+    const tools = useSelector(state => state.ToolsSlice.Tools)
+    const Status = useSelector(state => state.AuthSlice.Status)
+    const isAdmin = Status.toLowerCase() === "admin"
 
 
 
     const createObjForRow = (tool) => {
 
         const obj = {
-            id: tool.id,
-            name: tool.name,
-            description: tool.description,
-            info: tool.id
+            id: tool.Id,
+            name: tool.Name,
+            description: tool.Description,
+            info: tool.Id
         }
         return obj
     }
@@ -44,8 +44,8 @@ const ToolsTable = () => {
     const getFilteredArr = (tools) => {
         let arr = []
         tools.forEach(tool => {
-            const hasName = tool.name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            const hasDescription = tool.description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasName = tool.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasDescription = tool.Description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
             const hasMatches = (hasName + hasDescription) > -2
 
             arr = hasMatches ?

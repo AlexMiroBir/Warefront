@@ -1,5 +1,6 @@
 const ApiError = require('../error/api-error')
 const {Supplier} = require('../DB/models/models')
+const chalk = require('chalk')
 
 
 class SupplierController {
@@ -13,27 +14,30 @@ class SupplierController {
     }
 
     async createOrUpdateSupplier(req, res, next) {
-        const {id, name, description, phone, contact_name} = req.body
-        if (!name || !description || !phone || !contact_name) {
+        const {Id, Name, Description, Phone, Contact_Name} = req.body
+        if (!Name || !Description || !Phone || !Contact_Name) {
             return next(ApiError.badRequest('Wrong data'))
         }
-        if (id === -1) {
-            const supplier = await Supplier.create({name, description, phone, contact_name})
-            return res.json('New supplier has been created!')
+        if (Id === -1) {
+            await Supplier.create({Name, Description, Phone, Contact_Name})
+                .then(response => {
+                    return res.json(response)
+                })
+
         } else {
 
-            const supplier = await Supplier.findOne({where: {id}})
+            const supplier = await Supplier.findOne({where: {Id}})
             if (supplier) {
-                await supplier.update({name: name, description: description, phone: phone, contact_name})
+                await supplier.update({Name, Description, Phone, Contact_Name})
                 return res.status(202).json({message: "Supplier data has been changed"})
             }
         }
     }
 
     async deleteSupplier(req, res, next) {
-        const {id} = req.body
-        const supplier = await Supplier.findOne({where: {id}})
-        if (id) {
+        const {Id} = req.body
+        const supplier = await Supplier.findOne({where: {Id}})
+        if (Id) {
             await supplier.destroy()
             return res.status(202).json('Supplier has been removed')
         }

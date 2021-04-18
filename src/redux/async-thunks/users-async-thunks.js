@@ -56,7 +56,7 @@ const axiosDeleteUser = createAsyncThunk(
     'put/deleteUser',
     async (userId, {rejectWithValue}) => {
         try {
-            const data = {id: userId}
+            const data = {Id: userId}
             const response = await axios.put(API_URL_SERVER + "/api/user/delete", data, {
                 headers: {
                     'Authorization': token
