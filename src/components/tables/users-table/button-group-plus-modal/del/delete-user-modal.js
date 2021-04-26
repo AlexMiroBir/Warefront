@@ -55,8 +55,9 @@ const DeleteUserModal = ({selectedUsersId}) => {
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const users = useSelector(state => state.UsersSlice.users)
-
+    const users = useSelector(state => state.Users.Users)
+    const admin = users.find(user => user.Name.toLowerCase() === 'administrator')
+    const adminId = admin ? admin.Id : -1
 
     const [open, setOpen] = useState(false);
     const [sure, setSure] = useState(false);        // TODO при повтороном открытии крнпка delete активна
@@ -74,7 +75,6 @@ const DeleteUserModal = ({selectedUsersId}) => {
     const getArrWithUsersForDelete = (arrWithId) => {
         let arr = []
         arrWithId.forEach(id => {
-            // eslint-disable-next-line eqeqeq
             let user = users.find(user => user.Id == id)
             {
                 arr = [...arr, user]
@@ -84,12 +84,16 @@ const DeleteUserModal = ({selectedUsersId}) => {
     }
 
     const deleteUsers = async (usersId) => {
+
         for (const id of usersId) {
-            await dispatch(axiosDeleteUser(id))
-                .then(unwrapResult)
-                .then(response => dispatch(axiosGetUsers({})))
-                .catch(rejectedValueOrSerializedError => {
-                })
+
+            if (id != adminId) {
+                await dispatch(axiosDeleteUser(id))
+                    .then(unwrapResult)
+                    .then(response => dispatch(axiosGetUsers({})))
+                    .catch(rejectedValueOrSerializedError => {
+                    })
+            }
         }
 
         handleClose()

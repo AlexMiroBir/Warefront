@@ -7,7 +7,7 @@ const SuppliersSlice = createSlice({
     name: 'suppliers-slice',
     initialState: {
 
-        suppliers:[],
+        Suppliers:[],
 
 
     },
@@ -21,7 +21,7 @@ const SuppliersSlice = createSlice({
         [axiosGetSuppliers.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
            // state.isLoading = false
-            state.suppliers=payload
+            state.Suppliers=payload
         },
         [axiosGetSuppliers.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}

@@ -189,20 +189,20 @@ const AddSupplierModalForm = ({closeModal}) => {
 
                     </Grid> <Grid item xs={12}>
 
-                     <TextField
-                            id="contact-name-input"
-                            name="contactName"
-                            label="Contact Name"
-                            type="text"
-                            variant="outlined"
-                            className={classes.input}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.contactName}
-                            error={formik.touched.contactName && Boolean(formik.errors.contactName)}
-                            helperText={formik.touched.contactName && formik.errors.contactName}
-                            onKeyDown={(e) => e.stopPropagation()}
-                      />
+                    <TextField
+                        id="contact-name-input"
+                        name="contactName"
+                        label="Contact Name"
+                        type="text"
+                        variant="outlined"
+                        className={classes.input}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.contactName}
+                        error={formik.touched.contactName && Boolean(formik.errors.contactName)}
+                        helperText={formik.touched.contactName && formik.errors.contactName}
+                        onKeyDown={(e) => e.stopPropagation()}
+                    />
 
                 </Grid>
 

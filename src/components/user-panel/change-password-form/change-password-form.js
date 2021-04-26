@@ -73,14 +73,13 @@ const ChangePasswordForm = ({mod}) => {
 
     const dispatch = useDispatch();
     const history = useHistory();
-    const userId = useSelector(state => state.AuthSlice.id)
-    const isLoading = useSelector(state => state.AuthSlice.isLoading)
+    const userId = useSelector(state => state.Auth.Id)
+    const isLoading = useSelector(state => state.Auth.isLoading)
 
 
     const onClickChangePassword = (newPassword) => {
-        console.log(newPassword)
-        const newpassword = newPassword
-        dispatch(axiosChangePassword({userId, newpassword}))
+
+        dispatch(axiosChangePassword({Id:userId, NewPassword:newPassword}))
             .then(unwrapResult)
             // .then(response => dispatch(fetchAllContacts()))
             .then(response => history.push('/'))
@@ -106,6 +105,9 @@ const ChangePasswordForm = ({mod}) => {
             },
         }
     )
+    const isDisabled=(a,b)=>{
+        return (a||b)
+    }
 
 
     return (
@@ -146,7 +148,7 @@ const ChangePasswordForm = ({mod}) => {
                     variant="contained"
                     color={'primary'}
                     type={'submit'}
-                    disabled={formik.errors.newPassword || formik.errors.newPasswordRepeat}
+                    disabled={isDisabled(formik.errors.newPassword,formik.errors.newPasswordRepeat)}
                 >
                     Change password
                 </Button>

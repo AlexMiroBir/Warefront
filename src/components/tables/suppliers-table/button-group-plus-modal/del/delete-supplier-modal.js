@@ -49,14 +49,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const DeleteSupplierModal = ({selectedItemsId}) => {
+const DeleteSupplierModal = ({selectedSuppliersId}) => {
 
     const classes = useStyles();
 
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const suppliers = useSelector(state => state.SuppliersSlice.suppliers)
+    const suppliers = useSelector(state => state.Suppliers.Suppliers)
 
 
     const [open, setOpen] = useState(false);
@@ -76,7 +76,7 @@ const DeleteSupplierModal = ({selectedItemsId}) => {
         let arr = []
         arrWithId.forEach(id => {
             // eslint-disable-next-line eqeqeq
-            let supplier = suppliers.find(supplier => supplier.Id == id)
+            let supplier = suppliers.find(supplier => supplier.Id == id)  // no change!
             {
                 arr = [...arr, supplier]
             }
@@ -107,7 +107,7 @@ const DeleteSupplierModal = ({selectedItemsId}) => {
                 className={classes.button}
                 startIcon={<DeleteIcon/>}
                 onClick={handleOpen}
-                disabled={selectedItemsId.length < 1}>
+                disabled={selectedSuppliersId.length < 1}>
 
                 Delete
 
@@ -128,7 +128,7 @@ const DeleteSupplierModal = ({selectedItemsId}) => {
 
                         <Alert
                             severity="error">
-                            {`Are you sure you want to delete ${selectedItemsId.length} follow suppliers:`}
+                            {`Are you sure you want to delete ${selectedSuppliersId.length} follow suppliers:`}
                         </Alert>
 
                         <SureSlider setSure={setSure}/>
@@ -136,7 +136,7 @@ const DeleteSupplierModal = ({selectedItemsId}) => {
                         <Divider className={classes.divider}/>
 
                         Suppliers for deleting:
-                        <AccordionSuppliers suppliersForDelete={getArrWithSuppliersForDelete(selectedItemsId)}/>
+                        <AccordionSuppliers suppliersForDelete={getArrWithSuppliersForDelete(selectedSuppliersId)}/>
 
                         <Button
                             className={classes.button}
@@ -145,7 +145,7 @@ const DeleteSupplierModal = ({selectedItemsId}) => {
                             color="secondary"
                             variant="contained"
                             fullWidth
-                            onClick={() => deleteSuppliers(selectedItemsId)}
+                            onClick={() => deleteSuppliers(selectedSuppliersId)}
                             disabled={!sure}>
 
                             Delete

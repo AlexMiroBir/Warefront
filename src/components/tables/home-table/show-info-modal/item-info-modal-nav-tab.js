@@ -7,6 +7,8 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import ParametersTable from "./parameters-table";
+import ItemSuppliersTable from "./suppliers-table"
+
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -59,9 +61,10 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         width:"1000px"
     },
+
 }));
 
-const ItemInfoModalNavTab = () => {
+const ItemInfoModalNavTab = (props) => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -71,23 +74,23 @@ const ItemInfoModalNavTab = () => {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static">
+            <AppBar position="static" >
                 <Tabs
-                    variant="fullWidth"
+                    //variant="fullWidth"
                     value={value}
                     onChange={handleChange}
                     aria-label="nav tabs example"
                 >
-                    <LinkTab label="Parameters" href="/parameters" {...a11yProps(0)} />
-                    <LinkTab label="Suppliers" href="/suppliers" {...a11yProps(1)} />
+                    <LinkTab label="Parameters" href="/item/parameters" {...a11yProps(0)} />
+                    <LinkTab label="Suppliers" href="/item/suppliers" {...a11yProps(1)} />
 
                 </Tabs>
             </AppBar>
-            <TabPanel value={value} index={0}>
-              <ParametersTable/>
+            <TabPanel  value={value} index={0}>
+              <ParametersTable  {...props}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Suppliers
+               <ItemSuppliersTable {...props}/>
             </TabPanel>
 
         </div>

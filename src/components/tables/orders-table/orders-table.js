@@ -21,7 +21,11 @@ const OrdersTable = () => {
 
     const [globalFilterInput, setGlobalFilter] = useState("");
 
-    const orders = useSelector(state => state.OrdersSlice.orders)
+    const orders = useSelector(state => state.Orders.Orders)
+    const inventory = useSelector(state => state.Items.Items)
+    const users = useSelector(state => state.Users.Users)
+
+
 
     const getFormattedDate = (date) => {
 
@@ -34,37 +38,16 @@ const OrdersTable = () => {
     }
 
 
-    // const createObjForRow = (items) => {
-    //     console.log(items)
-    //     let arr = []
-    //     items.forEach(item => {
-    //         const obj = {
-    //             id: item.Id,
-    //             item: item.Inventory_Name,
-    //             description: item.Inventory_Description,
-    //             qty: item.QTY,
-    //             date: new Date(item.Date),
-    //             operator: item.Operator,
-    //             tool: item.Tool
-    //         }
-    //
-    //         arr.push(obj)
-    //
-    //     })
-    //
-    //     return arr
-    // }
-
 
     const createObjForRow = (order) => {
         const obj = {
             id: order.Id,
-            item: order.Inventory_Name,
-            description: order.Inventory_Description,
+            item: inventory.find(item=>item.Id===order.Inventory_ID)?.Name,
+            description: inventory.find(item=>item.Id===order.Inventory_ID)?.Description,
             qty: order.QTY,
             date: new Date(order.Date),
-            operator: order.Operator,
-            tool: order.Tool
+            operator: users.find(user=> user.Id === order.User_Id)?.Name,
+            tool: inventory.find(item=>item.Id===order.Inventory_ID)?.Tool.Name,
         }
         return obj
     }

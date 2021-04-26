@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const ToolInfoModalGrid=({toolId,handleCloseModal})=> {
+const ToolInfoModalGrid=({toolId,closeModal})=> {
 
 
     const classes = useStyles();
@@ -38,7 +38,7 @@ const ToolInfoModalGrid=({toolId,handleCloseModal})=> {
                     <Divider/>
                 </Grid>
                 <Grid item xs={12}>
-                   <ToolDataForm toolId={toolId} handleCloseModal={handleCloseModal} />
+                   <ToolDataForm toolId={toolId} closeModal={closeModal} />
                 </Grid>
 
 

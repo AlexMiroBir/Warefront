@@ -19,12 +19,14 @@ const useStyles = makeStyles({
 
 const UsersTable = () => {
 
+    const classes = useStyles()
+
     const [selectionModel, setSelectionModel] = useState([]);
     const [globalFilterInput, setGlobalFilter] = useState("");
 
-    const classes = useStyles()
-    const users = useSelector(state => state.UsersSlice.users)
-    const status = useSelector(state => state.AuthSlice.role)
+
+    const users = useSelector(state => state.Users.Users)
+    const status = useSelector(state => state.Auth.Status)
     const isAdmin = status.toLowerCase() === "admin"
 
 
@@ -43,11 +45,11 @@ const UsersTable = () => {
     const getFilteredArr = (users) => {
         let arr = []
         users.forEach(user => {
-            let hasName = user.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            let hasStatus = user.Status.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            let hasPhone = user.Phone.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasName = user.Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasStatus = user.Status.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            const hasPhone = user.Phone.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
 
-            let hasMatches = (hasName + hasStatus + hasPhone) > -3
+            const hasMatches = (hasName + hasStatus + hasPhone) > -3
 
             arr = hasMatches ?
                 [...arr, createObjForRow(user)]

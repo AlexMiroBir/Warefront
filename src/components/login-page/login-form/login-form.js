@@ -8,12 +8,11 @@ import Button from '@material-ui/core/Button';
 import {useDispatch} from "react-redux";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {axiosLogin} from "../../../redux/async-thunks/auth-async-thunks"
-import {axiosGetItems} from "../../../redux/async-thunks/items-async-thunks"
+import {axiosGetItems, axiosGetAvatars} from "../../../redux/async-thunks/items-async-thunks"
 import {axiosGetTools} from "../../../redux/async-thunks/tools-async-thunks";
 import {axiosGetSuppliers} from "../../../redux/async-thunks/suppliers-async-thunks";
 import {axiosGetUsers} from "../../../redux/async-thunks/users-async-thunks";
 import {axiosGetOrders} from "../../../redux/async-thunks/orders-async-thunks";
-import PasswordInput from "./password-input";
 
 
 /**
@@ -71,6 +70,7 @@ const validationSchema = yup.object({
 
 const LoginForm = () => {
 
+
     const classes = useStyles();
 
 
@@ -79,10 +79,11 @@ const LoginForm = () => {
 
 
     const onClickLogin = (username, password) => {
-        console.log(username)
-        dispatch(axiosLogin({username, password}))
+
+        dispatch(axiosLogin({Name:username, Password:password}))
             .then(unwrapResult)
             .then(response => dispatch(axiosGetItems({})))
+            .then(response => dispatch(axiosGetAvatars({})))
             .then(response => history.push('/home'))
             .then(response => dispatch(axiosGetTools({})))
             .then(response => dispatch(axiosGetSuppliers({})))
@@ -90,6 +91,12 @@ const LoginForm = () => {
             .then(response => dispatch(axiosGetOrders({})))
             .catch(rejectedValueOrSerializedError => {
             })
+    }
+
+    const isDisabled=(a,b)=>{
+        if(a||b){
+            return true
+        }
     }
 
 
@@ -154,7 +161,7 @@ const LoginForm = () => {
                     variant="contained"
                     color={'primary'}
                     type={'submit'}
-                    disabled={formik.errors.name || formik.errors.password}
+                    disabled={isDisabled(formik.errors.name, formik.errors.password)}
                 >
                     Log in
                 </Button>

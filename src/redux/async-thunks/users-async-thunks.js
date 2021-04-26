@@ -2,8 +2,8 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 
 
-const config = require("../../config");
-const API_URL_SERVER = config.API_URL_SERVER;
+const API_URL_SERVER = process.env.REACT_APP_API_URL;
+//const token = `Bearer ${localStorage.getItem('currentUserToken')}`
 
 
 axios.defaults.withCredentials = true;  ////TODO разобраться с этим https://github.com/axios/axios
@@ -11,10 +11,15 @@ axios.defaults.withCredentials = true;  ////TODO разобраться с эт�
 
 const axiosGetUsers = createAsyncThunk(
     'get/getUsers',
-    async ({rejectWithValue}) => {
+    async (args,{getState,rejectWithValue}) => {
         try {
-            const response = await axios.get(API_URL_SERVER + "/users",)
-            // console.log(response)
+            const token = getState().Auth.token
+            const response = await axios.get(API_URL_SERVER + "/api/user/users", {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            },)
+
             return response.data
         } catch (err) {
             let error = err // cast the error for access
@@ -28,10 +33,14 @@ const axiosGetUsers = createAsyncThunk(
 
 const axiosEditUser = createAsyncThunk(
     'post/updateUser',
-    async (row, {rejectWithValue}) => {
+    async (row, {getState,rejectWithValue}) => {
         try {
-            console.log(row)
-            const response = await axios.post(API_URL_SERVER + "/updateUser", row)
+            const token = getState().Auth.token
+            const response = await axios.post(API_URL_SERVER + "/api/user/addOrUpdateUser", row,{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            },)
             // console.log(response)
             return response.data
         } catch (err) {
@@ -46,11 +55,15 @@ const axiosEditUser = createAsyncThunk(
 
 const axiosDeleteUser = createAsyncThunk(
     'put/deleteUser',
-    async (userId, {rejectWithValue}) => {
+    async (userId, {getState,rejectWithValue}) => {
         try {
+            const token = getState().Auth.token
             const data = {Id: userId}
-            const response = await axios.put(API_URL_SERVER + "/deleteUser", data
-            )
+            const response = await axios.put(API_URL_SERVER + "/api/user/delete", data, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            },)
             // console.log(response)
             return response.data
         } catch (err) {

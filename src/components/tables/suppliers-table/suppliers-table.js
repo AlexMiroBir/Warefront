@@ -23,13 +23,14 @@ const SuppliersTable = () => {
     const [globalFilterInput, setGlobalFilter] = useState("");
 
     const classes = useStyles()
-    const suppliers = useSelector(state => state.SuppliersSlice.suppliers)
-    const status = useSelector(state => state.AuthSlice.role)
+    const suppliers = useSelector(state => state.Suppliers.Suppliers)
+    const status = useSelector(state => state.Auth.Status)
     const isAdmin = status.toLowerCase() === "admin"
 
 
     const createObjForRow = (supplier) => {
-        const obj = {
+
+        return {
             id: supplier.Id,
             name: supplier.Name,
             description: supplier.Description,
@@ -37,7 +38,6 @@ const SuppliersTable = () => {
             contactName: supplier.Contact_Name,
             info: supplier.Id
         }
-        return obj
     }
 
 
@@ -138,7 +138,7 @@ const SuppliersTable = () => {
                     value={globalFilterInput}
                     onKeyDown={(e) => e.stopPropagation()}
                 />
-                {isAdmin && <ButtonGroupAddDeleteSuppliers selectedItemsId={selectionModel}/>}
+                {isAdmin && <ButtonGroupAddDeleteSuppliers selectedSuppliersId={selectionModel}/>}
             </div>
             <DataGrid
                 rows={getSuppliersRows(suppliers)}
@@ -148,7 +148,6 @@ const SuppliersTable = () => {
                 rowsPerPageOptions={[5, 10, 50, 100]}
                 checkboxSelection
                 autoPageSize={false}
-                hideFooterPagination /// TODO убрать если забуду
                 components={{
                     Toolbar: GridToolbar,
                 }}

@@ -1,9 +1,13 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {
+    axiosDeleteItem,
+    axiosEditItem,
     axiosGetItemData,
-    axiosGetItemParameters,
+  //  axiosGetItemParameters,
     axiosGetItems,
-    axiosGetItemSuppliers
+   // axiosGetItemSuppliers,
+    axiosGetAvatars,
+    axiosGetItemImages
 } from "../async-thunks/items-async-thunks"
 
 
@@ -11,12 +15,12 @@ const ItemsSlice = createSlice({
     name: 'items-slice',
     initialState: {
 
-        items: [],
-        itemData: {
-            data: {},
-            parameters: {},
-            suppliers: {}
-        },
+        Items: [],
+        ItemData: {},
+        Avatars:[],
+        ItemImages:[],
+
+
 
         responseDataToSave: {
             row: {},
@@ -72,7 +76,7 @@ const ItemsSlice = createSlice({
         [axiosGetItems.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
             state.isLoading = false
-            state.items = JSON.parse(payload.data).items
+            state.Items = payload
         },
         [axiosGetItems.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
@@ -84,33 +88,82 @@ const ItemsSlice = createSlice({
         [axiosGetItemData.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
             state.isLoading = false
-            state.itemData.data = JSON.parse(JSON.parse(payload.data).item) ///TODO странно как-то выглядет
+            state.ItemData=payload
+
         },
         [axiosGetItemData.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
             state.isLoading = 'false'
         },
-        [axiosGetItemParameters.pending]: (state, action) => {
+        // [axiosGetItemParameters.pending]: (state, action) => {
+        //     state.isLoading = true
+        // },
+        // [axiosGetItemParameters.fulfilled]: (state, {payload}) => {
+        //     state.message = {message: "Data was received"}
+        //     state.isLoading = false
+        //
+        // },
+        // [axiosGetItemParameters.rejected]: (state, {payload}) => {
+        //     //  state.message = {message: payload.error.message}
+        //     state.isLoading = 'false'
+        // },
+        // [axiosGetItemSuppliers.pending]: (state, action) => {
+        //     state.isLoading = true
+        // },
+        // [axiosGetItemSuppliers.fulfilled]: (state, {payload}) => {
+        //     state.message = {message: "Data was received"}
+        //     state.isLoading = false
+        //     state.itemData.suppliers = payload
+        // },
+        // [axiosGetItemSuppliers.rejected]: (state, {payload}) => {
+        //     //  state.message = {message: payload.error.message}
+        //     state.isLoading = 'false'
+        // },
+        [axiosEditItem.pending]: (state, action) => {
             state.isLoading = true
         },
-        [axiosGetItemParameters.fulfilled]: (state, {payload}) => {
+        [axiosEditItem.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
             state.isLoading = false
-            state.itemData.parameters = payload
+          //  state.itemData.suppliers = payload
         },
-        [axiosGetItemParameters.rejected]: (state, {payload}) => {
+        [axiosEditItem.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
             state.isLoading = 'false'
         },
-        [axiosGetItemSuppliers.pending]: (state, action) => {
+        [axiosDeleteItem.pending]: (state, action) => {
             state.isLoading = true
         },
-        [axiosGetItemSuppliers.fulfilled]: (state, {payload}) => {
+        [axiosDeleteItem.fulfilled]: (state, {payload}) => {
             state.message = {message: "Data was received"}
             state.isLoading = false
-            state.itemData.suppliers = payload
+          //  state.itemData.suppliers = payload
         },
-        [axiosGetItemSuppliers.rejected]: (state, {payload}) => {
+        [axiosDeleteItem.rejected]: (state, {payload}) => {
+            //  state.message = {message: payload.error.message}
+            state.isLoading = 'false'
+        },
+        [axiosGetAvatars.pending]: (state, action) => {
+            state.isLoading = true
+        },
+        [axiosGetAvatars.fulfilled]: (state, {payload}) => {
+            state.message = {message: "Avatars were received"}
+            state.isLoading = false
+            state.Avatars = payload
+        },
+        [axiosGetAvatars.rejected]: (state, {payload}) => {
+            //  state.message = {message: payload.error.message}
+            state.isLoading = 'false'
+        },
+        [axiosGetItemImages.pending]: (state, action) => {
+            state.isLoading = true
+        },
+        [axiosGetItemImages.fulfilled]: (state, {payload}) => {
+            state.message = {message: "Images was received"}
+            state.isLoading = false
+            state.ItemImages = payload
+        },
+        [axiosGetItemImages.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
             state.isLoading = 'false'
         },

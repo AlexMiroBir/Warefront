@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         backgroundColor: "inherit",
-        marginTop: '5px',
+        margin: '5px 5px 5px 41px',
         width:'451px'
 
     },
@@ -84,7 +84,7 @@ const NavTab = ({handleChange, value=0}) => {
     const history = useHistory()
     const dispatch = useDispatch()
 
-    const currentUserStatus=useSelector(state=>state.AuthSlice.role)
+    const currentUserStatus=useSelector(state=>state.Auth.status)
     const isNotLimited = currentUserStatus!=="LIMITED"
 
     const onClickHandler = (buttonName) => {

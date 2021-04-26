@@ -1,83 +1,79 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {axiosLogin, axiosLogOut, axiosChangePassword} from "../async-thunks/auth-async-thunks"
-
+import {axiosChangePassword, axiosLogin, axiosLogOut} from "../async-thunks/auth-async-thunks"
+import jwtDecode from "jwt-decode";
 
 const AuthSlice = createSlice({
 
     name: 'auth-slice',
     initialState: {
 
-        /////Authorization/////
-        isAuthorized: 'true',
-        username: 'Administrator',
-        id: '17',
-        role: 'ADMIN',
+
+        isAuthorized: '',
+        Username: '',
+        Id: '',
+        Status: '',
         message: {},
-
-        // ///////////////////
-        // items:[],
-        // tools:[],
-        //
-      //  isLoading: '',
-
-    },
-    reducers: {
+        token: '',
 
 
     },
+    reducers: {},
     extraReducers: {
 
         [axiosLogin.pending]: (state, {payload}) => {
-           // isLoading = true
+            // isLoading = true
         },
-        [axiosLogin.fulfilled]: (state,{payload}) => {
+        [axiosLogin.fulfilled]: (state, {payload}) => {
+            const userData = jwtDecode(payload)
             state.isAuthorized = true
-            state.username = payload.Name
-            state.id = payload.Id
-            state.role = payload.Status
+            state.Username = userData.Name
+            state.Id = userData.Id
+            state.Status = userData.Status
             state.message = {message: "Authorized"}
+            state.token = payload
 
-
-            localStorage.setItem("isAuthorized", "true");
-            localStorage.setItem("currentUserName", payload.Name);
-            localStorage.setItem("currentRole", payload.Status);
-            localStorage.setItem('currentUserId', payload.Id);
+            // localStorage.clear()
+            // localStorage.setItem("isAuthorized", "true");
+            // localStorage.setItem("currentUserName", userData.Name);
+            // localStorage.setItem("currentStatus", userData.Status);
+            // localStorage.setItem('currentUserId', userData.Id);
+            // localStorage.setItem('currentUserToken', payload);
         },
         [axiosLogin.rejected]: (state, {payload}) => {
             state.isAuthorized = false
-            state.username = false
-            state.id = false
-            state.role = false
+            state.Username = false
+            state.Id = false
+            state.Status = false
             state.message = {message: payload}
-         //   state.isLoading = 'false'
+            //   state.isLoading = 'false'
         },
         [axiosLogOut.pending]: (state, action) => {
-          //  state.isLoading = true
+            //  state.isLoading = true
         },
         [axiosLogOut.fulfilled]: (state, {payload}) => {
             state.isAuthorized = false
-            state.username = false
-            state.id = false
-            state.role = false
+            state.Username = false
+            state.Id = false
+            state.Status = false
             state.message = {message: "LogOut completed"}
-         //   state.isLoading = false
-            localStorage.clear()
+            //   state.isLoading = false
+           // localStorage.clear()
         },
         [axiosLogOut.rejected]: (state, {payload}) => {
             state.message = {message: payload.error.message}
-          //  state.isLoading = 'false'
+            //  state.isLoading = 'false'
         },
         [axiosChangePassword.pending]: (state, action) => {
-         //   state.isLoading = true
+            //   state.isLoading = true
         },
         [axiosChangePassword.fulfilled]: (state, {payload}) => {
 
             state.message = {message: "Password was changed successfully"}
-          //  state.isLoading = false
+            //  state.isLoading = false
         },
         [axiosChangePassword.rejected]: (state, {payload}) => {
             state.message = {message: payload.error.message}
-           // state.isLoading = 'false'
+            // state.isLoading = 'false'
         },
 
     }

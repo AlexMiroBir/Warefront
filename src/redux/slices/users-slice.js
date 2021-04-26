@@ -8,7 +8,7 @@ const UsersSlice = createSlice({
     name: 'users-slice',
     initialState: {
 
-        users:[],
+        Users:[],
 
 
     },
@@ -22,7 +22,7 @@ const UsersSlice = createSlice({
         [axiosGetUsers.fulfilled]: (state, {payload}) => {
            // state.message = {message: "Data was received"}
           //  state.isLoading = false
-            state.users=payload
+            state.Users=payload
         },
         [axiosGetUsers.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}

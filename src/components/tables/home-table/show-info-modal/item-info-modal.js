@@ -6,7 +6,7 @@ import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
 import ItemInfoModalGrid from "./item-info-modal-grid";
 import {
-    axiosGetItemData,
+    axiosGetItemData, axiosGetItemImages,
     axiosGetItemParameters,
     axiosGetItemSuppliers
 } from "../../../../redux/async-thunks/items-async-thunks";
@@ -19,12 +19,20 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        maxHeight:'100vh',
+        maxWidth:'1020px',
+        overflowY:'auto',
+       // position:'absolute !important',
+       // top:"1vh !important",
+        margin:"5px auto auto auto"
+
     },
+
     paper: {
         backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
+        //border: '2px solid #000',
         boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
+        padding: theme.spacing(1, 1, 1),
 
     },
 }));
@@ -36,11 +44,11 @@ const ItemInfoModal = ({itemId}) => {
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = (itemId) => {
-        console.log(itemId)
+
         dispatch(axiosGetItemData(itemId))
             .then(unwrapResult)
-            .then(response => dispatch(axiosGetItemParameters(itemId)))
-            .then(response => dispatch(axiosGetItemSuppliers(itemId)))
+
+            // .then(response => dispatch(axiosGetItemSuppliers(itemId)))
             .then(response => history.push(`/data/item/${itemId}`))
             .then(response => setOpen(true))
             .catch(rejectedValueOrSerializedError => {
@@ -69,7 +77,7 @@ const ItemInfoModal = ({itemId}) => {
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={open}
-                onClose={handleClose}
+               // onClose={handleClose}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -78,7 +86,7 @@ const ItemInfoModal = ({itemId}) => {
             >
                 <Fade in={open}>
                     <div className={classes.paper}>
-                        <ItemInfoModalGrid/>
+                        <ItemInfoModalGrid itemId={itemId} closeModal={handleClose}/>
                     </div>
                 </Fade>
             </Modal>

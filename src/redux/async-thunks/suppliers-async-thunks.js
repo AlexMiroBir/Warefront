@@ -1,8 +1,8 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 
-const config = require("../../config");
-const API_URL_SERVER = config.API_URL_SERVER;
+const API_URL_SERVER = process.env.REACT_APP_API_URL;
+//const token = `Bearer ${localStorage.getItem('currentUserToken')}`
 
 
 axios.defaults.withCredentials = true;  ////TODO разобраться с этим https://github.com/axios/axios
@@ -10,10 +10,14 @@ axios.defaults.withCredentials = true;  ////TODO разобраться с эт�
 
 const axiosGetSuppliers = createAsyncThunk(
     'get/getSuppliers',
-    async ({rejectWithValue}) => {
+    async (args,{getState,rejectWithValue}) => {
         try {
-            const response = await axios.get(API_URL_SERVER + "/suppliers",)
-            console.log(`suppliers: ${response}`)
+            const token = getState().Auth.token
+            const response = await axios.get(API_URL_SERVER + "/api/supplier/suppliers",{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            },)
             return response.data
         } catch (err) {
             let error = err // cast the error for access
@@ -27,10 +31,14 @@ const axiosGetSuppliers = createAsyncThunk(
 
 const axiosEditSupplier = createAsyncThunk(
     'post/updateSupplier',
-    async (row, {rejectWithValue}) => {
+    async (row, {getState,rejectWithValue}) => {
         try {
-            const response = await axios.post(API_URL_SERVER + "/updateSupplier", row)
-            // console.log(response)
+            const token = getState().Auth.token
+            const response = await axios.post(API_URL_SERVER + "/api/supplier/createOrUpdateSupplier", row,{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            },)
             return response.data
         } catch (err) {
             let error = err // cast the error for access
@@ -44,12 +52,15 @@ const axiosEditSupplier = createAsyncThunk(
 
 const axiosDeleteSupplier = createAsyncThunk(
     'put/deleteSupplier',
-    async (supplierId, {rejectWithValue}) => {
+    async (supplierId, {getState,rejectWithValue}) => {
         try {
+            const token = getState().Auth.token
             const data = {Id: supplierId}
-            const response = await axios.put(API_URL_SERVER + "/deleteSupplier", data
-            )
-            // console.log(response)
+            const response = await axios.put(API_URL_SERVER + "/api/supplier/delete", data,{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            },)
             return response.data
         } catch (err) {
             let error = err // cast the error for access
