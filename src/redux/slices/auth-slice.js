@@ -32,12 +32,12 @@ const AuthSlice = createSlice({
             state.message = {message: "Authorized"}
             state.token = payload
 
-
-            localStorage.setItem("isAuthorized", "true");
-            localStorage.setItem("currentUserName", userData.Name);
-            localStorage.setItem("currentStatus", userData.Status);
-            localStorage.setItem('currentUserId', userData.Id);
-            localStorage.setItem('currentUserToken', payload);
+            // localStorage.clear()
+            // localStorage.setItem("isAuthorized", "true");
+            // localStorage.setItem("currentUserName", userData.Name);
+            // localStorage.setItem("currentStatus", userData.Status);
+            // localStorage.setItem('currentUserId', userData.Id);
+            // localStorage.setItem('currentUserToken', payload);
         },
         [axiosLogin.rejected]: (state, {payload}) => {
             state.isAuthorized = false
@@ -57,7 +57,7 @@ const AuthSlice = createSlice({
             state.Status = false
             state.message = {message: "LogOut completed"}
             //   state.isLoading = false
-            localStorage.clear()
+           // localStorage.clear()
         },
         [axiosLogOut.rejected]: (state, {payload}) => {
             state.message = {message: payload.error.message}

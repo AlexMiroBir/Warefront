@@ -12,7 +12,9 @@ import {axiosGetTools} from "../../../../redux/async-thunks/tools-async-thunks";
 import {axiosGetSuppliers} from "../../../../redux/async-thunks/suppliers-async-thunks";
 import {axiosGetUsers} from "../../../../redux/async-thunks/users-async-thunks";
 import {useHistory} from "react-router-dom";
-
+import CancelPresentationSharpIcon from "@material-ui/icons/CancelPresentationSharp";
+import SaveIcon from "@material-ui/icons/Save";
+import PickUpModal from "./pick-up-modal";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -22,10 +24,20 @@ const useStyles = makeStyles((theme) => ({
 
     },
     paper: {
-        padding:0,
+        padding: 0,
+        fontSize:'2rem',
         textAlign: 'center',
-        color: theme.palette.text.secondary,
+       // color: theme.palette.text.secondary,
     },
+    buttonsGreed: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        '& > *': {
+            display: 'flex',
+            margin:'0px 5px 0 5px'
+        }
+
+    }
 }));
 
 const ItemInfoModalGrid = ({itemId, closeModal}) => {
@@ -33,16 +45,16 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const tools = useSelector(state => state.ToolsSlice.Tools)
-    const allSuppliers = useSelector(state => state.SuppliersSlice.Suppliers)
-    const itemData = useSelector(state => state.ItemsSlice.ItemData)
+    const tools = useSelector(state => state.Tools.Tools)
+    const allSuppliers = useSelector(state => state.Suppliers.Suppliers)
+    const itemData = useSelector(state => state.Items.ItemData)
 
-    const itemDataParameters = useSelector(state => state.ItemsSlice.ItemData.Item_Parameters)
-    const itemDataSuppliers = useSelector(state => state.ItemsSlice.ItemData.Inventory_Suppliers)
+    const itemDataParameters = useSelector(state => state.Items.ItemData.Item_Parameters)
+    const itemDataSuppliers = useSelector(state => state.Items.ItemData.Inventory_Suppliers)
 
 
     const [needUpdateItem, setNeedUpdateItem] = useState(false)
-    const [Name, setNewName] = useState(itemData.Name )
+    const [Name, setNewName] = useState(itemData.Name)
     const [Description, setNewDesc] = useState(itemData.Description)
     const [Inventory_BCode, setNewBCode] = useState(itemData.Inventory_BCode)
     const [Tool, setNewTool] = useState(itemData.Tool.Name)
@@ -68,7 +80,7 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
             .then(response => dispatch(axiosGetTools({})))
             .then(response => dispatch(axiosGetSuppliers({})))
             .then(response => dispatch(axiosGetUsers({})))
-            // .then(response => dispatch(axiosGetOrders({})))
+            //.then(response => dispatch(axiosGetOrders({})))
             .then(response => closeModal())
             .catch(rejectedValueOrSerializedError => {
             })
@@ -118,9 +130,8 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
                 setNewDesc(value)
                 break;
             case 'Tool':
-                console.log("Tool_Id:"+Tool_Id + "Value:"+value)
                 setNewTool(value)
-                setNewTool_Id(tools.find(tool=>tool.Name===value).Id)
+                setNewTool_Id(tools.find(tool => tool.Name === value).Id)
                 break;
             case 'BCode':
                 setNewBCode(value)
@@ -186,14 +197,14 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
 
     return (
         <div className={classes.root}>
-            <Grid container spacing={0} >
+            <Grid container spacing={0}>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>Edit item</Paper>
                 </Grid>
+                {/*<Grid item xs={12}>*/}
+                {/*    <Paper className={classes.paper}>Avatar</Paper>*/}
+                {/*</Grid>*/}
                 <Grid item xs={12}>
-                    <Paper className={classes.paper}>Avatar</Paper>
-                </Grid>
-                <Grid item xs={12} >
                     {/*<ItemDataForm setName={setName} setBCode={setBCode} setDescription={setDescription} setForTool={setForTool} setLocation={setLocation} setQty={setQty} setQtyMin={setQtyMin} />*/}
                     <ItemDataForm updateItemMainData={updateItemMainData}/>
                 </Grid>
@@ -215,8 +226,30 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
 
                     />
                 </Grid>
-                <Grid item xs={12}>
-                    <Button onClick={() => tempSave()}>SAVE</Button>
+                <Grid className={classes.buttonsGreed} item xs={12}>
+                    {/*<Button*/}
+                    {/*    size='small'*/}
+                    {/*    color="default"*/}
+                    {/*    variant="contained"*/}
+
+                    {/*    onClick={() => tempSave()}>Pick UP</Button>*/}
+                    <PickUpModal itemId={itemId}/>
+                    <div>
+                        <Button
+                            startIcon={<SaveIcon/>}
+                            size='small'
+                            color="primary"
+                            variant="contained"
+                            fullWidth
+                            onClick={() => tempSave()}>SAVE</Button>
+                        <Button
+                            startIcon={<CancelPresentationSharpIcon/>}
+                            size='small'
+                            color="secondary"
+                            variant="contained"
+                            fullWidth
+                            onClick={() => closeModal()}>CANCEL</Button>
+                    </div>
                 </Grid>
 
             </Grid>

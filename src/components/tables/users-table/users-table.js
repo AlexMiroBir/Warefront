@@ -25,8 +25,8 @@ const UsersTable = () => {
     const [globalFilterInput, setGlobalFilter] = useState("");
 
 
-    const users = useSelector(state => state.UsersSlice.Users)
-    const status = useSelector(state => state.AuthSlice.Status)
+    const users = useSelector(state => state.Users.Users)
+    const status = useSelector(state => state.Auth.Status)
     const isAdmin = status.toLowerCase() === "admin"
 
 

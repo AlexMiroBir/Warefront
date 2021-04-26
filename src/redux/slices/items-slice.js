@@ -3,9 +3,11 @@ import {
     axiosDeleteItem,
     axiosEditItem,
     axiosGetItemData,
-    axiosGetItemParameters,
+  //  axiosGetItemParameters,
     axiosGetItems,
-    axiosGetItemSuppliers
+   // axiosGetItemSuppliers,
+    axiosGetAvatars,
+    axiosGetItemImages
 } from "../async-thunks/items-async-thunks"
 
 
@@ -15,6 +17,8 @@ const ItemsSlice = createSlice({
 
         Items: [],
         ItemData: {},
+        Avatars:[],
+        ItemImages:[],
 
 
 
@@ -91,30 +95,30 @@ const ItemsSlice = createSlice({
             //  state.message = {message: payload.error.message}
             state.isLoading = 'false'
         },
-        [axiosGetItemParameters.pending]: (state, action) => {
-            state.isLoading = true
-        },
-        [axiosGetItemParameters.fulfilled]: (state, {payload}) => {
-            state.message = {message: "Data was received"}
-            state.isLoading = false
-
-        },
-        [axiosGetItemParameters.rejected]: (state, {payload}) => {
-            //  state.message = {message: payload.error.message}
-            state.isLoading = 'false'
-        },
-        [axiosGetItemSuppliers.pending]: (state, action) => {
-            state.isLoading = true
-        },
-        [axiosGetItemSuppliers.fulfilled]: (state, {payload}) => {
-            state.message = {message: "Data was received"}
-            state.isLoading = false
-            state.itemData.suppliers = payload
-        },
-        [axiosGetItemSuppliers.rejected]: (state, {payload}) => {
-            //  state.message = {message: payload.error.message}
-            state.isLoading = 'false'
-        },
+        // [axiosGetItemParameters.pending]: (state, action) => {
+        //     state.isLoading = true
+        // },
+        // [axiosGetItemParameters.fulfilled]: (state, {payload}) => {
+        //     state.message = {message: "Data was received"}
+        //     state.isLoading = false
+        //
+        // },
+        // [axiosGetItemParameters.rejected]: (state, {payload}) => {
+        //     //  state.message = {message: payload.error.message}
+        //     state.isLoading = 'false'
+        // },
+        // [axiosGetItemSuppliers.pending]: (state, action) => {
+        //     state.isLoading = true
+        // },
+        // [axiosGetItemSuppliers.fulfilled]: (state, {payload}) => {
+        //     state.message = {message: "Data was received"}
+        //     state.isLoading = false
+        //     state.itemData.suppliers = payload
+        // },
+        // [axiosGetItemSuppliers.rejected]: (state, {payload}) => {
+        //     //  state.message = {message: payload.error.message}
+        //     state.isLoading = 'false'
+        // },
         [axiosEditItem.pending]: (state, action) => {
             state.isLoading = true
         },
@@ -136,6 +140,30 @@ const ItemsSlice = createSlice({
           //  state.itemData.suppliers = payload
         },
         [axiosDeleteItem.rejected]: (state, {payload}) => {
+            //  state.message = {message: payload.error.message}
+            state.isLoading = 'false'
+        },
+        [axiosGetAvatars.pending]: (state, action) => {
+            state.isLoading = true
+        },
+        [axiosGetAvatars.fulfilled]: (state, {payload}) => {
+            state.message = {message: "Avatars were received"}
+            state.isLoading = false
+            state.Avatars = payload
+        },
+        [axiosGetAvatars.rejected]: (state, {payload}) => {
+            //  state.message = {message: payload.error.message}
+            state.isLoading = 'false'
+        },
+        [axiosGetItemImages.pending]: (state, action) => {
+            state.isLoading = true
+        },
+        [axiosGetItemImages.fulfilled]: (state, {payload}) => {
+            state.message = {message: "Images was received"}
+            state.isLoading = false
+            state.ItemImages = payload
+        },
+        [axiosGetItemImages.rejected]: (state, {payload}) => {
             //  state.message = {message: payload.error.message}
             state.isLoading = 'false'
         },

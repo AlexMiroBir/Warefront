@@ -13,8 +13,8 @@ import "./some.css" // at the request of the library, these classes are needed f
 const ItemSuppliersTable = ({suppliers, addItemSupplier, updateItemSuppliers, delItemSupplier}) => {
 
 
-    const itemData = useSelector(state => state.ItemsSlice.ItemData)
-    const allSuppliers = useSelector(state => state.SuppliersSlice.Suppliers)
+    const itemData = useSelector(state => state.Items.ItemData)
+    const allSuppliers = useSelector(state => state.Suppliers.Suppliers)
 
 
     const [data, setData] = useState([]);

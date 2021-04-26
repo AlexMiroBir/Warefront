@@ -4,7 +4,7 @@ import {useSelector} from "react-redux";
 
 const Toast=(message)=> {
 
-    const globalStateMessageObj = useSelector(state=>state.AuthSlice.message) /// TODO здесь используется message из аутентификации, это неправильно, надо искать общий эндпоинт
+    const globalStateMessageObj = useSelector(state=>state.Auth.message) /// TODO здесь используется message из аутентификации, это неправильно, надо искать общий эндпоинт
 
     const [state, setState] = React.useState({
         open: false,

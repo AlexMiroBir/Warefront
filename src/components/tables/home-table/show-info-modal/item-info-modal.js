@@ -6,7 +6,7 @@ import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
 import ItemInfoModalGrid from "./item-info-modal-grid";
 import {
-    axiosGetItemData,
+    axiosGetItemData, axiosGetItemImages,
     axiosGetItemParameters,
     axiosGetItemSuppliers
 } from "../../../../redux/async-thunks/items-async-thunks";
@@ -44,11 +44,11 @@ const ItemInfoModal = ({itemId}) => {
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = (itemId) => {
-        console.log(itemId)
+
         dispatch(axiosGetItemData(itemId))
             .then(unwrapResult)
-            .then(response => dispatch(axiosGetItemParameters(itemId)))
-            .then(response => dispatch(axiosGetItemSuppliers(itemId)))
+
+            // .then(response => dispatch(axiosGetItemSuppliers(itemId)))
             .then(response => history.push(`/data/item/${itemId}`))
             .then(response => setOpen(true))
             .catch(rejectedValueOrSerializedError => {
@@ -77,7 +77,7 @@ const ItemInfoModal = ({itemId}) => {
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={open}
-                onClose={handleClose}
+               // onClose={handleClose}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -86,7 +86,7 @@ const ItemInfoModal = ({itemId}) => {
             >
                 <Fade in={open}>
                     <div className={classes.paper}>
-                        <ItemInfoModalGrid itemId={itemId} closeMadal={handleClose}/>
+                        <ItemInfoModalGrid itemId={itemId} closeModal={handleClose}/>
                     </div>
                 </Fade>
             </Modal>

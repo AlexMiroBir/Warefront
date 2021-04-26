@@ -48,7 +48,7 @@ const useStyles = makeStyles({
 
 const UserPanel = () => {
 
-    const userName = useSelector(state => state.AuthSlice.Username)
+    const userName = useSelector(state => state.Auth.Username)
     const classes = useStyles();
 
 
@@ -57,15 +57,15 @@ const UserPanel = () => {
         <Paper square className={classes.root}>
 <Box className={classes.userNameBox}>
                 <Route path="/" >
-                    <Tabs
-                        className={classes.tab}
-                        variant="fullWidth"
-                        indicatorColor="primary"
-                        textColor="primary"
-                        aria-label="icon tabs example"
+                    <Box                           //TODO TABS заменил на BOX(избавление от варнингов)
+                        className={classes.tab}    //TODO заккоменитровано(избавление от варнингов)
+                        // variant="fullWidth"
+                        // indicatorColor="primary"
+                        // textColor="primary"
+                        // aria-label="icon tabs example"
                     >
                         <Box>{userName}</Box>
-                    </Tabs>
+                    </Box>
                 </Route>
                 <Route path="/change-password" exact>
                     <Box className={classes.changePasswordTab}

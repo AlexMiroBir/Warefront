@@ -84,7 +84,7 @@ const NavTab = ({handleChange, value=0}) => {
     const history = useHistory()
     const dispatch = useDispatch()
 
-    const currentUserStatus=useSelector(state=>state.AuthSlice.role)
+    const currentUserStatus=useSelector(state=>state.Auth.status)
     const isNotLimited = currentUserStatus!=="LIMITED"
 
     const onClickHandler = (buttonName) => {

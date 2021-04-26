@@ -92,9 +92,9 @@ const UserDataForm = ({userId, closeModal}) => {
 
 
     const dispatch = useDispatch()
-    const users = useSelector(state => state.UsersSlice.Users)
+    const users = useSelector(state => state.Users.Users)
     const currentUserData = users.find(user => user.Id === userId)
-    const status = useSelector(state => state.AuthSlice.Status)
+    const status = useSelector(state => state.Auth.Status)
     const isAdmin = status.toLowerCase() === "admin"
 
 

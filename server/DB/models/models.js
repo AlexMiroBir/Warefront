@@ -137,11 +137,19 @@ Inventory.hasMany(Item_Drawing, {foreignKey: 'Inventory_ID'})
 
 
 module.exports = {
-    User, Inventory_Status, Item_Drawing, Item_Parameters, Inventory_Supplier, Supplier, Tool, Transfer, Inventory
+    User,
+    Inventory_Status,
+    Item_Drawing,
+    Item_Parameters,
+    Inventory_Supplier,
+    Supplier,
+    Tool,
+    Transfer,
+    Inventory
 }
 
 
-//FOR POSTGRES
+// FOR POSTGRES
 // INSERT INTO dbo."Inventory_Status" VALUES (1,1,12,2,'B1');
 // INSERT INTO dbo."Inventory_Status" VALUES (2,2,5,2,'B2');
 // INSERT INTO dbo."Inventory_Status" VALUES (3,3,0,0,'A1');

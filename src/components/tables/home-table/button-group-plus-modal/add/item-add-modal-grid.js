@@ -31,12 +31,12 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const tools = useSelector(state => state.ToolsSlice.Tools)
-    const allSuppliers = useSelector(state => state.SuppliersSlice.Suppliers)
-    const itemData = useSelector(state => state.ItemsSlice.ItemData)
+    const tools = useSelector(state => state.Tools.Tools)
+    const allSuppliers = useSelector(state => state.Suppliers.Suppliers)
+    const itemData = useSelector(state => state.Items.ItemData)
 
-    const itemDataParameters = useSelector(state => state.ItemsSlice.ItemData.Item_Parameters)
-    const itemDataSuppliers = useSelector(state => state.ItemsSlice.ItemData.Inventory_Suppliers)
+    const itemDataParameters = useSelector(state => state.Items.ItemData.Item_Parameters)
+    const itemDataSuppliers = useSelector(state => state.Items.ItemData.Inventory_Suppliers)
 
 
     const [needUpdateItem, setNeedUpdateItem] = useState(false)

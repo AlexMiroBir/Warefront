@@ -55,7 +55,7 @@ const DeleteItemModal = ({selectedItemsId}) => {
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const items = useSelector(state => state.ItemsSlice.Items)
+    const items = useSelector(state => state.Items.Items)
 
 
     const [open, setOpen] = useState(false);

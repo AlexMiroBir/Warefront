@@ -55,7 +55,7 @@ const DeleteUserModal = ({selectedUsersId}) => {
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const users = useSelector(state => state.UsersSlice.Users)
+    const users = useSelector(state => state.Users.Users)
     const admin = users.find(user => user.Name.toLowerCase() === 'administrator')
     const adminId = admin ? admin.Id : -1
 

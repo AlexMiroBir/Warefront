@@ -73,8 +73,8 @@ const ChangePasswordForm = ({mod}) => {
 
     const dispatch = useDispatch();
     const history = useHistory();
-    const userId = useSelector(state => state.AuthSlice.Id)
-    const isLoading = useSelector(state => state.AuthSlice.isLoading)
+    const userId = useSelector(state => state.Auth.Id)
+    const isLoading = useSelector(state => state.Auth.isLoading)
 
 
     const onClickChangePassword = (newPassword) => {
@@ -105,6 +105,9 @@ const ChangePasswordForm = ({mod}) => {
             },
         }
     )
+    const isDisabled=(a,b)=>{
+        return (a||b)
+    }
 
 
     return (
@@ -145,7 +148,7 @@ const ChangePasswordForm = ({mod}) => {
                     variant="contained"
                     color={'primary'}
                     type={'submit'}
-                    disabled={formik.errors.newPassword || formik.errors.newPasswordRepeat}
+                    disabled={isDisabled(formik.errors.newPassword,formik.errors.newPasswordRepeat)}
                 >
                     Change password
                 </Button>

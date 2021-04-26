@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import { useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-       flexGrow: 1,
+        flexGrow: 1,
     },
     paper: {
         padding: theme.spacing(2),
@@ -29,12 +29,12 @@ const useStyles = makeStyles((theme) => ({
 
     form: {
         width: '93%',
-        fontSize:'0.5rem',
+        fontSize: '0.5rem',
 
         '& > *': {
             margin: 0,
             width: '93%',
-            padding:0
+            padding: 0
 
         },
     },
@@ -79,22 +79,32 @@ const validationSchema = yup.object({
 
 
 const ItemDataForm = ({updateItemMainData}) => {
+
+
     const classes = useStyles();
 
 
-    const itemData = useSelector(state => state.ItemsSlice.ItemData)
-    const tools = useSelector(state => state.ToolsSlice.Tools)
+    const itemData = useSelector(state => state.Items.ItemData)
+    const tools = useSelector(state => state.Tools.Tools)
+
+    const [qty, setQty] = useState(itemData.Inventory_Status.QTY_In_Stock)
+
+    useEffect(() => setQty(itemData.Inventory_Status.QTY_In_Stock), [itemData.Inventory_Status.QTY_In_Stock])
+
 
     const formik = useFormik({
+
         initialValues: {
             name: itemData.Name,
             bCode: itemData.Inventory_BCode,
             description: itemData.Description,
             forTool: itemData.Tool.Name,
             location: itemData.Inventory_Status.Location,
-            qty: itemData.Inventory_Status.QTY_In_Stock,
+            qty: qty,
             qtyMin: itemData.Inventory_Status.QTY_Min,
         },
+       // enableReinitialize:true,
+       //  validateOnMount:true,
         validationSchema: validationSchema,
     });
 
@@ -115,7 +125,7 @@ const ItemDataForm = ({updateItemMainData}) => {
                             type="text"
                             name="name"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder="Type name"
                             onChange={formik.handleChange}
                             onKeyUp={(e) => updateItemMainData('Name', e.target.value)}
                             onBlur={formik.handleBlur}
@@ -137,7 +147,7 @@ const ItemDataForm = ({updateItemMainData}) => {
                             type="text"
                             name="bCode"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder=""
                             onChange={formik.handleChange}
                             onKeyUp={(e) => updateItemMainData('BCode', e.target.value)}
                             onBlur={formik.handleBlur}
@@ -161,7 +171,7 @@ const ItemDataForm = ({updateItemMainData}) => {
                             type="text"
                             name="description"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder="Type description"
                             onChange={formik.handleChange}
                             onKeyUp={(e) => updateItemMainData('Description', e.target.value)}
                             onBlur={formik.handleBlur}
@@ -183,7 +193,7 @@ const ItemDataForm = ({updateItemMainData}) => {
                             type="text"
                             name="forTool"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder=""
                             onChange={(e) => updateItemMainData('Tool', e.target.value)}
                             onBlur={formik.handleBlur}
                             defaultValue={formik.values.forTool}
@@ -209,7 +219,7 @@ const ItemDataForm = ({updateItemMainData}) => {
                             type="text"
                             name="location"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder=""
                             onChange={(e) => updateItemMainData('Location', e.target.value)}
                             onBlur={formik.handleBlur}
                             defaultValue={formik.values.location}
@@ -230,7 +240,7 @@ const ItemDataForm = ({updateItemMainData}) => {
                             type="text"
                             name="qty"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder="Type qty"
                             onChange={formik.handleChange}
                             onKeyUp={(e) => updateItemMainData('QTY', e.target.value)}
                             onBlur={formik.handleBlur}
@@ -249,7 +259,7 @@ const ItemDataForm = ({updateItemMainData}) => {
                             type="text"
                             name="qtyMin"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder="Type qty min"
                             onChange={formik.handleChange}
                             onKeyUp={(e) => updateItemMainData('QTY_MIN', e.target.value)}
                             onBlur={formik.handleBlur}

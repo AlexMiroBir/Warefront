@@ -3,15 +3,18 @@ import {useState} from "react";
 
 import {DataGrid, GridToolbar} from "@material-ui/data-grid";
 import {useSelector} from "react-redux";
-import ImageModal from "./image-modal";
+import ImageModal from "./carousel/image-modal";
 
 
 import {makeStyles} from "@material-ui/core/styles";
-import monitor from '../../../images/03d1a674-b686-4c00-a13f-2e8929503f40.png'
+import noImage from '../../../images/no-image.png'
 import ItemInfoModal from "./show-info-modal/item-info-modal";
 
 import TextField from "@material-ui/core/TextField";
 import ButtonGroupAddDeleteItems from "./button-group-plus-modal/button-group";
+
+
+
 
 
 const useStyles = makeStyles({
@@ -25,16 +28,18 @@ const useStyles = makeStyles({
 // TODO выделять ячйки с нарушенным неснижаемым остатком
 
 const HomeTable = () => {
+    const API_URL_SERVER = process.env.REACT_APP_API_URL;
 
     const classes = useStyles()
 
     const [selectionModel, setSelectionModel] = useState([]);
     const [globalFilterInput, setGlobalFilter] = useState("");
 
-    const items = useSelector(state => state.ItemsSlice.Items)
+    const items = useSelector(state => state.Items.Items)
     // const itemData = useSelector(state => state.ItemsSlice.itemData.data)
-    const Status = useSelector(state => state.AuthSlice.Status)
-    const isAdmin = Status.toLowerCase() === "admin"
+    const status = useSelector(state => state.Auth.Status)
+    const avatars = useSelector(state => state.Items.Avatars)
+    const isAdmin = status.toLowerCase() === "admin"
 
 
     const createObjForRow = (item) => {
@@ -48,6 +53,7 @@ const HomeTable = () => {
             location: item.Inventory_Status ? item.Inventory_Status.Location : '',
             tool: item.Tool ? item.Tool.Name : '',
             info: item.Id,
+            image: item.Id
         }
         return obj
     }
@@ -131,24 +137,36 @@ const HomeTable = () => {
     //
     //     return arr
     // }
+    const getImageLink = (id) => {
+        const filename = avatars.find(avatar=>avatar.Inventory_ID===id)?.Filename
+        console.log(filename)
+        if(!filename){
+            return noImage
+        }
+        return `${API_URL_SERVER}/${filename}`
+    }
 
 
     const getItemsColumns = () => {
 
+        const API_URL_SERVER = process.env.REACT_APP_API_URL;
 
         const columns = [
             {
-                field: 'Image',
+                field: 'image',
                 headerName: "Image",
                 description: "Avatar",
                 width: 100,
                 filterable: false,
                 sortable: false,
                 disableClickEventBubbling: true,
-                renderCell: () => ( ///     TODO разобраться с картинками  в скобках было (GridCellParams)  https://material-ui.com/components/data-grid/rendering/
+                renderCell: (params) => ( ///     TODO разобраться с картинками  в скобках было (GridCellParams)  https://material-ui.com/components/data-grid/rendering/
 
                     // <img className={classes.avatar} src={monitor} onClick={()=>showImageModal()}/>
-                    <ImageModal imgSrc={monitor}/>
+                    <ImageModal
+                        itemId={params.value}
+                        imgSrc={getImageLink(params.value)}/>
+
                 ),
             },
             // {

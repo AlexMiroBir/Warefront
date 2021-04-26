@@ -24,8 +24,8 @@ const ToolsTable = () => {
     const [globalFilterInput, setGlobalFilter] = useState("");
 
 
-    const tools = useSelector(state => state.ToolsSlice.Tools)
-    const Status = useSelector(state => state.AuthSlice.Status)
+    const tools = useSelector(state => state.Tools.Tools)
+    const Status = useSelector(state => state.Auth.Status)
     const isAdmin = Status.toLowerCase() === "admin"
 
 

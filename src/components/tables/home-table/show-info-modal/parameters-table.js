@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 const ParametersTable = ({parameters, addItemParameter,delItemParameter, updateItemParameter}) => {
 
 const classes = useStyles()
-    const itemData = useSelector(state => state.ItemsSlice.ItemData)
+    const itemData = useSelector(state => state.Items.ItemData)
 
 
 

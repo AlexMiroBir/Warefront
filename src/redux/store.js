@@ -12,13 +12,13 @@ import OrdersSlice from "./slices/orders-slice"
 
 
 const rootReducer = combineReducers({
-    CommonSlice,
-    AuthSlice,
-    ItemsSlice,
-    ToolsSlice,
-    SuppliersSlice,
-    OrdersSlice,
-    UsersSlice
+    Common:CommonSlice,
+    Auth:AuthSlice,
+    Items:ItemsSlice,
+    Tools:ToolsSlice,
+    Suppliers:SuppliersSlice,
+    Orders:OrdersSlice,
+    Users:UsersSlice
 
 
 

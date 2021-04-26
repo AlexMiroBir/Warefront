@@ -56,7 +56,7 @@ const DeleteSupplierModal = ({selectedSuppliersId}) => {
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const suppliers = useSelector(state => state.SuppliersSlice.Suppliers)
+    const suppliers = useSelector(state => state.Suppliers.Suppliers)
 
 
     const [open, setOpen] = useState(false);

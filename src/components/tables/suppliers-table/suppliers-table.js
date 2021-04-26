@@ -23,8 +23,8 @@ const SuppliersTable = () => {
     const [globalFilterInput, setGlobalFilter] = useState("");
 
     const classes = useStyles()
-    const suppliers = useSelector(state => state.SuppliersSlice.Suppliers)
-    const status = useSelector(state => state.AuthSlice.Status)
+    const suppliers = useSelector(state => state.Suppliers.Suppliers)
+    const status = useSelector(state => state.Auth.Status)
     const isAdmin = status.toLowerCase() === "admin"
 
 

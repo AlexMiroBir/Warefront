@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 const API_URL_SERVER = process.env.REACT_APP_API_URL;
-const token = `Bearer ${localStorage.getItem('currentUserToken')}`
+//const token = `Bearer ${localStorage.getItem('currentUserToken')}`
 
 
 axios.defaults.withCredentials = true;  ////TODO разобраться с этим https://github.com/axios/axios
@@ -11,11 +11,12 @@ axios.defaults.withCredentials = true;  ////TODO разобраться с эт�
 
 const axiosGetUsers = createAsyncThunk(
     'get/getUsers',
-    async ({rejectWithValue}) => {
+    async (args,{getState,rejectWithValue}) => {
         try {
+            const token = getState().Auth.token
             const response = await axios.get(API_URL_SERVER + "/api/user/users", {
                 headers: {
-                    'Authorization': token
+                    'Authorization': `Bearer ${token}`
                 }
             },)
 
@@ -32,12 +33,12 @@ const axiosGetUsers = createAsyncThunk(
 
 const axiosEditUser = createAsyncThunk(
     'post/updateUser',
-    async (row, {rejectWithValue}) => {
+    async (row, {getState,rejectWithValue}) => {
         try {
-            console.log(row)
+            const token = getState().Auth.token
             const response = await axios.post(API_URL_SERVER + "/api/user/addOrUpdateUser", row,{
                 headers: {
-                    'Authorization': token
+                    'Authorization': `Bearer ${token}`
                 }
             },)
             // console.log(response)
@@ -54,12 +55,13 @@ const axiosEditUser = createAsyncThunk(
 
 const axiosDeleteUser = createAsyncThunk(
     'put/deleteUser',
-    async (userId, {rejectWithValue}) => {
+    async (userId, {getState,rejectWithValue}) => {
         try {
+            const token = getState().Auth.token
             const data = {Id: userId}
             const response = await axios.put(API_URL_SERVER + "/api/user/delete", data, {
                 headers: {
-                    'Authorization': token
+                    'Authorization': `Bearer ${token}`
                 }
             },)
             // console.log(response)

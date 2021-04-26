@@ -56,7 +56,7 @@ const DeleteToolModal = ({selectedToolsId}) => {
 
     const dispatch = useDispatch()
     const history = useHistory()
-    const tools = useSelector(state => state.ToolsSlice.Tools)
+    const tools = useSelector(state => state.Tools.Tools)
 
 
     const [open, setOpen] = useState(false);

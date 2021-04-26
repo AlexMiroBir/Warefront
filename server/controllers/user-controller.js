@@ -4,107 +4,139 @@ const jwt = require('jsonwebtoken')
 const {User} = require('../DB/models/models')
 const authMiddleware = require('../middleware/auth-middleware')
 const chalk = require('chalk')
+const {
+    getAllUsersFromDB,
+    loginDB,
+    changePasswordDB,
+    addOrUpdateUserDB,
+    deleteUserFromDB
+} = require('../DB/SQL/users-sequelize-scripts')
 
-const generateJwt = (Id, Name, Status) => {
-    return jwt.sign(
-        {Id, Name, Status},
-        process.env.SECRET_KEY,
-        {expiresIn: '24h'}
-    )
-}
+// const generateJwt = (Id, Name, Status) => {
+//     return jwt.sign(
+//         {Id, Name, Status},
+//         process.env.SECRET_KEY,
+//         {expiresIn: '24h'}
+//     )
+// }
 
 
 class UserController {
 
     async getAllUsers(req, res, next) {
-        const users = await User.findAll()
-        if (!users) {
-            return next(ApiError.badRequest('No users'))
+        try {
+            const users = await getAllUsersFromDB(next)
+            return res.json(users)
+
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
-        return res.json(users)
 
     }
 
 
     async login(req, res, next) {
-        const {Name, Password} = req.body
-        const user = await User.findOne({where: {Name}})
-        const Id = user.Id
-        const Status = user.Status
-        if (!user) {
-            return next(ApiError.badRequest('User not found'))
+
+        try {
+            const {Name, Password} = req.body
+            // const user = await User.findOne({where: {Name}})
+            // const Id = user.Id
+            // const Status = user.Status
+            // if (!user) {
+            //     return next(ApiError.badRequest('User not found'))
+            // }
+            // let comparePasswordIfHashed = bcrypt.compareSync(Password, user.Password)
+            // let comparePassword = Password === user.Password
+            // if (!comparePassword && !comparePasswordIfHashed) {
+            //     return next(ApiError.badRequest('Wrong password or username'))
+            // }
+            // const token = generateJwt(Id, Name, Status)
+            // //return res.json({id, name, password, role, token})
+            const token = await loginDB(Name, Password, next)
+            return res.json({token})
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
-        let comparePasswordIfHashed = bcrypt.compareSync(Password, user.Password)
-        let comparePassword = Password === user.Password
-        if (!comparePassword && !comparePasswordIfHashed) {
-            return next(ApiError.badRequest('Wrong password or username'))
-        }
-        const token = generateJwt(Id, Name, Status)
-        //return res.json({id, name, password, role, token})
-        return res.json({token})
     }
 
     async logOut(req, res, next) {
-        return res.status(202).json({message: "Logout completed"})
-
+        try {
+            return res.status(202).json({message: "Logout completed"})
+        } catch (error) {
+            return next(ApiError.internal(error.message))
+        }
     }
+
 
     async changPassword(req, res, next) {
 
-        const {Id, NewPassword} = req.body
-        const hashPassword = await bcrypt.hash(NewPassword, 5)
-        const user = await User.findOne({where: {Id}})
-        if (user) {
-            await user.update({Password: hashPassword})
+        try {
+            const {Id, NewPassword} = req.body
+            // const hashPassword = await bcrypt.hash(NewPassword, 5)
+            // const user = await User.findOne({where: {Id}})
+            // if (!user) {
+            //     return next(ApiError.badRequest('User not found'))
+            // }
+            // await user.update({Password: hashPassword})
+            await changePasswordDB(Id, NewPassword, next)
             return res.status(202).json({message: "Password has been changed"})
+        } catch (error) {
+            return next(ApiError.internal(error.message))
+
         }
-        return next(ApiError.badRequest('User not found'))
     }
 
     async addOrUpdateUser(req, res, next) {
+        try {
+            const {Id, Name, Status, Phone, Password} = req.body
+            // if (!Name || !Status) {
+            //     return next(ApiError.badRequest('Wrong data'))
+            // }
+            // if (Id === -1) {
+            //     if (!Password) {
+            //         return next(ApiError.badRequest('Wrong data'))
+            //     }
+            //     const candidate = await User.findOne({where: {Name}})
+            //     if (candidate) {
+            //         return next(ApiError.badRequest('User with such Name already exists'))
+            //     }
+            //     console.log(chalk.red(Name, Status, Phone, Password))
+            //     const hashPassword = await bcrypt.hash(Password, 5)
+            //
+            //     await User.create({Name, Status, Phone, Password: hashPassword})
+            //     return res.json('New user has been created!')
+            //
+            // } else {
+            //     const user = await User.findOne({where: {Id}})
+            //     if (user) {
+            //         await user.update({Name, Status, Phone})
+            //         return res.status(202).json({message: "User data has been changed"})
+            //     }
+            //     return next(ApiError.badRequest('User not found'))
+            // }
+            await addOrUpdateUserDB(Id, Name, Status, Phone, Password, next, res)
+        } catch (error) {
+            return next(ApiError.internal(error.message))
 
-        const {Id, Name, Status, Phone, Password} = req.body
-        console.log(chalk.red(Id, Name, Status, Phone, Password))
-        if (!Name || !Status) {
-            return next(ApiError.badRequest('Wrong data'))
-        }
-        if (Id === -1) {
-            if (!Password) {
-                return next(ApiError.badRequest('Wrong data'))
-            }
-            const candidate = await User.findOne({where: {Name}})
-            if (candidate) {
-                return next(ApiError.badRequest('User with such Name already exists'))
-            }
-            console.log(chalk.red(Name, Status, Phone, Password))
-            const hashPassword = await bcrypt.hash(Password, 5)
-
-            await User.create({Name, Status, Phone, Password: hashPassword})
-            return res.json('New user has been created!')
-
-        } else {
-            const user = await User.findOne({where: {Id}})
-            if (user) {
-                await user.update({Name, Status, Phone})
-                return res.status(202).json({message: "User data has been changed"})
-            }
-            return next(ApiError.badRequest('User not found'))
         }
     }
 
     async deleteUser(req, res, next) {
-        const {Id} = req.body
-
-        const user = await User.findOne({where: {Id}})
-        if (user) {
-            if(user.name.toLowerCase() === "administrator"){
-                return next(ApiError.badRequest(`You can't remove Administrator`))
-            }
-            await user.destroy()
-            return res.status(202).json('User has been removed')
+        try {
+            const {Id} = req.body
+            // const user = await User.findOne({where: {Id}})
+            // if (user) {
+            //     if (user.name.toLowerCase() === "administrator") {
+            //         return next(ApiError.badRequest(`You can't remove Administrator`))
+            //     }
+            //     await user.destroy()
+            //     return res.status(202).json('User has been removed')
+            // }
+            // return next(ApiError.badRequest('User not found'))
+            await deleteUserFromDB(Id, res, next)
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
-        return next(ApiError.badRequest('User not found'))
-
     }
 
 //     async check(req, res, next) {

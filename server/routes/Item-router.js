@@ -7,10 +7,16 @@ const authMiddleware = require('../middleware/auth-middleware')
 
 
 
-//router.post('/new-item',authMiddleware, checkRole('ADMIN'),ItemController.createOrUpdateItem)
+
 router.get('/items',authMiddleware,ItemController.getAll)
 router.get('/:Id',authMiddleware,ItemController.getOne)
+router.get('/images/avatars',authMiddleware,ItemController.getAvatars)
+router.get('/itemImages/:Id',authMiddleware,ItemController.getItemImages)
 router.put('/update',authMiddleware,checkRole('ADMIN'),ItemController.createOrUpdateItem)
-router.put('/delete',authMiddleware, checkRole('ADMIN'),ItemController.deleteItem)
+router.put('/addImage',authMiddleware,checkRole('ADMIN'),ItemController.addImage)
+router.put('/delete',authMiddleware,checkRole('ADMIN'),ItemController.deleteItem)
+router.put('/images/delete',authMiddleware,ItemController.deleteImage)
+router.put('/setAvatar',authMiddleware,ItemController.setAvatar)
+
 
 module.exports=router

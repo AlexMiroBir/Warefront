@@ -2,7 +2,7 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 
 const API_URL_SERVER = process.env.REACT_APP_API_URL;
-const token = `Bearer ${localStorage.getItem('currentUserToken')}`
+//const token = `Bearer ${localStorage.getItem('currentUserToken')}`
 
 
 axios.defaults.withCredentials = true;  ////TODO разобраться с этим https://github.com/axios/axios
@@ -10,11 +10,12 @@ axios.defaults.withCredentials = true;  ////TODO разобраться с эт�
 
 const axiosGetTools = createAsyncThunk(
     'get/getTools',
-    async ({rejectWithValue}) => {
+    async (args,{getState,rejectWithValue}) => {
         try {
+            const token = getState().Auth.token
             const response = await axios.get(API_URL_SERVER + "/api/tool/tools", {
                 headers: {
-                    'Authorization': token
+                    'Authorization': `Bearer ${token}`
                 }
             },)
             return response.data
@@ -31,11 +32,12 @@ const axiosGetTools = createAsyncThunk(
 
 const axiosEditTool = createAsyncThunk(
     'post/updateTool',
-    async (row, {rejectWithValue}) => {
+    async (row, {getState,rejectWithValue}) => {
         try {
+            const token = getState().Auth.token
             const response = await axios.post(API_URL_SERVER + "/api/tool/createOrUpdateTool", row, {
                 headers: {
-                    'Authorization': token
+                    'Authorization': `Bearer ${token}`
                 }
             },)
             // console.log(response)
@@ -52,12 +54,13 @@ const axiosEditTool = createAsyncThunk(
 
 const axiosDeleteTool = createAsyncThunk(
     'put/deleteTool',
-    async (toolId, {rejectWithValue}) => {
+    async (toolId, {getState,rejectWithValue}) => {
         try {
+            const token = getState().Auth.token
             const data = {Id: toolId}
             const response = await axios.put(API_URL_SERVER + "/api/tool/delete", data, {
                 headers: {
-                    'Authorization': token
+                    'Authorization': `Bearer ${token}`
                 }
             },)
             return response.data

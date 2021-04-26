@@ -1,5 +1,5 @@
 const chalk = require("chalk");
-
+const fs = require('fs')
 const uuid = require('uuid')
 const ApiError = require('../error/api-error')
 const path = require('path')
@@ -10,15 +10,24 @@ const {
     updateItem,
     updateItemParameters,
     updateItemSuppliers,
-    newItem
-} = require("../DB/SQL/items-sql-scripts")
+    newItemToDB,
+    addImageToDB,
+    getItemImagesFromDB,
+    getAvatarsFromDB,
+    setAvatarDB,
+    deleteImageFromDB
+} = require("../DB/SQL/items-sequelize-scripts")
 
 
 class ItemController {
 
-    async getAll(req, res) {
-        const AllItems = await getAllItemsFromDB()
-        return res.json(AllItems)
+    async getAll(req, res, next) {
+        try {
+            const AllItems = await getAllItemsFromDB()
+            return res.json(AllItems)
+        } catch (err) {
+            return next(ApiError.internal(err.message))
+        }
     }
 
     async getOne(req, res, next) {
@@ -68,7 +77,7 @@ class ItemController {
 
             if (Id === -1) {
 
-                await newItem(Id, row, parametersTable, suppliersTable)
+                await newItemToDB(Id, row, parametersTable, suppliersTable)
 
 
             } else {
@@ -104,6 +113,71 @@ class ItemController {
 
         } catch (err) {
             next(ApiError.internal(err))
+        }
+
+    }
+
+    async addImage(req, res, next) {
+
+
+        try {
+            const {File} = req.files
+            const {Id, General} = req.body
+            console.log(Id)
+            const Filename = uuid.v4() + '.png'
+            await File.mv(path.resolve(__dirname, '..', 'static', Filename))
+
+            const Filepath = path.resolve(__dirname, '..', 'static')
+            await addImageToDB(Id, Filename, Filepath, General)
+
+            return res.json('ok')
+        } catch (err) {
+            next(ApiError.internal(err.message))
+        }
+
+    }
+
+    async getAvatars(req, res, next) {
+
+        try {
+            const Avatars = await getAvatarsFromDB()
+            return res.json(Avatars)
+        } catch (err) {
+            return next(ApiError.internal(err.message))
+        }
+    }
+
+    async getItemImages(req, res, next) {
+        try {
+            const {Id} = req.params
+            const Images = await getItemImagesFromDB(Id)
+            return res.json(Images)
+        } catch (err) {
+            return next(ApiError.internal(err.message))
+        }
+    }
+
+    async setAvatar(req, res, next) {
+        const {Id, PictId} = req.body
+        try {
+            await setAvatarDB(Id, PictId)
+            return res.json('avatar was changed')
+        } catch (err) {
+            return next(ApiError.internal(err.message))
+        }
+
+    }
+
+    async deleteImage(req, res, next) {
+
+        try {
+            const {Id} = req.body
+            await deleteImageFromDB(Id)
+
+
+            return res.json('image was removed')
+        } catch (err) {
+            return next(ApiError.internal(err.message))
         }
 
     }

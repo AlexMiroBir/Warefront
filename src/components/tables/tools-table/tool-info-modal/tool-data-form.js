@@ -85,9 +85,9 @@ const ToolDataForm = ({toolId, closeModal}) => {
 
 
     const dispatch = useDispatch()
-    const tools = useSelector(state => state.ToolsSlice.Tools)
+    const tools = useSelector(state => state.Tools.Tools)
     const currentToolData = tools.find(tool => tool.Id === toolId)
-    const status = useSelector(state => state.AuthSlice.Status)
+    const status = useSelector(state => state.Auth.Status)
     const isAdmin = status.toLowerCase() === "admin"
 
     const history = useHistory()

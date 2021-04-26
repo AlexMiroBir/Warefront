@@ -82,8 +82,8 @@ const ItemAddForm = ({updateItemMainData, Name,Description}) => {
     const classes = useStyles();
 
 
-    const itemData = useSelector(state => state.ItemsSlice.ItemData)
-    const tools = useSelector(state => state.ToolsSlice.Tools)
+    const itemData = useSelector(state => state.Items.ItemData)
+    const tools = useSelector(state => state.Tools.Tools)
 
     const formik = useFormik({
         initialValues: {
@@ -116,7 +116,7 @@ const ItemAddForm = ({updateItemMainData, Name,Description}) => {
                             type="text"
                             name="name"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder="Type name"
                             onChange={formik.handleChange}
                             onKeyUp={(e) => updateItemMainData('Name', e.target.value)}
                             onBlur={formik.handleBlur}
@@ -138,7 +138,7 @@ const ItemAddForm = ({updateItemMainData, Name,Description}) => {
                             type="text"
                             name="bCode"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder=""
                             onChange={formik.handleChange}
                             onKeyUp={(e) => updateItemMainData('BCode', e.target.value)}
                             onBlur={formik.handleBlur}
@@ -162,7 +162,7 @@ const ItemAddForm = ({updateItemMainData, Name,Description}) => {
                             type="text"
                             name="description"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder="Type description"
                             onChange={formik.handleChange}
                             onKeyUp={(e) => updateItemMainData('Description', e.target.value)}
                             onBlur={formik.handleBlur}
@@ -184,7 +184,7 @@ const ItemAddForm = ({updateItemMainData, Name,Description}) => {
                             type="text"
                             name="forTool"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder=""
                             onChange={(e) => updateItemMainData('Tool', e.target.value)}
                             onBlur={formik.handleBlur}
                             defaultValue={formik.values.forTool}
@@ -210,7 +210,7 @@ const ItemAddForm = ({updateItemMainData, Name,Description}) => {
                             type="text"
                             name="location"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder="Type location"
                             onChange={formik.handleChange}
                             onKeyUp={(e) => updateItemMainData('Location', e.target.value)}
                             onBlur={formik.handleBlur}
@@ -232,7 +232,7 @@ const ItemAddForm = ({updateItemMainData, Name,Description}) => {
                             type="text"
                             name="qty"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder="Type qty"
                             onChange={formik.handleChange}
                             onKeyUp={(e) => updateItemMainData('QTY', e.target.value)}
                             onBlur={formik.handleBlur}
@@ -251,7 +251,7 @@ const ItemAddForm = ({updateItemMainData, Name,Description}) => {
                             type="text"
                             name="qtyMin"
                             className={classes.input}
-                            placeholder="Type login"
+                            placeholder="Type qty min"
                             onChange={formik.handleChange}
                             onKeyUp={(e) => updateItemMainData('QTY_MIN', e.target.value)}
                             onBlur={formik.handleBlur}
