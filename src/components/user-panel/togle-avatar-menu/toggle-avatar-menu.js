@@ -14,6 +14,7 @@ import {axiosLogOut} from '../../../redux/async-thunks/auth-async-thunks'
 import {useDispatch} from "react-redux";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {useHistory} from "react-router-dom";
+import {startLoading, stopLoading} from "../../../redux/slices/common-slice";
 
 
 
@@ -71,11 +72,14 @@ const ToggleAvatarMenu = () => {
     const history = useHistory()
 
     const logOut=(event)=>{
+        dispatch(startLoading("Logout..."))
         dispatch(axiosLogOut({}))
             .then(unwrapResult)
             .then(handleClose(event))
+            .then(response => dispatch(stopLoading("Log out completed")))
             .then(history.push("/login"))
             .catch(rejectedValueOrSerializedError => {
+                dispatch(stopLoading(rejectedValueOrSerializedError.message))
             })
     }
 

@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelPresentationSharpIcon from '@material-ui/icons/CancelPresentationSharp';
 import {axiosEditTool, axiosGetTools} from "../../../../../redux/async-thunks/tools-async-thunks";
+import {setMessage, stopLoading} from "../../../../../redux/slices/common-slice";
 
 
 /**
@@ -107,13 +108,16 @@ const AddToolModalForm = ({closeModal}) => {
                     Description: values.description,
 
                 }
-
+                dispatch(setMessage("Adding tool..."))
                 dispatch(axiosEditTool(row))
                     .then(unwrapResult)
                     .then(response => dispatch(axiosGetTools({})))
                     .then(response => history.push('/tools'))
+                    .then(response =>dispatch(setMessage("Tool has been added")))
                     .then(response => closeModal())
                     .catch(rejectedValueOrSerializedError => {
+                        dispatch(setMessage(rejectedValueOrSerializedError.message))
+
                     })
             },
         }

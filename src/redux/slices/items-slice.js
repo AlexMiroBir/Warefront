@@ -38,36 +38,36 @@ const ItemsSlice = createSlice({
 
 
     },
-    reducers: {
-
-        needUpdateItem: {
-            reducer: (state, action) => {
-                state.responseDataToSave.needUpdateItem = true
-            }
-        },
-        needUpdateParameters: {
-            reducer: (state, action) => {
-                state.responseDataToSave.needUpdateParameters = true
-            }
-        },
-        needUpdateSuppliers: {
-            reducer: (state, action) => {
-                state.responseDataToSave.needUpdateSuppliers = true
-            }
-        },
-        addToCandidatesToUpdateMainItemData: {
-            reducer: (state, {payload}) => {
-                state.candidatesToUpdate.itemData = payload
-            }
-        },
-        addToCandidatesToUpdateParameters: {
-            reducer: (state, {payload}) => {
-                state.candidatesToUpdate.parameters = payload
-            }
-        },
-
-
-    },
+    // reducers: {
+    //
+    //     needUpdateItem: {
+    //         reducer: (state, action) => {
+    //             state.responseDataToSave.needUpdateItem = true
+    //         }
+    //     },
+    //     needUpdateParameters: {
+    //         reducer: (state, action) => {
+    //             state.responseDataToSave.needUpdateParameters = true
+    //         }
+    //     },
+    //     needUpdateSuppliers: {
+    //         reducer: (state, action) => {
+    //             state.responseDataToSave.needUpdateSuppliers = true
+    //         }
+    //     },
+    //     addToCandidatesToUpdateMainItemData: {
+    //         reducer: (state, {payload}) => {
+    //             state.candidatesToUpdate.itemData = payload
+    //         }
+    //     },
+    //     addToCandidatesToUpdateParameters: {
+    //         reducer: (state, {payload}) => {
+    //             state.candidatesToUpdate.parameters = payload
+    //         }
+    //     },
+    //
+    //
+    // },
     extraReducers: {
 
         [axiosGetItems.pending]: (state, action) => {

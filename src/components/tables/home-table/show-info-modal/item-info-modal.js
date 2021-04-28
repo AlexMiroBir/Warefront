@@ -5,26 +5,23 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
 import ItemInfoModalGrid from "./item-info-modal-grid";
-import {
-    axiosGetItemData, axiosGetItemImages,
-    axiosGetItemParameters,
-    axiosGetItemSuppliers
-} from "../../../../redux/async-thunks/items-async-thunks";
+import {axiosGetItemData} from "../../../../redux/async-thunks/items-async-thunks";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
+import {startLoading, stopLoading, setMessage} from "../../../../redux/slices/common-slice";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        maxHeight:'100vh',
-        maxWidth:'1020px',
-        overflowY:'auto',
-       // position:'absolute !important',
-       // top:"1vh !important",
-        margin:"5px auto auto auto"
+        maxHeight: '100vh',
+        maxWidth: '1020px',
+        overflowY: 'auto',
+        // position:'absolute !important',
+        // top:"1vh !important",
+        margin: "5px auto auto auto"
 
     },
 
@@ -44,14 +41,16 @@ const ItemInfoModal = ({itemId}) => {
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = (itemId) => {
-
+        dispatch(setMessage("Getting item data..."))
         dispatch(axiosGetItemData(itemId))
             .then(unwrapResult)
-
-            // .then(response => dispatch(axiosGetItemSuppliers(itemId)))
             .then(response => history.push(`/data/item/${itemId}`))
+            .then(response => dispatch(setMessage("Item data has been received")))
             .then(response => setOpen(true))
+
             .catch(rejectedValueOrSerializedError => {
+                     dispatch(setMessage(rejectedValueOrSerializedError.message))
+
             })
 
     }
@@ -77,7 +76,7 @@ const ItemInfoModal = ({itemId}) => {
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={open}
-               // onClose={handleClose}
+                // onClose={handleClose}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{

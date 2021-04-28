@@ -15,6 +15,8 @@ import {useHistory} from "react-router-dom";
 import CancelPresentationSharpIcon from "@material-ui/icons/CancelPresentationSharp";
 import SaveIcon from "@material-ui/icons/Save";
 import PickUpModal from "./pick-up-modal";
+import {setMessage, startLoading, stopLoading} from "../../../../redux/slices/common-slice";
+import {axiosGetOrders} from "../../../../redux/async-thunks/orders-async-thunks";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -73,6 +75,7 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
     const [suppliersIdForDelete, setSuppliersIdForDelete] = useState([])
 
     const dispatchData = (obj) => {
+        dispatch(setMessage("Editing item data..."))
         dispatch(axiosEditItem(obj))
             .then(unwrapResult)
             .then(response => history.push('/home'))
@@ -80,9 +83,12 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
             .then(response => dispatch(axiosGetTools({})))
             .then(response => dispatch(axiosGetSuppliers({})))
             .then(response => dispatch(axiosGetUsers({})))
-            //.then(response => dispatch(axiosGetOrders({})))
+            .then(response => dispatch(axiosGetOrders({})))
+            .then(response => dispatch(setMessage("Item data has been edited")))
             .then(response => closeModal())
             .catch(rejectedValueOrSerializedError => {
+                dispatch(setMessage(rejectedValueOrSerializedError.message))
+
             })
     }
 
@@ -233,7 +239,7 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
                     {/*    variant="contained"*/}
 
                     {/*    onClick={() => tempSave()}>Pick UP</Button>*/}
-                    <PickUpModal itemId={itemId}/>
+                    <PickUpModal itemId={itemId} closeModal={{closeModal}}/>
                     <div>
                         <Button
                             startIcon={<SaveIcon/>}

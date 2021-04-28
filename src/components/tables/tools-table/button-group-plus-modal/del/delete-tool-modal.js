@@ -19,6 +19,7 @@ import Slider from '@material-ui/core/Slider';
 import Grid from '@material-ui/core/Grid';
 import Divider from "@material-ui/core/Divider";
 import AccordionTools from "./accordion";
+import {setMessage} from "../../../../../redux/slices/common-slice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -86,10 +87,13 @@ const DeleteToolModal = ({selectedToolsId}) => {
 
     const deleteTools = async (toolsId) => {
         for (const id of toolsId) {
+            dispatch(setMessage("Deleting tool..."))
             await dispatch(axiosDeleteTool(id))
                 .then(unwrapResult)
                 .then(response => dispatch(axiosGetTools({})))
+                .then(response => dispatch(setMessage("Tool has been deleted")))
                 .catch(rejectedValueOrSerializedError => {
+                    dispatch(setMessage(rejectedValueOrSerializedError.message))
                 })
         }
 

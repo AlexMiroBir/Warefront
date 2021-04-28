@@ -3,13 +3,14 @@ import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import{axiosGetItems,axiosEditItem} from "../../../../../redux/async-thunks/items-async-thunks";
-import ItemAddModalNavTab from "./item-add-modal-nav-tab";
+import AddItemModalNavTab from "./add-item-modal-nav-tab";
 import {useDispatch, useSelector} from "react-redux";
 import Button from "@material-ui/core/Button";
 import {unwrapResult} from "@reduxjs/toolkit";
-import ItemAddForm from './item-add-form'
+import AddItemForm from './add-item-form'
 
 import {useHistory} from "react-router-dom";
+import {setMessage, startLoading, stopLoading} from "../../../../../redux/slices/common-slice";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ItemAddModalGrid = ({itemId, closeModal}) => {
+const AddItemModalGrid = ({itemId, closeModal}) => {
 
 
     const dispatch = useDispatch()
@@ -35,8 +36,8 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
     const allSuppliers = useSelector(state => state.Suppliers.Suppliers)
     const itemData = useSelector(state => state.Items.ItemData)
 
-    const itemDataParameters = useSelector(state => state.Items.ItemData.Item_Parameters)
-    const itemDataSuppliers = useSelector(state => state.Items.ItemData.Inventory_Suppliers)
+    // const itemDataParameters = useSelector(state => state.Items.ItemData.Item_Parameters)
+    // const itemDataSuppliers = useSelector(state => state.Items.ItemData.Inventory_Suppliers)
 
 
     const [needUpdateItem, setNeedUpdateItem] = useState(false)
@@ -58,12 +59,16 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
     const [suppliersIdForDelete, setSuppliersIdForDelete] = useState([])
 
     const dispatchData = (obj) => {
+        dispatch(setMessage("Adding item..."))
         dispatch(axiosEditItem(obj))
             .then(unwrapResult)
             .then(response => history.push('/home'))
             .then(response => dispatch(axiosGetItems({})))
+            .then(response => dispatch(setMessage("Item has been added")))
             .then(response => closeModal())
             .catch(rejectedValueOrSerializedError => {
+                dispatch(setMessage(rejectedValueOrSerializedError.message))
+
             })
     }
 
@@ -186,7 +191,7 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
                 </Grid>
                 <Grid item xs={12} >
                     {/*<ItemDataForm setName={setName} setBCode={setBCode} setDescription={setDescription} setForTool={setForTool} setLocation={setLocation} setQty={setQty} setQtyMin={setQtyMin} />*/}
-                    <ItemAddForm
+                    <AddItemForm
                         updateItemMainData={updateItemMainData}
                         Name={Name}
                         Description
@@ -195,7 +200,7 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <ItemAddModalNavTab
+                    <AddItemModalNavTab
                         itemId={itemId}
                         // Parameters
                         parameters={parameters}
@@ -222,4 +227,4 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
 }
 
 
-export default ItemAddModalGrid
+export default AddItemModalGrid

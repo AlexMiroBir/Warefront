@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Grid from '@material-ui/core/Grid';
 import Divider from "@material-ui/core/Divider";
+import {setMessage} from "../../../../../redux/slices/common-slice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -74,7 +75,7 @@ const DeleteItemModal = ({selectedItemsId}) => {
     const getArrWithItemsForDelete = (arrWithId) => {
         let arr = []
         arrWithId.forEach(id => {
-            // eslint-disable-next-line eqeqeq
+
             let item = items.find(item => item.Id == id)
             {
                 arr = [...arr, item]
@@ -83,14 +84,19 @@ const DeleteItemModal = ({selectedItemsId}) => {
         return arr
     }
 
-    const deleteUsers = async (usersId) => {
+    const deleteItems = async (usersId) => {
+
         for (const id of usersId) {
+            dispatch(setMessage("Deleting item..."))
             await dispatch(axiosDeleteItem(id))
                 .then(unwrapResult)
                 .then(response => dispatch(axiosGetItems({})))
+                .then(response => dispatch(setMessage("Item has been deleted")))
                 .catch(rejectedValueOrSerializedError => {
+                    dispatch(setMessage(rejectedValueOrSerializedError.message))
                 })
         }
+
 
         handleClose()
         history.push('/home')
@@ -144,7 +150,7 @@ const DeleteItemModal = ({selectedItemsId}) => {
                             color="secondary"
                             variant="contained"
                             fullWidth
-                            onClick={() => deleteUsers(selectedItemsId)}
+                            onClick={() => deleteItems(selectedItemsId)}
                             disabled={!sure}>
 
                             Delete

@@ -2,7 +2,7 @@ import React from 'react';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles';
 import DeleteItemModal from "./del/delete-item-modal";
-import AddItemModal from "./add/item-add-modal-form";
+import AddItemModal from "./add/add-item-modal-form";
 
 
 const useStyles = makeStyles((theme) => ({

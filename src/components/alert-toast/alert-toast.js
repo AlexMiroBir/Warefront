@@ -2,9 +2,10 @@ import React, {useEffect} from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import {useSelector} from "react-redux";
 
-const Toast=(message)=> {
 
-    const globalStateMessageObj = useSelector(state=>state.Auth.message) /// TODO здесь используется message из аутентификации, это неправильно, надо искать общий эндпоинт
+const Toast=()=> {
+
+    const globalStateMessageObj = useSelector(state=>state.Common.message)
 
     const [state, setState] = React.useState({
         open: false,
@@ -13,7 +14,7 @@ const Toast=(message)=> {
 
     });
 
-    useEffect(()=>handleClick({vertical: 'bottom', horizontal: 'right'}),[globalStateMessageObj]);
+    useEffect(()=>handleClick({vertical: 'top', horizontal: 'left'}),[globalStateMessageObj]);
 
     const {vertical, horizontal, open} = state;
 
@@ -30,7 +31,7 @@ const Toast=(message)=> {
     return (
         <div>
             <Snackbar
-                //severity={'error'}
+
 
                 anchorOrigin={{vertical, horizontal}}
                 open={open}
@@ -38,6 +39,7 @@ const Toast=(message)=> {
                 message={globalStateMessageObj.message}
                 key={vertical + horizontal}
             />
+
         </div>
     );
 }

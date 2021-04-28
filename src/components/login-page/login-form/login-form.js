@@ -8,11 +8,12 @@ import Button from '@material-ui/core/Button';
 import {useDispatch} from "react-redux";
 import {unwrapResult} from "@reduxjs/toolkit";
 import {axiosLogin} from "../../../redux/async-thunks/auth-async-thunks"
-import {axiosGetItems, axiosGetAvatars} from "../../../redux/async-thunks/items-async-thunks"
+import {axiosGetAvatars, axiosGetItems} from "../../../redux/async-thunks/items-async-thunks"
 import {axiosGetTools} from "../../../redux/async-thunks/tools-async-thunks";
 import {axiosGetSuppliers} from "../../../redux/async-thunks/suppliers-async-thunks";
 import {axiosGetUsers} from "../../../redux/async-thunks/users-async-thunks";
 import {axiosGetOrders} from "../../../redux/async-thunks/orders-async-thunks";
+import {startLoading, stopLoading} from "../../../redux/slices/common-slice";
 
 
 /**
@@ -79,22 +80,26 @@ const LoginForm = () => {
 
 
     const onClickLogin = (username, password) => {
-
-        dispatch(axiosLogin({Name:username, Password:password}))
+        dispatch(startLoading("Login..."))
+        dispatch(axiosLogin({Name: username, Password: password}))
             .then(unwrapResult)
+            .then(response => dispatch(stopLoading("Authorized")))
             .then(response => dispatch(axiosGetItems({})))
+            .then(response => dispatch(startLoading("Getting main data...")))
             .then(response => dispatch(axiosGetAvatars({})))
             .then(response => history.push('/home'))
             .then(response => dispatch(axiosGetTools({})))
             .then(response => dispatch(axiosGetSuppliers({})))
             .then(response => dispatch(axiosGetUsers({})))
             .then(response => dispatch(axiosGetOrders({})))
+            .then(response => dispatch(stopLoading("Data has been received")))
             .catch(rejectedValueOrSerializedError => {
+                dispatch(stopLoading(rejectedValueOrSerializedError.message))
             })
     }
 
-    const isDisabled=(a,b)=>{
-        if(a||b){
+    const isDisabled = (a, b) => {
+        if (a || b) {
             return true
         }
     }
@@ -147,7 +152,7 @@ const LoginForm = () => {
                     type="password"
                     name="password"
                     className={classes.input}
-                   // placeholder="Type password"
+                    // placeholder="Type password"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.password}

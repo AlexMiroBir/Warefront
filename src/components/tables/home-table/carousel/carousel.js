@@ -17,6 +17,7 @@ import {
 import {unwrapResult} from "@reduxjs/toolkit";
 import noImagePic from "../../../../images/no-image.png"
 import Box from "@material-ui/core/Box";
+import {setMessage, startLoading, stopLoading} from "../../../../redux/slices/common-slice";
 
 const API_URL_SERVER = process.env.REACT_APP_API_URL;
 
@@ -101,22 +102,29 @@ function Item({setFile, image, setIndex}) {
 
     const setAvatar = () => {
         const id = itemId
+        dispatch(setMessage("Setting avatar..."))
         dispatch(axiosSetAvatar({itemId, pictId: image.Id}))
             .then(unwrapResult)
             .then(response => dispatch(axiosGetItemImages(id)))
             .then(response => dispatch(axiosGetAvatars()))
-            // .then(response =>setIndex(0))
+            .then(response => dispatch(setMessage("Avatar has been set")))
             .catch(rejectedValueOrSerializedError => {
+                dispatch(setMessage(rejectedValueOrSerializedError.message))
+
             })
     }
 
     const delImage = () => {
         const Id = image.Id
+        dispatch(setMessage("Deleting image..."))
         dispatch(axiosDeleteImage(Id))
             .then(unwrapResult)
             .then(response => dispatch(axiosGetItemImages(Id)))
             .then(response => dispatch(axiosGetAvatars()))
+            .then(response => dispatch(setMessage("Image has been deleted")))
             .catch(rejectedValueOrSerializedError => {
+                dispatch(setMessage(rejectedValueOrSerializedError.message))
+
             })
     }
 

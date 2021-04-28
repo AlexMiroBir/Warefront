@@ -7,6 +7,7 @@ import MyCarousel from "./carousel";
 import {useDispatch} from "react-redux";
 import {axiosAddImage, axiosGetAvatars, axiosGetItemImages} from "../../../../redux/async-thunks/items-async-thunks";
 import {unwrapResult} from "@reduxjs/toolkit";
+import {setMessage} from "../../../../redux/slices/common-slice";
 
 const useStyles = makeStyles((theme) => ({
     avatar: {
@@ -54,10 +55,14 @@ const ImageModal = ({imgSrc, itemId}) => {
 
 
     const handleOpen = () => {
+        dispatch(setMessage("Getting images..."))
         dispatch(axiosGetItemImages(itemId))
             .then(unwrapResult)
+            .then(response => dispatch(setMessage("Images have been received...")))
             .then(response => setOpen(true))
             .catch(rejectedValueOrSerializedError => {
+                dispatch(setMessage(rejectedValueOrSerializedError.message))
+
             })
 
     };
@@ -67,13 +72,17 @@ const ImageModal = ({imgSrc, itemId}) => {
     };
 
     const sendFileToServer = () => {
-        if(file) {
+        if (file) {
+            dispatch(setMessage("Uploading image..."))
             dispatch(axiosAddImage({ItemId: itemId, File: file}))
                 .then(unwrapResult)
+                .then(response => dispatch(setMessage("Image has been uploaded...")))
                 .then(response => dispatch(axiosGetItemImages(itemId)))
                 .then(response => dispatch(axiosGetAvatars()))
                 // .then(response =>setIndex(0))
                 .catch(rejectedValueOrSerializedError => {
+                    dispatch(setMessage(rejectedValueOrSerializedError.message))
+
                 })
         }
     }

@@ -10,6 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import {unwrapResult} from "@reduxjs/toolkit";
 import {axiosGetItemData, axiosGetItems} from "../../../../redux/async-thunks/items-async-thunks";
 import {axiosPickUpItem} from "../../../../redux/async-thunks/orders-async-thunks";
+import {setMessage} from "../../../../redux/slices/common-slice";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const PickUpModal = ({itemId}) => {
+const PickUpModal = ({itemId,closeModal}) => {
     const classes = useStyles();
     const history = useHistory()
     const dispatch = useDispatch()
@@ -59,7 +60,7 @@ const toolId = useSelector(state => state.Items?.ItemData?.Tool_Id)
     };
 
     const pickUpToServer = () => {
-        console.log(pickUpQTY)
+       dispatch(setMessage(''))
         dispatch(axiosPickUpItem({Id: itemId, PickUpQTY: pickUpQTY, User_Id: userId, Tool_Id:toolId}))
             .then(unwrapResult)
             .then(response => dispatch(axiosGetItems({})))
@@ -88,7 +89,7 @@ const toolId = useSelector(state => state.Items?.ItemData?.Tool_Id)
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={open}
-                onClose={handleClose}
+               // onClose={handleClose}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -121,7 +122,8 @@ const toolId = useSelector(state => state.Items?.ItemData?.Tool_Id)
                                 size='small'
                                 color="secondary"
                                 variant="contained">
-                                Cancel
+                                onClick={() => closeModal()}>
+                                Close
                             </Button>
 
                         </div>

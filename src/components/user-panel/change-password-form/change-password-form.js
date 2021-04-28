@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {axiosChangePassword} from "../../../redux/async-thunks/auth-async-thunks";
 import {axiosGetItems} from "../../../redux/async-thunks/items-async-thunks";
 import {unwrapResult} from "@reduxjs/toolkit";
+import {setMessage} from "../../../redux/slices/common-slice";
 
 
 /**
@@ -78,12 +79,15 @@ const ChangePasswordForm = ({mod}) => {
 
 
     const onClickChangePassword = (newPassword) => {
-
+        dispatch(setMessage("Updating password..."))
         dispatch(axiosChangePassword({Id:userId, NewPassword:newPassword}))
             .then(unwrapResult)
             // .then(response => dispatch(fetchAllContacts()))
+            .then(response => dispatch(setMessage("Password has been updated...")))
             .then(response => history.push('/'))
             .catch(rejectedValueOrSerializedError => {
+                dispatch(setMessage(rejectedValueOrSerializedError.message))
+
             })
     }
 

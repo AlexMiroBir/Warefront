@@ -3,26 +3,40 @@ import LoginPage from "../login-page/login-page";
 import Toast from "../alert-toast/alert-toast";
 import MainPage from "../main-page";
 import {Redirect, Route, Switch, useHistory} from 'react-router-dom';
+import {useSelector} from "react-redux";
+import Loader from "../loader";
+import {makeStyles} from "@material-ui/core/styles";
 
-//import {useSelector} from "react-redux";
+const useStyles = makeStyles((theme) => ({
+    app: {
+        maxWidth: '99vw'
+    }
+}));
 
 
 function App() {
+
+    const classes = useStyles()
+
     const history = useHistory()
-    //  const isAuthorized = useSelector(state => state.Slice.isAuthorized)
+    const isLoading = useSelector(state => state.Common.isLoading)
+    const loadingLabel = useSelector(state => state.Common.loadingLabel)
 
     useEffect(() => history.push('/login'), [history]) /// TODO потенциальная проблема
 
 
     return (
 
-        <div className="App">
+        <div className={classes.app}>
+            {isLoading && <Loader
+                label={loadingLabel}/>}
+
 
             <Switch>
 
-            <Route path="/login" exact><LoginPage/> </Route>
-            <Route path="/" > <MainPage/></Route>
-            <Redirect from="**" to="/"/>
+                <Route path="/login" exact><LoginPage/> </Route>
+                <Route path="/"> <MainPage/></Route>
+                <Redirect from="**" to="/"/>
 
             </Switch>
             <Toast/>

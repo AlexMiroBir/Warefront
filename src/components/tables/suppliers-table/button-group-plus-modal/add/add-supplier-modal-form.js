@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelPresentationSharpIcon from '@material-ui/icons/CancelPresentationSharp';
 import {axiosEditSupplier, axiosGetSuppliers} from "../../../../../redux/async-thunks/suppliers-async-thunks";
+import {setMessage} from "../../../../../redux/slices/common-slice";
 
 
 /**
@@ -114,13 +115,15 @@ const AddSupplierModalForm = ({closeModal}) => {
                     Phone: values.phone,
                     Contact_Name: values.contactName,
                 }
-
+                dispatch(setMessage("Adding supplier..."))
                 dispatch(axiosEditSupplier(row))
                     .then(unwrapResult)
                     .then(response => dispatch(axiosGetSuppliers({})))
                     .then(response => history.push('/suppliers'))
+                    .then(response => dispatch(setMessage("Supplier has been added")))
                     .then(response => closeModal())
                     .catch(rejectedValueOrSerializedError => {
+                        dispatch(setMessage(rejectedValueOrSerializedError.message))
                     })
             },
         }

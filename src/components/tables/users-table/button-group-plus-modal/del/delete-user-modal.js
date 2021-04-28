@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Grid from '@material-ui/core/Grid';
 import Divider from "@material-ui/core/Divider";
+import {setMessage, startLoading, stopLoading} from "../../../../../redux/slices/common-slice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -86,12 +87,14 @@ const DeleteUserModal = ({selectedUsersId}) => {
     const deleteUsers = async (usersId) => {
 
         for (const id of usersId) {
-
             if (id != adminId) {
+                dispatch(setMessage("Deleting user..."))
                 await dispatch(axiosDeleteUser(id))
                     .then(unwrapResult)
                     .then(response => dispatch(axiosGetUsers({})))
+                    .then(response => dispatch(setMessage("User(s) has been deleted")))
                     .catch(rejectedValueOrSerializedError => {
+                        dispatch(setMessage(rejectedValueOrSerializedError.message))
                     })
             }
         }

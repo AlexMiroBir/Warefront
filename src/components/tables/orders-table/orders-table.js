@@ -31,7 +31,6 @@ const OrdersTable = () => {
 
         const monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"]
-        console.log(monthNames[date.getMonth()])
 
         return (`${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()},
           ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
@@ -53,15 +52,15 @@ const OrdersTable = () => {
     }
 
 
-    const getFilteredArr = (orders) => {
+    const getFilteredArr = (orders) => { //TODO должны ли удаляться заказы с Айтемами????
         let arr = []
         orders.forEach(order => {
-            let hasItem = order.Inventory_Name.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            let hasDescription = order.Inventory_Description.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            let hasQty = order.QTY.toString().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasItem = order.Inventory_Name?.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasDescription = order.Inventory_Description?.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasQty = order?.QTY.toString().indexOf(globalFilterInput.toLowerCase().trim())
             let hasDate = getFormattedDate(new Date(order.Date)).toString().toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            let hasOperator = order.Operator.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
-            let hasTool = order.Tool.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasOperator = order.Operator?.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
+            let hasTool = order.Tool?.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())
 
             let hasMatches = (hasItem + hasDescription + hasQty + hasDate + hasOperator + hasTool) > -6
 

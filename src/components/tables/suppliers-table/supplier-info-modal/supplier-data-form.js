@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelPresentationSharpIcon from '@material-ui/icons/CancelPresentationSharp';
 import {axiosEditSupplier, axiosGetSuppliers} from "../../../../redux/async-thunks/suppliers-async-thunks";
+import {setMessage} from "../../../../redux/slices/common-slice";
 
 /**
  * Material-UI styles:
@@ -120,13 +121,16 @@ const SupplierDataForm = ({supplierId, closeModal}) => {
                     Phone: values.phone,
                     Contact_Name: values.contactName,
                 }
-
+                dispatch(setMessage("Editing supplier..."))
                 dispatch(axiosEditSupplier(row))
                     .then(unwrapResult)
                     .then(response => dispatch(axiosGetSuppliers({})))
                     .then(response => history.push('/suppliers'))
+                    .then(response => dispatch(setMessage("Supplier has been deleted...")))
                     .then(response => closeModal())
                     .catch(rejectedValueOrSerializedError => {
+                        dispatch(setMessage(rejectedValueOrSerializedError.message))
+
                     })
 
 

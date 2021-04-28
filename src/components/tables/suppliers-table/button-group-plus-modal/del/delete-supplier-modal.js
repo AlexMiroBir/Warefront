@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Grid from '@material-ui/core/Grid';
 import Divider from "@material-ui/core/Divider";
+import {setMessage} from "../../../../../redux/slices/common-slice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -86,10 +87,13 @@ const DeleteSupplierModal = ({selectedSuppliersId}) => {
 
     const deleteSuppliers = async (suppliersId) => {
         for (const id of suppliersId) {
+            dispatch(setMessage("Deleting supplier..."))
             await dispatch(axiosDeleteSupplier(id))
                 .then(unwrapResult)
                 .then(response => dispatch(axiosGetSuppliers({})))
+                .then(response => dispatch(setMessage("Supplier has been deleted")))
                 .catch(rejectedValueOrSerializedError => {
+                    dispatch(setMessage(rejectedValueOrSerializedError.message))
                 })
         }
 
