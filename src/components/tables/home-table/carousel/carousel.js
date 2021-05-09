@@ -54,10 +54,10 @@ const MyCarousel = ({setFile, close}) => {   //TODO подумать о пере
 
 
     const [index, setIndex] = useState(0)
-    console.log(index)
+
     const itemImages = useSelector(state => state.Items.ItemImages)
 
-    //useEffect(() => console.log(), [itemImages])
+
 
     const imageSort = (array) => {
         if (array.length < 1) {
@@ -65,8 +65,6 @@ const MyCarousel = ({setFile, close}) => {   //TODO подумать о пере
         }
         return array.slice().sort((a, b) => a.General < b.General ? 1 : -1)
     }
-
-    //  const sortedImages = itemImages.slice().sort((a, b) => a.General < b.General ? 1 : -1)
 
 
     {
@@ -88,6 +86,10 @@ const MyCarousel = ({setFile, close}) => {   //TODO подумать о пере
 }
 
 function Item({setFile, image, setIndex}) {
+
+    const status = useSelector(state => state.Auth.Status)
+    const isAdmin = status.toLowerCase()==='admin'
+
     const itemId = image.Inventory_ID
 
     const classes = useStyles()
@@ -102,28 +104,28 @@ function Item({setFile, image, setIndex}) {
 
     const setAvatar = () => {
         const id = itemId
-        dispatch(setMessage("Setting avatar..."))
+        dispatch(setMessage({msg:"Setting avatar...", variant:"info"}))
         dispatch(axiosSetAvatar({itemId, pictId: image.Id}))
             .then(unwrapResult)
             .then(response => dispatch(axiosGetItemImages(id)))
             .then(response => dispatch(axiosGetAvatars()))
-            .then(response => dispatch(setMessage("Avatar has been set")))
+            .then(response => dispatch(setMessage({msg:"Avatar has been set",variant:'success'})))
             .catch(rejectedValueOrSerializedError => {
-                dispatch(setMessage(rejectedValueOrSerializedError.message))
+                dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
 
             })
     }
 
     const delImage = () => {
         const Id = image.Id
-        dispatch(setMessage("Deleting image..."))
+        dispatch(setMessage({msg:"Deleting image...",variant:'info'}))
         dispatch(axiosDeleteImage(Id))
             .then(unwrapResult)
             .then(response => dispatch(axiosGetItemImages(Id)))
             .then(response => dispatch(axiosGetAvatars()))
-            .then(response => dispatch(setMessage("Image has been deleted")))
+            .then(response => dispatch(setMessage({msg:"Image has been deleted",variant:'success'})))
             .catch(rejectedValueOrSerializedError => {
-                dispatch(setMessage(rejectedValueOrSerializedError.message))
+                dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
 
             })
     }
@@ -139,7 +141,7 @@ function Item({setFile, image, setIndex}) {
 
     const imageSrc = getImageLink(image.Filename)
 
-    console.log(imageSrc)
+
 
     return (
         <Box className={classes.box}>
@@ -153,20 +155,20 @@ function Item({setFile, image, setIndex}) {
                 <div>
                     {!noImage && <div className={classes.star}>
 
-                        <StarSharpIcon
+                        {isAdmin &&<StarSharpIcon
                             style={{color: orange[500]}}
-                            fontSize="large"/>
+                            fontSize="large"/>}
 
                     </div>}
-                    <div className={classes.buttons}>
+                    {isAdmin &&  <div className={classes.buttons}>
                         <UploadButton setFile={setFile}/>
-                        <Button
+                       <Button
                             variant="contained"
                             color="secondary"
                             onClick={() => delImage()}
                             disabled={noImage}
                         >Delete</Button>
-                    </div>
+                    </div>}
                 </div>
 
                 :
@@ -178,13 +180,13 @@ function Item({setFile, image, setIndex}) {
                                       onClick={() => setAvatar()}
                     >
                         {fullFill ?
-                            <StarSharpIcon
+                            isAdmin && <StarSharpIcon
                                 style={{color: orange[500]}}
                                 fontSize="large"/>
 
                             :
 
-                            <StarOutlineSharpIcon
+                            isAdmin && <StarOutlineSharpIcon
                                 style={{color: orange[500]}}
                                 fontSize="large"/>
 
@@ -192,7 +194,7 @@ function Item({setFile, image, setIndex}) {
                         }
 
                     </div>}
-                    <div className={classes.buttons}>
+                    {isAdmin && <div className={classes.buttons}>
                         <UploadButton setFile={setFile}/>
                         <Button
                             variant="contained"
@@ -200,7 +202,7 @@ function Item({setFile, image, setIndex}) {
                             onClick={() => delImage()}
                             disabled={noImage}
                         >Delete</Button>
-                    </div>
+                    </div>}
                 </div>}
         </Box>
     )

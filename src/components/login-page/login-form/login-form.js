@@ -83,18 +83,18 @@ const LoginForm = () => {
         dispatch(startLoading("Login..."))
         dispatch(axiosLogin({Name: username, Password: password}))
             .then(unwrapResult)
-            .then(response => dispatch(stopLoading("Authorized")))
-            .then(response => dispatch(axiosGetItems({})))
+            .then(response => dispatch(stopLoading({msg: "Authorized", variant: 'success'})))
             .then(response => dispatch(startLoading("Getting main data...")))
+            .then(response => dispatch(axiosGetItems({})))
             .then(response => dispatch(axiosGetAvatars({})))
             .then(response => history.push('/home'))
             .then(response => dispatch(axiosGetTools({})))
             .then(response => dispatch(axiosGetSuppliers({})))
             .then(response => dispatch(axiosGetUsers({})))
             .then(response => dispatch(axiosGetOrders({})))
-            .then(response => dispatch(stopLoading("Data has been received")))
+            .then(response => dispatch(stopLoading({msg: "Data has been received", variant: 'success'})))
             .catch(rejectedValueOrSerializedError => {
-                dispatch(stopLoading(rejectedValueOrSerializedError.message))
+                dispatch(stopLoading({msg: rejectedValueOrSerializedError.message, variant: "error"}))
             })
     }
 

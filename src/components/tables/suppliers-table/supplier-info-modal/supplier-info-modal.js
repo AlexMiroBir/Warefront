@@ -43,7 +43,7 @@ const SupplierInfoModal = ({supplierId}) => {
 
 
     const handleClose = () => {
-        console.log('close Modal')
+
         setOpen(false)
     };
 
@@ -51,7 +51,7 @@ const SupplierInfoModal = ({supplierId}) => {
         <div>
             <Button
                 onClick={() => handleOpen(supplierId)}
-                variant="outlined"
+                variant="contained"
                 color="primary"
                 size="small"
                 style={{marginLeft: 16}}

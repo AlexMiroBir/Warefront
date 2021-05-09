@@ -78,7 +78,7 @@ const validationSchema = yup.object({
 });
 
 
-const AddItemForm = ({updateItemMainData, Name,Description}) => {
+const AddItemForm = ({updateItemMainData, Name, Description}) => {
     const classes = useStyles();
 
 

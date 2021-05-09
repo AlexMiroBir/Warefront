@@ -108,15 +108,15 @@ const AddToolModalForm = ({closeModal}) => {
                     Description: values.description,
 
                 }
-                dispatch(setMessage("Adding tool..."))
+                dispatch(setMessage({msg:"Adding tool...",variant:'info'}))
                 dispatch(axiosEditTool(row))
                     .then(unwrapResult)
                     .then(response => dispatch(axiosGetTools({})))
                     .then(response => history.push('/tools'))
-                    .then(response =>dispatch(setMessage("Tool has been added")))
+                    .then(response =>dispatch(setMessage({msg:"Tool has been added", variant:'success'})))
                     .then(response => closeModal())
                     .catch(rejectedValueOrSerializedError => {
-                        dispatch(setMessage(rejectedValueOrSerializedError.message))
+                        dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
 
                     })
             },

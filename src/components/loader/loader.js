@@ -4,8 +4,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import "./loader.css"
 
 
-///////////Material UI styles//////////////////
-
 const useStyles = makeStyles((theme) => ({
     page: {
         position: 'absolute',
@@ -38,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-////////////////////////////////////////////
 
 
 const Loader = ({label}) => {

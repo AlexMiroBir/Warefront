@@ -16,16 +16,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#1b5e20',
-        },
-        secondary: {
-            main: '#b71c1c',
-        },
-    },
-});
+
 
 
 const ButtonGroupAddDeleteUsers = ({selectedUsersId}) => {
@@ -38,10 +29,10 @@ const ButtonGroupAddDeleteUsers = ({selectedUsersId}) => {
             <ButtonGroup
                 size="large"
                 aria-label="small outlined button group">
-                <ThemeProvider theme={theme}>
+
                     <AddUserModal/>
                     <DeleteUserModal selectedUsersId={selectedUsersId}/>
-                </ThemeProvider>
+
             </ButtonGroup>
         </div>
     );

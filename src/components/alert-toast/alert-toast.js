@@ -1,48 +1,54 @@
 import React, {useEffect} from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
 import {useSelector} from "react-redux";
+import { SnackbarProvider, useSnackbar } from 'notistack';
+import Collapse from '@material-ui/core/Collapse';
+
+const ToastInside=()=> {
+    const { enqueueSnackbar } = useSnackbar();
+
+    const globalStateMessageObj = useSelector(state=>state.Common.message)
+    const variant = globalStateMessageObj.variant
+    const msg = globalStateMessageObj.msg
+
+    console.log(globalStateMessageObj)
+
+
+    useEffect(()=>setTimeout(handleClickVariant(msg, variant),500),[globalStateMessageObj]);
+
+
+
+    const handleClick = () => {
+        enqueueSnackbar(msg);
+    };
+
+    const handleClickVariant = (msg,variant) => () => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(msg, {variant});
+    };
+
+    return (
+        <React.Fragment>
+        </React.Fragment>
+    );
+}
+
 
 
 const Toast=()=> {
 
-    const globalStateMessageObj = useSelector(state=>state.Common.message)
-
-    const [state, setState] = React.useState({
-        open: false,
-        vertical: 'top',
-        horizontal: 'center',
-
-    });
-
-    useEffect(()=>handleClick({vertical: 'top', horizontal: 'left'}),[globalStateMessageObj]);
-
-    const {vertical, horizontal, open} = state;
-
-    const handleClick = (newState) => () => {
-        setState({open: true, ...newState});
-    };
-
-    const handleClose = () => {
-        setState({...state, open: false});
-    };
-
-
 
     return (
-        <div>
-            <Snackbar
-
-
-                anchorOrigin={{vertical, horizontal}}
-                open={open}
-                onClose={handleClose}
-                message={globalStateMessageObj.message}
-                key={vertical + horizontal}
-            />
-
-        </div>
+        <SnackbarProvider
+            maxSnack={3}
+            anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+            }}
+            TransitionComponent={Collapse}
+        >
+            <ToastInside />
+        </SnackbarProvider>
     );
 }
-
 
 export default Toast

@@ -11,7 +11,7 @@ import {useHistory} from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelPresentationSharpIcon from '@material-ui/icons/CancelPresentationSharp';
-import {setMessage} from "../../../../redux/slices/common-slice";
+import {setMessage, stopLoading} from "../../../../redux/slices/common-slice";
 
 /**
  * Material-UI styles:
@@ -94,15 +94,6 @@ const ToolDataForm = ({toolId, closeModal}) => {
     const history = useHistory()
 
 
-    // const onClickEditToolsData = (row) => {      // TODO убрать когда переделаю на stopPropagation
-    //
-    //     dispatch(axiosEditTool(row))
-    //         .then(unwrapResult)
-    //         .then(response => dispatch(axiosGetTools({})))
-    //         .then(response => history.push('/tools'))
-    //         .catch(rejectedValueOrSerializedError => {
-    //         })
-    // }
 
     /**
      * Formik for Material UI - https://formik.org/docs/examples/with-material-ui
@@ -121,15 +112,15 @@ const ToolDataForm = ({toolId, closeModal}) => {
                     Name: values.name,
                     Description: values.description,
                 }
-                dispatch(setMessage("Editing tool..."))
+                dispatch(setMessage({msg:"Editing tool...",variant:'info'}))
                 dispatch(axiosEditTool(row))
                     .then(unwrapResult)
                     .then(response => dispatch(axiosGetTools({})))
                     .then(response => history.push('/tools'))
-                    .then(response => dispatch(setMessage("Tool has been deleted...")))
+                    .then(response => dispatch(setMessage({msg:"Tool has been deleted",variant:'success'})))
                     .then(response => closeModal())
                     .catch(rejectedValueOrSerializedError => {
-                        dispatch(setMessage(rejectedValueOrSerializedError.message))
+                        dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
 
                     })
             },

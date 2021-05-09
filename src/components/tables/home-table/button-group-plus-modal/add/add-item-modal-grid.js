@@ -23,8 +23,14 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding:0,
         textAlign: 'center',
-        color: theme.palette.text.secondary,
+        fontSize:'2rem',
+        backgroundColor: 'rgb(141, 255, 129)',
     },
+    buttons:{
+        display:'flex',
+        justifyContent:'space-between',
+        padding:'0 20px'
+    }
 }));
 
 const AddItemModalGrid = ({itemId, closeModal}) => {
@@ -35,9 +41,6 @@ const AddItemModalGrid = ({itemId, closeModal}) => {
     const tools = useSelector(state => state.Tools.Tools)
     const allSuppliers = useSelector(state => state.Suppliers.Suppliers)
     const itemData = useSelector(state => state.Items.ItemData)
-
-    // const itemDataParameters = useSelector(state => state.Items.ItemData.Item_Parameters)
-    // const itemDataSuppliers = useSelector(state => state.Items.ItemData.Inventory_Suppliers)
 
 
     const [needUpdateItem, setNeedUpdateItem] = useState(false)
@@ -59,15 +62,15 @@ const AddItemModalGrid = ({itemId, closeModal}) => {
     const [suppliersIdForDelete, setSuppliersIdForDelete] = useState([])
 
     const dispatchData = (obj) => {
-        dispatch(setMessage("Adding item..."))
+        dispatch(setMessage({msg:"Adding item...",variant:'info'}))
         dispatch(axiosEditItem(obj))
             .then(unwrapResult)
             .then(response => history.push('/home'))
             .then(response => dispatch(axiosGetItems({})))
-            .then(response => dispatch(setMessage("Item has been added")))
+            .then(response => dispatch(setMessage({msg:"Item has been added",variant:'success'})))
             .then(response => closeModal())
             .catch(rejectedValueOrSerializedError => {
-                dispatch(setMessage(rejectedValueOrSerializedError.message))
+                dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
 
             })
     }
@@ -161,7 +164,8 @@ const AddItemModalGrid = ({itemId, closeModal}) => {
             newSupplier.Supplier_SN = newSupplier.serial_number
             setSuppliers([...suppliers, newSupplier])
         } catch (e) {
-            window.alert("suppler with such name doesn't exist")    /// TODO сделать норм ошибку
+            dispatch(stopLoading({msg:`suppler with such name doesn't exist`,variant:'error'}))
+
 
         }
 
@@ -173,7 +177,7 @@ const AddItemModalGrid = ({itemId, closeModal}) => {
     }
 
     const updateItemSuppliers = (newSuppliers) => {
-        console.log(JSON.stringify(newSuppliers))
+
         setSuppliers([...newSuppliers])
     }
 
@@ -184,10 +188,7 @@ const AddItemModalGrid = ({itemId, closeModal}) => {
         <div className={classes.root}>
             <Grid container spacing={0} >
                 <Grid item xs={12}>
-                    <Paper className={classes.paper}>Edit item</Paper>
-                </Grid>
-                <Grid item xs={12}>
-                    <Paper className={classes.paper}>Avatar</Paper>
+                    <Paper className={classes.paper}>Add new Item</Paper>
                 </Grid>
                 <Grid item xs={12} >
                     {/*<ItemDataForm setName={setName} setBCode={setBCode} setDescription={setDescription} setForTool={setForTool} setLocation={setLocation} setQty={setQty} setQtyMin={setQtyMin} />*/}
@@ -202,13 +203,11 @@ const AddItemModalGrid = ({itemId, closeModal}) => {
                 <Grid item xs={12}>
                     <AddItemModalNavTab
                         itemId={itemId}
-                        // Parameters
                         parameters={parameters}
                         addItemParameter={addItemParameter}
                         delItemParameter={delItemParameter}
                         updateItemParameter={updateItemParameter}
 
-                        // Suppliers
                         suppliers={suppliers}
                         addItemSupplier={addItemSupplier}
                         delItemSupplier={delItemSupplier}
@@ -218,7 +217,16 @@ const AddItemModalGrid = ({itemId, closeModal}) => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Button onClick={() => tempSave()}>SAVE</Button>
+                    <div className={classes.buttons}><Button
+                        size='small'
+                        color="primary"
+                        variant="contained"
+                        onClick={() => tempSave()}>SAVE</Button>
+                    <Button
+                        size='small'
+                        color="secondary"
+                        variant="contained"
+                        onClick={() => closeModal()}>CLOSE</Button></div>
                 </Grid>
 
             </Grid>

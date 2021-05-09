@@ -61,10 +61,11 @@ const DeleteUserModal = ({selectedUsersId}) => {
     const adminId = admin ? admin.Id : -1
 
     const [open, setOpen] = useState(false);
-    const [sure, setSure] = useState(false);        // TODO при повтороном открытии крнпка delete активна
+    const [sure, setSure] = useState(false);
 
 
     const handleOpen = () => {
+        setSure(false)
         setOpen(true);
         history.push('/users/delete')
     };
@@ -88,13 +89,13 @@ const DeleteUserModal = ({selectedUsersId}) => {
 
         for (const id of usersId) {
             if (id != adminId) {
-                dispatch(setMessage("Deleting user..."))
+                dispatch(setMessage({msg:"Deleting user...",variant:'info'}))
                 await dispatch(axiosDeleteUser(id))
                     .then(unwrapResult)
                     .then(response => dispatch(axiosGetUsers({})))
-                    .then(response => dispatch(setMessage("User(s) has been deleted")))
+                    .then(response => dispatch(setMessage({msg:"User has been deleted",variant:'success'})))
                     .catch(rejectedValueOrSerializedError => {
-                        dispatch(setMessage(rejectedValueOrSerializedError.message))
+                        dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
                     })
             }
         }

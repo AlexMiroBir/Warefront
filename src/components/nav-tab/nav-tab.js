@@ -85,8 +85,8 @@ const NavTab = ({handleChange, value = 0}) => {
     const history = useHistory()
     const dispatch = useDispatch()
 
-    const currentUserStatus = useSelector(state => state.Auth.status)
-    const isNotLimited = currentUserStatus !== "LIMITED"
+    const currentUserStatus = useSelector(state => state.Auth.Status)
+    const isNotLimited = currentUserStatus.toLowerCase() !== "limited"
 
     const onClickHandler = (buttonName) => {
         switch (buttonName) {
@@ -94,10 +94,11 @@ const NavTab = ({handleChange, value = 0}) => {
                 dispatch(startLoading("getting items..."))
                 dispatch(axiosGetItems({}))
                     .then(unwrapResult)
-                    .then(response => dispatch(stopLoading("Items have been received")))
+                    .then(response => dispatch(stopLoading({msg: "Items have been received", variant: 'success'})))
                     .then(response => history.push('/home'))
                     .catch(rejectedValueOrSerializedError => {
-                        dispatch(stopLoading(rejectedValueOrSerializedError.message))
+                        dispatch(stopLoading({msg: rejectedValueOrSerializedError.message, variant: "error"}))
+
                     })
                 return
 
@@ -106,10 +107,10 @@ const NavTab = ({handleChange, value = 0}) => {
                 dispatch(startLoading("getting tools..."))
                 dispatch(axiosGetTools({}))
                     .then(unwrapResult)
-                    .then(response => dispatch(stopLoading("Tools have been received")))
+                    .then(response => dispatch(stopLoading({msg: "Tools have been received", variant: 'success'})))
                     .then(response => history.push('/tools'))
                     .catch(rejectedValueOrSerializedError => {
-                        dispatch(stopLoading(rejectedValueOrSerializedError.message))
+                        dispatch(stopLoading({msg: rejectedValueOrSerializedError.message, variant: "error"}))
                     })
                 return
 
@@ -118,10 +119,10 @@ const NavTab = ({handleChange, value = 0}) => {
                 dispatch(startLoading("getting suppliers..."))
                 dispatch(axiosGetSuppliers({}))
                     .then(unwrapResult)
-                    .then(response => dispatch(stopLoading("Suppliers have been received")))
+                    .then(response => dispatch(stopLoading({msg: "Suppliers have been received", variant: 'success'})))
                     .then(response => history.push('/suppliers'))
                     .catch(rejectedValueOrSerializedError => {
-                        dispatch(stopLoading(rejectedValueOrSerializedError.message))
+                        dispatch(stopLoading({msg: rejectedValueOrSerializedError.message, variant: "error"}))
                     })
                 return
 
@@ -130,10 +131,10 @@ const NavTab = ({handleChange, value = 0}) => {
                 dispatch(startLoading("getting users..."))
                 dispatch(axiosGetUsers({}))
                     .then(unwrapResult)
-                    .then(response => dispatch(stopLoading("Users have been received")))
+                    .then(response => dispatch(stopLoading({msg: "Users have been received", variant: 'success'})))
                     .then(response => history.push('/users'))
                     .catch(rejectedValueOrSerializedError => {
-                        dispatch(stopLoading(rejectedValueOrSerializedError.message))
+                        dispatch(stopLoading({msg: rejectedValueOrSerializedError.message, variant: "error"}))
                     })
                 return
 
@@ -142,10 +143,10 @@ const NavTab = ({handleChange, value = 0}) => {
                 dispatch(startLoading("getting orders..."))
                 dispatch(axiosGetOrders({}))
                     .then(unwrapResult)
-                    .then(response => dispatch(stopLoading("Orders have been received")))
+                    .then(response => dispatch(stopLoading({msg: "Orders have been received", variant: 'success'})))
                     .then(response => history.push('/orders'))
                     .catch(rejectedValueOrSerializedError => {
-                        dispatch(stopLoading(rejectedValueOrSerializedError.message))
+                        dispatch(stopLoading({msg: rejectedValueOrSerializedError.message, variant: "error"}))
                     })
                 return
 
@@ -154,10 +155,10 @@ const NavTab = ({handleChange, value = 0}) => {
                 dispatch(axiosGetItems({}))
                 dispatch(startLoading("getting items..."))
                     .then(unwrapResult)
-                    .then(response => dispatch(stopLoading("Items have been received")))
+                    .then(response => dispatch(stopLoading({msg: "Items have been received", variant: 'success'})))
                     .then(response => history.push('/home'))
                     .catch(rejectedValueOrSerializedError => {
-                        dispatch(stopLoading(rejectedValueOrSerializedError.message))
+                        dispatch(stopLoading({msg: rejectedValueOrSerializedError.message, variant: "error"}))
                     })
                 return
             }
@@ -186,26 +187,7 @@ const NavTab = ({handleChange, value = 0}) => {
                                               onClick={() => onClickHandler('orders')}  {...a11yProps(4)} />}
                 </Tabs>
             </AppBar>
-            {/*<>*/}
-            {/*    <TabPanel value={value} index={0}>*/}
-            {/*        Page One*/}
-            {/*    </TabPanel>*/}
-            {/*    <TabPanel value={value} index={1}>*/}
-            {/*        Page Two*/}
-            {/*    </TabPanel>*/}
-            {/*    <TabPanel value={value} index={2}>*/}
-            {/*        Page Three*/}
-            {/*    </TabPanel>*/}
-            {/*    <TabPanel value={value} index={3}>*/}
-            {/*        Page Four*/}
-            {/*    </TabPanel>*/}
-            {/*    <TabPanel value={value} index={4}>*/}
-            {/*        Page Five*/}
-            {/*    </TabPanel>*/}
-            {/*    <TabPanel value={value} index={5}>*/}
-            {/*        Page Six*/}
-            {/*    </TabPanel>*/}
-            {/*</>*/}
+
         </div>
     );
 }

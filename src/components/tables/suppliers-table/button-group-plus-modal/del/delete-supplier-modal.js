@@ -18,7 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Grid from '@material-ui/core/Grid';
 import Divider from "@material-ui/core/Divider";
-import {setMessage} from "../../../../../redux/slices/common-slice";
+import {setMessage, stopLoading} from "../../../../../redux/slices/common-slice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -61,10 +61,11 @@ const DeleteSupplierModal = ({selectedSuppliersId}) => {
 
 
     const [open, setOpen] = useState(false);
-    const [sure, setSure] = useState(false);        // TODO при повтороном открытии крнпка delete активна
+    const [sure, setSure] = useState(false);
 
 
     const handleOpen = () => {
+        setSure(false)
         setOpen(true);
         history.push('/suppliers/delete')
     };
@@ -87,13 +88,13 @@ const DeleteSupplierModal = ({selectedSuppliersId}) => {
 
     const deleteSuppliers = async (suppliersId) => {
         for (const id of suppliersId) {
-            dispatch(setMessage("Deleting supplier..."))
+            dispatch(setMessage({msg:"Deleting supplier...",variant:'info'}))
             await dispatch(axiosDeleteSupplier(id))
                 .then(unwrapResult)
                 .then(response => dispatch(axiosGetSuppliers({})))
-                .then(response => dispatch(setMessage("Supplier has been deleted")))
+                .then(response => dispatch(setMessage({msg:"Supplier has been deleted",variant:'success'})))
                 .catch(rejectedValueOrSerializedError => {
-                    dispatch(setMessage(rejectedValueOrSerializedError.message))
+                    dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
                 })
         }
 

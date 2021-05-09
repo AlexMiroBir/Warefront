@@ -42,7 +42,7 @@ const ToggleAvatarMenu = () => {
     };
 
     const handleClose = (event) => {
-        console.log(event)
+
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;
         }
@@ -76,10 +76,10 @@ const ToggleAvatarMenu = () => {
         dispatch(axiosLogOut({}))
             .then(unwrapResult)
             .then(handleClose(event))
-            .then(response => dispatch(stopLoading("Log out completed")))
+            .then(response => dispatch(stopLoading({msg:"Log out completed",variant:'success'})))
             .then(history.push("/login"))
             .catch(rejectedValueOrSerializedError => {
-                dispatch(stopLoading(rejectedValueOrSerializedError.message))
+                dispatch(stopLoading({msg:rejectedValueOrSerializedError.message,variant:'error'}))
             })
     }
 

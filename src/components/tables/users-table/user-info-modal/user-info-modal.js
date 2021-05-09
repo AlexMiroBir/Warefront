@@ -49,7 +49,7 @@ const UserInfoModal = ({userId}) => {
         <div>
             <Button
                 onClick={() => handleOpen(userId)}
-                variant="outlined"
+                variant="contained"
                 color="primary"
                 size="small"
                 style={{marginLeft: 16}}

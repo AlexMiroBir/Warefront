@@ -5,27 +5,36 @@ const CommonSlice = createSlice({
     name: 'common-slice',
     initialState: {
 
-        message: {},
+        message: {
+            msg: 'initialization',
+            variant: 'info',
+            date: ''
+        },
         isLoading: false,
-        loadingLabel:""
+        loadingLabel: ""
 
     },
     reducers: {
         startLoading: {
-            reducer: (state, action) => {
+            reducer: (state, {payload}) => {
                 state.isLoading = true
-                state.loadingLabel=action.payload
+                state.loadingLabel = payload
             }
         },
         stopLoading: {
-            reducer: (state, action) => {
+            reducer: (state, {payload}) => {
                 state.isLoading = false
-                state.message = {message: action.payload}
+                state.message.msg = payload.msg
+                state.message.variant = payload.variant
+                state.message.date = Date.now()
+
             }
         },
         setMessage: {
-            reducer: (state, action) => {
-                state.message = {message: action.payload}
+            reducer: (state, {payload}) => {
+                state.message.msg = payload.msg
+                state.message.variant = payload.variant
+                state.message.date = Date.now()
             }
         },
 
@@ -35,5 +44,5 @@ const CommonSlice = createSlice({
 })
 
 export default CommonSlice.reducer
-export const {startLoading, stopLoading,setMessage} = CommonSlice.actions
+export const {startLoading, stopLoading, setMessage} = CommonSlice.actions
 

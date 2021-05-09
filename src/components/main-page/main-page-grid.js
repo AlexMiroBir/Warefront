@@ -9,16 +9,10 @@ import HomeTable from "../tables/home-table/home-table";
 import ToolsTable from "../tables/tools-table";
 import SuppliersTable from "../tables/suppliers-table";
 import UsersTable from "../tables/users-table";
-
-
-//----------IMAGES------------
-import logo from '../images/VPGlogo.jpg'
 import OrdersTable from "../tables/orders-table/orders-table";
 
-
-
-
-
+//----------LOGO------------
+import logo from '../images/WH.png'
 //-------------------------------
 
 const useStyles = makeStyles((theme) => ({
@@ -120,9 +114,7 @@ const MainPageGrid = () => {
                         <TabPanel value={value} index={4}>
                            <OrdersTable/>
                         </TabPanel>
-                        {/*<TabPanel value={value} index={5}>*/}
-                        {/*    Page Six*/}
-                        {/*</TabPanel>*/}
+
                     </>
 
 

@@ -6,7 +6,7 @@ const API_URL_SERVER = process.env.REACT_APP_API_URL;
 //const token = `Bearer ${localStorage.getItem('currentUserToken')}`
 
 
-axios.defaults.withCredentials = true;  ////TODO разобраться с этим https://github.com/axios/axios
+//axios.defaults.withCredentials = true;  ////TODO разобраться с этим https://github.com/axios/axios
 
 
 const axiosGetUsers = createAsyncThunk(

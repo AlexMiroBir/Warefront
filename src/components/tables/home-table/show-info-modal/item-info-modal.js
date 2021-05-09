@@ -41,15 +41,15 @@ const ItemInfoModal = ({itemId}) => {
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = (itemId) => {
-        dispatch(setMessage("Getting item data..."))
+        dispatch(setMessage({msg:"Getting item data...", variant:'info'}))
         dispatch(axiosGetItemData(itemId))
             .then(unwrapResult)
             .then(response => history.push(`/data/item/${itemId}`))
-            .then(response => dispatch(setMessage("Item data has been received")))
+            .then(response => dispatch(setMessage({msg:"Item data has been received",variant:'success'})))
             .then(response => setOpen(true))
 
             .catch(rejectedValueOrSerializedError => {
-                     dispatch(setMessage(rejectedValueOrSerializedError.message))
+                dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
 
             })
 
@@ -64,7 +64,7 @@ const ItemInfoModal = ({itemId}) => {
         <div>
             <Button
                 onClick={() => handleOpen(itemId)}
-                variant="outlined"
+                variant="contained"
                 color="primary"
                 size="small"
                 style={{marginLeft: 16}}

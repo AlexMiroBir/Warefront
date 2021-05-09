@@ -52,7 +52,7 @@ const OrdersTable = () => {
     }
 
 
-    const getFilteredArr = (orders) => { //TODO должны ли удаляться заказы с Айтемами????
+    const getFilteredArr = (orders) => {
         let arr = []
         orders.forEach(order => {
             let hasItem = order.Inventory_Name?.toLowerCase().indexOf(globalFilterInput.toLowerCase().trim())

@@ -62,7 +62,7 @@ const ItemAddForm = ({itemId}) => {
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={open}
-                onClose={handleClose}
+               // onClose={handleClose}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{

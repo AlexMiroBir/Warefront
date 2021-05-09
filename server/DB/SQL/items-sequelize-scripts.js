@@ -4,7 +4,8 @@ const {
     Inventory_Status,
     Item_Drawing,
     Inventory_Supplier,
-    Item_Parameters
+    Item_Parameters,
+    Transfer
 } = require('../models/models')
 const chalk = require('chalk')
 const {Op} = require("sequelize");
@@ -29,7 +30,8 @@ async function getAllItemsFromDB() {
             },
             {
                 model: Item_Drawing,
-            }
+            },
+
         ]
     })
 
@@ -83,9 +85,13 @@ async function deleteItemById(Id) {
     await Inventory_Supplier.destroy({
         where: {Inventory_ID: Id}
     })
+    await Transfer.destroy({
+        where: {Inventory_ID: Id}
+    })
     await Inventory.destroy({
         where: {Id}
     })
+
 
 }
 
@@ -242,7 +248,7 @@ async function addImageToDB(Id, Filename, Filepath) {
 
 
     if (allItemImages.length < 1) {
-        console.log(`allImages${allItemImages}`)
+
         General = '0x01'
     }
 

@@ -113,7 +113,7 @@ const SuppliersTable = () => {
                 filterable: false,
                 sortable: false,
                 disableClickEventBubbling: true,
-                renderCell: (params) => ( ///     TODO разобраться с кнопкой https://material-ui.com/components/data-grid/rendering/
+                renderCell: (params) => ( ///
 
                     <SupplierInfoModal supplierId={params.value}/>
 
