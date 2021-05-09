@@ -19,6 +19,7 @@ import Slider from '@material-ui/core/Slider';
 import Grid from '@material-ui/core/Grid';
 import Divider from "@material-ui/core/Divider";
 import AccordionTools from "./accordion";
+import {setMessage, stopLoading} from "../../../../../redux/slices/common-slice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,10 +61,11 @@ const DeleteToolModal = ({selectedToolsId}) => {
 
 
     const [open, setOpen] = useState(false);
-    const [sure, setSure] = useState(false);        // TODO при повтороном открытии крнпка delete активна
+    const [sure, setSure] = useState(false);
 
 
     const handleOpen = () => {
+        setSure(false)
         setOpen(true);
         history.push('/tools/delete')
     };
@@ -86,10 +88,13 @@ const DeleteToolModal = ({selectedToolsId}) => {
 
     const deleteTools = async (toolsId) => {
         for (const id of toolsId) {
+            dispatch(setMessage({msg:"Deleting tool...",variant:'info'}))
             await dispatch(axiosDeleteTool(id))
                 .then(unwrapResult)
                 .then(response => dispatch(axiosGetTools({})))
+                .then(response => dispatch(setMessage({msg:"Tool has been deleted", variant:'success'})))
                 .catch(rejectedValueOrSerializedError => {
+                    dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
                 })
         }
 

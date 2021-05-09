@@ -103,8 +103,7 @@ const ItemDataForm = ({updateItemMainData}) => {
             qty: qty,
             qtyMin: itemData.Inventory_Status.QTY_Min,
         },
-       // enableReinitialize:true,
-       //  validateOnMount:true,
+
         validationSchema: validationSchema,
     });
 

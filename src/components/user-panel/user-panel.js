@@ -29,14 +29,8 @@ const useStyles = makeStyles({
 
     },
     changePasswordTab: {
-       // display: 'flex',
-
-       // alignItems: 'baseline',
-       // justifyContent: 'space-around',
-        //maxHeight: '200px',
-        // fontSize: '1.5rem',
         width:"400px",
-       // height:"200px"
+
 
     },
     userNameBox:{
@@ -57,12 +51,9 @@ const UserPanel = () => {
         <Paper square className={classes.root}>
 <Box className={classes.userNameBox}>
                 <Route path="/" >
-                    <Box                           //TODO TABS заменил на BOX(избавление от варнингов)
-                        className={classes.tab}    //TODO заккоменитровано(избавление от варнингов)
-                        // variant="fullWidth"
-                        // indicatorColor="primary"
-                        // textColor="primary"
-                        // aria-label="icon tabs example"
+                    <Box
+                        className={classes.tab}
+
                     >
                         <Box>{userName}</Box>
                     </Box>

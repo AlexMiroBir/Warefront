@@ -78,7 +78,7 @@ const validationSchema = yup.object({
 });
 
 
-const ItemAddForm = ({updateItemMainData, Name,Description}) => {
+const AddItemForm = ({updateItemMainData, Name, Description}) => {
     const classes = useStyles();
 
 
@@ -273,6 +273,6 @@ const ItemAddForm = ({updateItemMainData, Name,Description}) => {
 }
 
 
-export default ItemAddForm
+export default AddItemForm
 
 

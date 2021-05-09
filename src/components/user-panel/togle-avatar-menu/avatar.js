@@ -4,7 +4,7 @@ import {useSelector} from "react-redux";
 import React from "react";
 import {makeStyles} from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
-import {deepOrange} from '@material-ui/core/colors';
+import {deepOrange,indigo} from '@material-ui/core/colors';
 
 
 
@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     square: {
-        color: theme.palette.getContrastText(deepOrange[500]),
-        backgroundColor: deepOrange[500],
+        color: theme.palette.getContrastText(deepOrange[800]),
+        backgroundColor: indigo[900],
         marginLeft:'10px',
     },
 

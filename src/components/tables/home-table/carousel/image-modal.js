@@ -7,6 +7,7 @@ import MyCarousel from "./carousel";
 import {useDispatch} from "react-redux";
 import {axiosAddImage, axiosGetAvatars, axiosGetItemImages} from "../../../../redux/async-thunks/items-async-thunks";
 import {unwrapResult} from "@reduxjs/toolkit";
+import {setMessage, stopLoading} from "../../../../redux/slices/common-slice";
 
 const useStyles = makeStyles((theme) => ({
     avatar: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ImageModal = ({imgSrc, itemId}) => {
 
-    console.log(imgSrc)
+
     // const avatars = useSelector(state => state.Items.Avatars)
     //
     // useEffect(()=> console.log('rererer'),[avatars])
@@ -54,10 +55,14 @@ const ImageModal = ({imgSrc, itemId}) => {
 
 
     const handleOpen = () => {
+        dispatch(setMessage({msg:"Getting images...",variant:'info'}))
         dispatch(axiosGetItemImages(itemId))
             .then(unwrapResult)
+            .then(response => dispatch(setMessage({msg:"Images have been received",variant:'success'})))
             .then(response => setOpen(true))
             .catch(rejectedValueOrSerializedError => {
+                dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
+
             })
 
     };
@@ -67,13 +72,17 @@ const ImageModal = ({imgSrc, itemId}) => {
     };
 
     const sendFileToServer = () => {
-        if(file) {
+        if (file) {
+            dispatch(setMessage({msg:"Uploading image...",variant:'info'}))
             dispatch(axiosAddImage({ItemId: itemId, File: file}))
                 .then(unwrapResult)
+                .then(response => dispatch(setMessage({msg:"Image has been uploaded",variant:'success'})))
                 .then(response => dispatch(axiosGetItemImages(itemId)))
                 .then(response => dispatch(axiosGetAvatars()))
-                // .then(response =>setIndex(0))
+                // .then(response =>setIndex(0)) // TODO обновление QTY
                 .catch(rejectedValueOrSerializedError => {
+                    dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
+
                 })
         }
     }

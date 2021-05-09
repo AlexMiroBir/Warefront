@@ -33,6 +33,7 @@ const HomeTable = () => {
     const classes = useStyles()
 
     const [selectionModel, setSelectionModel] = useState([]);
+
     const [globalFilterInput, setGlobalFilter] = useState("");
 
     const items = useSelector(state => state.Items.Items)
@@ -139,7 +140,6 @@ const HomeTable = () => {
     // }
     const getImageLink = (id) => {
         const filename = avatars.find(avatar=>avatar.Inventory_ID===id)?.Filename
-        console.log(filename)
         if(!filename){
             return noImage
         }

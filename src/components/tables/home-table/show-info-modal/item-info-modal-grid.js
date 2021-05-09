@@ -15,6 +15,8 @@ import {useHistory} from "react-router-dom";
 import CancelPresentationSharpIcon from "@material-ui/icons/CancelPresentationSharp";
 import SaveIcon from "@material-ui/icons/Save";
 import PickUpModal from "./pick-up-modal";
+import {setMessage, startLoading, stopLoading} from "../../../../redux/slices/common-slice";
+import {axiosGetOrders} from "../../../../redux/async-thunks/orders-async-thunks";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -27,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
         padding: 0,
         fontSize:'2rem',
         textAlign: 'center',
-       // color: theme.palette.text.secondary,
+        backgroundColor: 'rgb(141, 255, 129)',
     },
     buttonsGreed: {
         display: 'flex',
@@ -73,6 +75,7 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
     const [suppliersIdForDelete, setSuppliersIdForDelete] = useState([])
 
     const dispatchData = (obj) => {
+        dispatch(setMessage({msg:"Editing item data...", variant:'info'}))
         dispatch(axiosEditItem(obj))
             .then(unwrapResult)
             .then(response => history.push('/home'))
@@ -80,9 +83,12 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
             .then(response => dispatch(axiosGetTools({})))
             .then(response => dispatch(axiosGetSuppliers({})))
             .then(response => dispatch(axiosGetUsers({})))
-            //.then(response => dispatch(axiosGetOrders({})))
+            .then(response => dispatch(axiosGetOrders({})))
+            .then(response => dispatch(setMessage({msg:"Item data has been edited", variant:'success'})))
             .then(response => closeModal())
             .catch(rejectedValueOrSerializedError => {
+                dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
+
             })
     }
 
@@ -176,7 +182,7 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
             newSupplier.Supplier_SN = newSupplier.serial_number
             setSuppliers([...suppliers, newSupplier])
         } catch (e) {
-            window.alert("suppler with such name doesn't exist")    /// TODO сделать норм ошибку
+            dispatch(stopLoading({msg:`suppler with such name doesn't exist`,variant:'error'}))
 
         }
 
@@ -188,7 +194,7 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
     }
 
     const updateItemSuppliers = (newSuppliers) => {
-        console.log(JSON.stringify(newSuppliers))
+
         setSuppliers([...newSuppliers])
     }
 
@@ -233,7 +239,7 @@ const ItemInfoModalGrid = ({itemId, closeModal}) => {
                     {/*    variant="contained"*/}
 
                     {/*    onClick={() => tempSave()}>Pick UP</Button>*/}
-                    <PickUpModal itemId={itemId}/>
+                    <PickUpModal itemId={itemId} closeModal={closeModal}/>
                     <div>
                         <Button
                             startIcon={<SaveIcon/>}

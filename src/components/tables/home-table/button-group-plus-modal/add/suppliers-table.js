@@ -58,7 +58,7 @@ const ItemSuppliersTable = ({suppliers, addItemSupplier, updateItemSuppliers, de
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    onChange={e => editProps.onChange(e.target.value)}   //TODO не изменяется
+                                    onChange={e => editProps.onChange(e.target.value)}
                                     defaultValue={''}
                                 >
                                     {allSuppliers.map(supp =>

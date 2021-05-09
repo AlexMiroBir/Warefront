@@ -2,7 +2,7 @@ import React from 'react';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles';
 import DeleteItemModal from "./del/delete-item-modal";
-import AddItemModal from "./add/item-add-modal-form";
+import AddItemModal from "./add/add-item-modal-form";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -16,16 +16,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#1b5e20',
-        },
-        secondary: {
-            main: '#b71c1c',
-        },
-    },
-});
+
 
 
 const ButtonGroupAddDeleteItems = ({selectedItemsId}) => {
@@ -38,10 +29,10 @@ const ButtonGroupAddDeleteItems = ({selectedItemsId}) => {
             <ButtonGroup
                 size="large"
                 aria-label="small outlined button group">
-                <ThemeProvider theme={theme}>
+
                     <AddItemModal/>
                     <DeleteItemModal selectedItemsId={selectedItemsId}/>
-                </ThemeProvider>
+
             </ButtonGroup>
         </div>
     );

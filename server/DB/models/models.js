@@ -135,6 +135,9 @@ Inventory.hasMany(Item_Parameters, {foreignKey: 'Inventory_ID'})
 Item_Drawing.belongsTo(Inventory, {foreignKey: 'Inventory_ID'})
 Inventory.hasMany(Item_Drawing, {foreignKey: 'Inventory_ID'})
 
+Transfer.belongsTo(Inventory, {foreignKey: 'Inventory_ID'})
+Inventory.hasMany(Transfer, {foreignKey: 'Inventory_ID'})
+
 
 module.exports = {
     User,

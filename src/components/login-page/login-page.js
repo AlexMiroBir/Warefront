@@ -2,15 +2,10 @@ import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import LoginForm from "./login-form";
 
-
-
-
-//----------IMAGES------------
-import logo from '../images/VPGlogo.jpg'
-
+//----------LOGO------------
+import logo from '../images/WH.png'
 //-------------------------------
 
-///////////Material UI styles//////////////////
 
 const useStyles = makeStyles((theme) => ({
     page: {
@@ -24,13 +19,12 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     logo:{
-        width:'15%'
+       width:'25%',
+        marginLeft:'-4%'
     }
 
 }));
 
-
-////////////////////////////////////////////
 
 
 const LoginPage = () => {

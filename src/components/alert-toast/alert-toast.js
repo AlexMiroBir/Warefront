@@ -1,46 +1,54 @@
 import React, {useEffect} from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
 import {useSelector} from "react-redux";
+import { SnackbarProvider, useSnackbar } from 'notistack';
+import Collapse from '@material-ui/core/Collapse';
 
-const Toast=(message)=> {
+const ToastInside=()=> {
+    const { enqueueSnackbar } = useSnackbar();
 
-    const globalStateMessageObj = useSelector(state=>state.Auth.message) /// TODO здесь используется message из аутентификации, это неправильно, надо искать общий эндпоинт
+    const globalStateMessageObj = useSelector(state=>state.Common.message)
+    const variant = globalStateMessageObj.variant
+    const msg = globalStateMessageObj.msg
 
-    const [state, setState] = React.useState({
-        open: false,
-        vertical: 'top',
-        horizontal: 'center',
+    console.log(globalStateMessageObj)
 
-    });
 
-    useEffect(()=>handleClick({vertical: 'bottom', horizontal: 'right'}),[globalStateMessageObj]);
+    useEffect(()=>setTimeout(handleClickVariant(msg, variant),500),[globalStateMessageObj]);
 
-    const {vertical, horizontal, open} = state;
 
-    const handleClick = (newState) => () => {
-        setState({open: true, ...newState});
+
+    const handleClick = () => {
+        enqueueSnackbar(msg);
     };
 
-    const handleClose = () => {
-        setState({...state, open: false});
+    const handleClickVariant = (msg,variant) => () => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(msg, {variant});
     };
-
-
 
     return (
-        <div>
-            <Snackbar
-                //severity={'error'}
-
-                anchorOrigin={{vertical, horizontal}}
-                open={open}
-                onClose={handleClose}
-                message={globalStateMessageObj.message}
-                key={vertical + horizontal}
-            />
-        </div>
+        <React.Fragment>
+        </React.Fragment>
     );
 }
 
+
+
+const Toast=()=> {
+
+
+    return (
+        <SnackbarProvider
+            maxSnack={3}
+            anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+            }}
+            TransitionComponent={Collapse}
+        >
+            <ToastInside />
+        </SnackbarProvider>
+    );
+}
 
 export default Toast

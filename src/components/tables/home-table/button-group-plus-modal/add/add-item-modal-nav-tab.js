@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const ItemAddModalNavTab = (props) => {
+const AddItemModalNavTab = (props) => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -98,4 +98,4 @@ const ItemAddModalNavTab = (props) => {
 }
 
 
-export default ItemAddModalNavTab
+export default AddItemModalNavTab

@@ -13,6 +13,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import CancelPresentationSharpIcon from '@material-ui/icons/CancelPresentationSharp';
 
 import {axiosGetUsers,axiosEditUser} from "../../../../redux/async-thunks/users-async-thunks";
+import {setMessage, stopLoading} from "../../../../redux/slices/common-slice";
 
 
 /**
@@ -120,13 +121,16 @@ const UserDataForm = ({userId, closeModal}) => {
                     Status: values.status,
                     Phone: values.phone,
                 }
-
+                dispatch(setMessage({msg:"Editing user...",variant:'info'}))
                 dispatch(axiosEditUser(row))
                     .then(unwrapResult)
                     .then(response => dispatch(axiosGetUsers({})))
                     .then(response => history.push('/users'))
+                    .then(response => dispatch(setMessage({msg:"User has been deleted", variant:'success'})))
                     .then(response =>  closeModal())
                     .catch(rejectedValueOrSerializedError => {
+                        dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
+
                     })
 
 

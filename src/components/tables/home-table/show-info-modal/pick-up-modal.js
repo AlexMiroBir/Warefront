@@ -10,6 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import {unwrapResult} from "@reduxjs/toolkit";
 import {axiosGetItemData, axiosGetItems} from "../../../../redux/async-thunks/items-async-thunks";
 import {axiosPickUpItem} from "../../../../redux/async-thunks/orders-async-thunks";
+import {setMessage, stopLoading} from "../../../../redux/slices/common-slice";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const PickUpModal = ({itemId}) => {
+const PickUpModal = ({itemId, closeModal}) => {
     const classes = useStyles();
     const history = useHistory()
     const dispatch = useDispatch()
@@ -45,7 +46,7 @@ const PickUpModal = ({itemId}) => {
 
     const itemQTY = useSelector(state => state.Items?.ItemData?.Inventory_Status?.QTY_In_Stock)
     const userId = useSelector(state => state.Auth.Id)
-const toolId = useSelector(state => state.Items?.ItemData?.Tool_Id)
+    const toolId = useSelector(state => state.Items?.ItemData?.Tool_Id)
 
     const [pickUpQTY, setPickupQTY] = React.useState(itemQTY);
     const handleOpen = (itemId) => {
@@ -59,16 +60,19 @@ const toolId = useSelector(state => state.Items?.ItemData?.Tool_Id)
     };
 
     const pickUpToServer = () => {
-        console.log(pickUpQTY)
-        dispatch(axiosPickUpItem({Id: itemId, PickUpQTY: pickUpQTY, User_Id: userId, Tool_Id:toolId}))
+        dispatch(setMessage({msg: 'pick up...', variant: 'info'}))
+        dispatch(axiosPickUpItem({Id: itemId, PickUpQTY: pickUpQTY, User_Id: userId, Tool_Id: toolId}))
             .then(unwrapResult)
+            .then(response=>dispatch(setMessage({msg: 'pick up completed', variant: 'success'})))
             .then(response => dispatch(axiosGetItems({})))
             // .then(response => history.push('/home'))
+            //
             .then(response => dispatch(axiosGetItemData(itemId)))
             // .then(response => dispatch(axiosGetSuppliers({})))
             // .then(response => dispatch(axiosGetUsers({})))
             // .then(response => dispatch(axiosGetOrders({})))
             .catch(rejectedValueOrSerializedError => {
+                dispatch(stopLoading({msg: rejectedValueOrSerializedError.message, variant: "error"}))
             })
     }
 
@@ -88,7 +92,7 @@ const toolId = useSelector(state => state.Items?.ItemData?.Tool_Id)
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={open}
-                onClose={handleClose}
+                // onClose={handleClose}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -120,8 +124,9 @@ const toolId = useSelector(state => state.Items?.ItemData?.Tool_Id)
                             <Button
                                 size='small'
                                 color="secondary"
-                                variant="contained">
-                                Cancel
+                                variant="contained"
+                                onClick={() => handleClose()}>
+                                Close
                             </Button>
 
                         </div>

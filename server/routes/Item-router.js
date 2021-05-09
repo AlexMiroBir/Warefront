@@ -15,8 +15,8 @@ router.get('/itemImages/:Id',authMiddleware,ItemController.getItemImages)
 router.put('/update',authMiddleware,checkRole('ADMIN'),ItemController.createOrUpdateItem)
 router.put('/addImage',authMiddleware,checkRole('ADMIN'),ItemController.addImage)
 router.put('/delete',authMiddleware,checkRole('ADMIN'),ItemController.deleteItem)
-router.put('/images/delete',authMiddleware,ItemController.deleteImage)
-router.put('/setAvatar',authMiddleware,ItemController.setAvatar)
+router.put('/images/delete',authMiddleware,checkRole('ADMIN'),ItemController.deleteImage)
+router.put('/setAvatar',authMiddleware,checkRole('ADMIN'),ItemController.setAvatar)
 
 
 module.exports=router

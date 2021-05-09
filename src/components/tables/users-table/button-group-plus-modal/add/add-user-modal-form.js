@@ -12,6 +12,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import CancelPresentationSharpIcon from '@material-ui/icons/CancelPresentationSharp';
 import {axiosEditUser, axiosGetUsers} from "../../../../../redux/async-thunks/users-async-thunks";
 import Select from "@material-ui/core/Select";
+import {setMessage, stopLoading} from "../../../../../redux/slices/common-slice";
 
 
 /**
@@ -117,13 +118,15 @@ const AddUserModalForm = ({closeModal}) => {
                     Phone: values.phone,
                     Password: values.password,
                 }
-
+                dispatch(setMessage({msg:"Adding user...",variant:'info'}))
                 dispatch(axiosEditUser(row))
                     .then(unwrapResult)
                     .then(response => dispatch(axiosGetUsers({})))
                     .then(response => history.push('/users'))
+                    .then(response => dispatch(setMessage({msg:"User has been added",variant:'success'})))
                     .then(response => closeModal())
                     .catch(rejectedValueOrSerializedError => {
+                        dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
                     })
             },
         }

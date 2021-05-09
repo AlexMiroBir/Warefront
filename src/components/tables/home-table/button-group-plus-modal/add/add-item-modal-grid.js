@@ -3,13 +3,14 @@ import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import{axiosGetItems,axiosEditItem} from "../../../../../redux/async-thunks/items-async-thunks";
-import ItemAddModalNavTab from "./item-add-modal-nav-tab";
+import AddItemModalNavTab from "./add-item-modal-nav-tab";
 import {useDispatch, useSelector} from "react-redux";
 import Button from "@material-ui/core/Button";
 import {unwrapResult} from "@reduxjs/toolkit";
-import ItemAddForm from './item-add-form'
+import AddItemForm from './add-item-form'
 
 import {useHistory} from "react-router-dom";
+import {setMessage, startLoading, stopLoading} from "../../../../../redux/slices/common-slice";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,11 +23,17 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding:0,
         textAlign: 'center',
-        color: theme.palette.text.secondary,
+        fontSize:'2rem',
+        backgroundColor: 'rgb(141, 255, 129)',
     },
+    buttons:{
+        display:'flex',
+        justifyContent:'space-between',
+        padding:'0 20px'
+    }
 }));
 
-const ItemAddModalGrid = ({itemId, closeModal}) => {
+const AddItemModalGrid = ({itemId, closeModal}) => {
 
 
     const dispatch = useDispatch()
@@ -34,9 +41,6 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
     const tools = useSelector(state => state.Tools.Tools)
     const allSuppliers = useSelector(state => state.Suppliers.Suppliers)
     const itemData = useSelector(state => state.Items.ItemData)
-
-    const itemDataParameters = useSelector(state => state.Items.ItemData.Item_Parameters)
-    const itemDataSuppliers = useSelector(state => state.Items.ItemData.Inventory_Suppliers)
 
 
     const [needUpdateItem, setNeedUpdateItem] = useState(false)
@@ -58,12 +62,16 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
     const [suppliersIdForDelete, setSuppliersIdForDelete] = useState([])
 
     const dispatchData = (obj) => {
+        dispatch(setMessage({msg:"Adding item...",variant:'info'}))
         dispatch(axiosEditItem(obj))
             .then(unwrapResult)
             .then(response => history.push('/home'))
             .then(response => dispatch(axiosGetItems({})))
+            .then(response => dispatch(setMessage({msg:"Item has been added",variant:'success'})))
             .then(response => closeModal())
             .catch(rejectedValueOrSerializedError => {
+                dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
+
             })
     }
 
@@ -156,7 +164,8 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
             newSupplier.Supplier_SN = newSupplier.serial_number
             setSuppliers([...suppliers, newSupplier])
         } catch (e) {
-            window.alert("suppler with such name doesn't exist")    /// TODO сделать норм ошибку
+            dispatch(stopLoading({msg:`suppler with such name doesn't exist`,variant:'error'}))
+
 
         }
 
@@ -168,7 +177,7 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
     }
 
     const updateItemSuppliers = (newSuppliers) => {
-        console.log(JSON.stringify(newSuppliers))
+
         setSuppliers([...newSuppliers])
     }
 
@@ -179,14 +188,11 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
         <div className={classes.root}>
             <Grid container spacing={0} >
                 <Grid item xs={12}>
-                    <Paper className={classes.paper}>Edit item</Paper>
-                </Grid>
-                <Grid item xs={12}>
-                    <Paper className={classes.paper}>Avatar</Paper>
+                    <Paper className={classes.paper}>Add new Item</Paper>
                 </Grid>
                 <Grid item xs={12} >
                     {/*<ItemDataForm setName={setName} setBCode={setBCode} setDescription={setDescription} setForTool={setForTool} setLocation={setLocation} setQty={setQty} setQtyMin={setQtyMin} />*/}
-                    <ItemAddForm
+                    <AddItemForm
                         updateItemMainData={updateItemMainData}
                         Name={Name}
                         Description
@@ -195,15 +201,13 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <ItemAddModalNavTab
+                    <AddItemModalNavTab
                         itemId={itemId}
-                        // Parameters
                         parameters={parameters}
                         addItemParameter={addItemParameter}
                         delItemParameter={delItemParameter}
                         updateItemParameter={updateItemParameter}
 
-                        // Suppliers
                         suppliers={suppliers}
                         addItemSupplier={addItemSupplier}
                         delItemSupplier={delItemSupplier}
@@ -213,7 +217,16 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Button onClick={() => tempSave()}>SAVE</Button>
+                    <div className={classes.buttons}><Button
+                        size='small'
+                        color="primary"
+                        variant="contained"
+                        onClick={() => tempSave()}>SAVE</Button>
+                    <Button
+                        size='small'
+                        color="secondary"
+                        variant="contained"
+                        onClick={() => closeModal()}>CLOSE</Button></div>
                 </Grid>
 
             </Grid>
@@ -222,4 +235,4 @@ const ItemAddModalGrid = ({itemId, closeModal}) => {
 }
 
 
-export default ItemAddModalGrid
+export default AddItemModalGrid

@@ -3,28 +3,53 @@ import LoginPage from "../login-page/login-page";
 import Toast from "../alert-toast/alert-toast";
 import MainPage from "../main-page";
 import {Redirect, Route, Switch, useHistory} from 'react-router-dom';
+import {useSelector} from "react-redux";
+import Loader from "../loader";
+import {createMuiTheme, makeStyles, ThemeProvider} from "@material-ui/core/styles";
 
-//import {useSelector} from "react-redux";
+const useStyles = makeStyles((theme) => ({
+    app: {
+        maxWidth: '99vw'
+    }
+}));
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#1b5e20',
+        },
+        secondary: {
+            main: '#b71c1c',
+        },
+    },
+});
 
 
 function App() {
-    const history = useHistory()
-    //  const isAuthorized = useSelector(state => state.Slice.isAuthorized)
 
-    useEffect(() => history.push('/login'), [history]) /// TODO потенциальная проблема
+    const classes = useStyles()
+
+    const history = useHistory()
+    const isLoading = useSelector(state => state.Common.isLoading)
+    const loadingLabel = useSelector(state => state.Common.loadingLabel)
+
+    useEffect(() => history.push('/login'), [history])
 
 
     return (
 
-        <div className="App">
+        <div className={classes.app}>
+            {isLoading && <Loader
+                label={loadingLabel}/>}
 
-            <Switch>
+            <ThemeProvider theme={theme}>
+                <Switch>
 
-            <Route path="/login" exact><LoginPage/> </Route>
-            <Route path="/" > <MainPage/></Route>
-            <Redirect from="**" to="/"/>
+                    <Route path="/login" exact><LoginPage/> </Route>
+                    <Route path="/"> <MainPage/></Route>
+                    <Redirect from="**" to="/"/>
 
-            </Switch>
+                </Switch> </ThemeProvider>
             <Toast/>
         </div>
 

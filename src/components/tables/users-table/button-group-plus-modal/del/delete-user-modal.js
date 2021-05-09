@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Grid from '@material-ui/core/Grid';
 import Divider from "@material-ui/core/Divider";
+import {setMessage, startLoading, stopLoading} from "../../../../../redux/slices/common-slice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,10 +61,11 @@ const DeleteUserModal = ({selectedUsersId}) => {
     const adminId = admin ? admin.Id : -1
 
     const [open, setOpen] = useState(false);
-    const [sure, setSure] = useState(false);        // TODO при повтороном открытии крнпка delete активна
+    const [sure, setSure] = useState(false);
 
 
     const handleOpen = () => {
+        setSure(false)
         setOpen(true);
         history.push('/users/delete')
     };
@@ -86,12 +88,14 @@ const DeleteUserModal = ({selectedUsersId}) => {
     const deleteUsers = async (usersId) => {
 
         for (const id of usersId) {
-
             if (id != adminId) {
+                dispatch(setMessage({msg:"Deleting user...",variant:'info'}))
                 await dispatch(axiosDeleteUser(id))
                     .then(unwrapResult)
                     .then(response => dispatch(axiosGetUsers({})))
+                    .then(response => dispatch(setMessage({msg:"User has been deleted",variant:'success'})))
                     .catch(rejectedValueOrSerializedError => {
+                        dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
                     })
             }
         }

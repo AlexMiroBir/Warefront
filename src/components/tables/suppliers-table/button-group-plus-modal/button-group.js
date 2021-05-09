@@ -16,22 +16,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#1b5e20',
-        },
-        secondary: {
-            main: '#b71c1c',
-        },
-    },
-});
+
 
 
 const ButtonGroupAddDeleteSuppliers = ({selectedSuppliersId}) => {
     const classes = useStyles();
 
-    console.log(selectedSuppliersId)
+
 
     return (
 
@@ -39,10 +30,10 @@ const ButtonGroupAddDeleteSuppliers = ({selectedSuppliersId}) => {
             <ButtonGroup
                 size="large"
                 aria-label="small outlined button group">
-                <ThemeProvider theme={theme}>
+
                     <AddModal/>
                     <DeleteSupplierModal selectedSuppliersId={selectedSuppliersId}/>
-                </ThemeProvider>
+
             </ButtonGroup>
         </div>
     );

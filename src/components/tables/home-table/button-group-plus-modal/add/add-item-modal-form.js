@@ -4,10 +4,10 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
-import ItemAddModalGrid from './item-add-modal-grid'
-import {unwrapResult} from "@reduxjs/toolkit";
-import {useHistory} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import AddItemModalGrid from './add-item-modal-grid'
+// import {unwrapResult} from "@reduxjs/toolkit";
+// import {useHistory} from "react-router-dom";
+// import {useDispatch} from "react-redux";
 import AddBoxSharpIcon from "@material-ui/icons/AddBoxSharp";
 
 
@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
 
 const ItemAddForm = ({itemId}) => {
     const classes = useStyles();
-    const history = useHistory()
-    const dispatch = useDispatch()
+    // const history = useHistory()
+    // const dispatch = useDispatch()
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = (itemId) => {
@@ -62,7 +62,7 @@ const ItemAddForm = ({itemId}) => {
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={open}
-                onClose={handleClose}
+               // onClose={handleClose}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -71,7 +71,7 @@ const ItemAddForm = ({itemId}) => {
             >
                 <Fade in={open}>
                     <div className={classes.paper}>
-                        <ItemAddModalGrid itemId={itemId} closeMadal={handleClose}/>
+                        <AddItemModalGrid itemId={itemId} closeModal={handleClose}/>
                     </div>
                 </Fade>
             </Modal>

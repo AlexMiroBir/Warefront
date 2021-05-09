@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Grid from '@material-ui/core/Grid';
 import Divider from "@material-ui/core/Divider";
+import {setMessage, stopLoading} from "../../../../../redux/slices/common-slice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -59,10 +60,11 @@ const DeleteItemModal = ({selectedItemsId}) => {
 
 
     const [open, setOpen] = useState(false);
-    const [sure, setSure] = useState(false);        // TODO при повтороном открытии крнпка delete активна
+    const [sure, setSure] = useState(false);
 
 
     const handleOpen = () => {
+        setSure(false)
         setOpen(true);
         history.push('/items/delete')
     };
@@ -74,7 +76,7 @@ const DeleteItemModal = ({selectedItemsId}) => {
     const getArrWithItemsForDelete = (arrWithId) => {
         let arr = []
         arrWithId.forEach(id => {
-            // eslint-disable-next-line eqeqeq
+
             let item = items.find(item => item.Id == id)
             {
                 arr = [...arr, item]
@@ -83,14 +85,19 @@ const DeleteItemModal = ({selectedItemsId}) => {
         return arr
     }
 
-    const deleteUsers = async (usersId) => {
+    const deleteItems = async (usersId) => {
+
         for (const id of usersId) {
+            dispatch(setMessage({msg:"Deleting item...",variant:'info'}))
             await dispatch(axiosDeleteItem(id))
                 .then(unwrapResult)
                 .then(response => dispatch(axiosGetItems({})))
+                .then(response => dispatch(setMessage({msg:"Item has been deleted",variant:'success'})))
                 .catch(rejectedValueOrSerializedError => {
+                    dispatch(stopLoading({msg:rejectedValueOrSerializedError.message, variant:"error"}))
                 })
         }
+
 
         handleClose()
         history.push('/home')
@@ -134,7 +141,7 @@ const DeleteItemModal = ({selectedItemsId}) => {
 
                         <Divider className={classes.divider}/>
 
-                        Users for deleting:
+                        Items for deleting:
                         <AccordionItems itemsForDelete={getArrWithItemsForDelete(selectedItemsId)}/>
 
                         <Button
@@ -144,7 +151,7 @@ const DeleteItemModal = ({selectedItemsId}) => {
                             color="secondary"
                             variant="contained"
                             fullWidth
-                            onClick={() => deleteUsers(selectedItemsId)}
+                            onClick={() => deleteItems(selectedItemsId)}
                             disabled={!sure}>
 
                             Delete
