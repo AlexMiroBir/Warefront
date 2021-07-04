@@ -1,0 +1,33 @@
+{
+  "name": "warefront",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.1.2",
+    "mariadb": "^2.5.3",
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.6.2",
+    "tedious": "^11.0.7",
+    "uuid": "^8.3.2",
+    "chalk": "^4.1.1",
+    "web-vitals": "^1.0.1"
+  },
+  "scripts": {
+    "start": "set process.env.NODE_ENV=production && node index.js ",
+    "dev": "set process.env.NODE_ENV=development && nodemon index.js"
+  },
+  "devDependencies": {
+    "chalk": "^4.1.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.8"
+  }
+}

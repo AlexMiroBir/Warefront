@@ -1,13 +1,10 @@
 const ApiError = require('../../error/api-error')
 const {
-    Supplier,
-    Inventory,
     Inventory_Status,
-    Tool,
-    User,
     Transfer
 } = require('../../DB/models/models')
-const sequelize = require('sequelize')
+const {Sequelize} = require("sequelize");
+
 
 async function pickUpItemDB(Id, PickUpQTY, User_Id, Tool_Id, res, next) {
 
@@ -29,7 +26,14 @@ async function pickUpItemDB(Id, PickUpQTY, User_Id, Tool_Id, res, next) {
 }
 
 async function createNewOrderToDB(Id, PickUpQTY, User_Id, Tool_Id) {
-    await Transfer.create({Inventory_ID: Id, QTY: PickUpQTY, Date: sequelize.fn('NOW'), User_Id, Tool_Id})
+
+    await Transfer.create({
+        Inventory_ID: Id,
+        QTY: PickUpQTY,
+        Date: Sequelize.literal('CURRENT_TIMESTAMP'),
+        User_Id,
+        Tool_Id
+    })
 }
 
 

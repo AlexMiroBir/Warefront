@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const sequelize = require('./DB/db')
-const PORT = process.env.SERVER_PORT
+const PORT = process.env.PORT || 3001
 const cors = require('cors')
 const morganMiddleWare = require('./middleware/morgan-middleware')
 const fileUpload = require('express-fileupload')
@@ -21,12 +21,13 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 
-
-
-
-app.use(morganMiddleWare)
+//
+// if (process.env.NODE_ENV === 'development') {
+//     app.use(morganMiddleWare)
+// }
 app.use(express.json())
-app.use(express.static(path.resolve(__dirname, 'static')))
+app.use(express.static(path.join(__dirname, 'static')))
+// app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))
 app.use('/api', router)
 

@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {User} = require('../DB/models/models')
 const authMiddleware = require('../middleware/auth-middleware')
-const chalk = require('chalk')
+
 const {
     getAllUsersFromDB,
     loginDB,

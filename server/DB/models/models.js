@@ -23,7 +23,7 @@ const Item_Drawing = sequelize.define('Item_Drawing', {
     Inventory_ID: {type: DataTypes.INTEGER, allowNull: false},
     Filename: {type: DataTypes.STRING, allowNull: false},
     Filepath: {type: DataTypes.STRING, allowNull: false},
-    General: {type: DataTypes.STRING, allowNull: true}
+    General: {type: DataTypes.STRING.BINARY, allowNull: true}
 
 }, {freezeTableName: true, timestamps: false, schema: 'dbo'})
 
@@ -122,19 +122,19 @@ const Inventory = sequelize.define('Inventory', {
 
 Inventory.belongsTo(Tool, {foreignKey: 'Tool_Id'})
 Tool.hasMany(Inventory, {foreignKey: 'Tool_Id'})
-
+//
 Inventory_Status.belongsTo(Inventory, {foreignKey: 'Inventory_ID'})
 Inventory.hasOne(Inventory_Status, {foreignKey: 'Inventory_ID'})
-
+//
 Inventory_Supplier.belongsTo(Inventory, {foreignKey: 'Inventory_ID'})
 Inventory.hasMany(Inventory_Supplier, {foreignKey: 'Inventory_ID'})
-
+//
 Item_Parameters.belongsTo(Inventory, {foreignKey: 'Inventory_ID'})
 Inventory.hasMany(Item_Parameters, {foreignKey: 'Inventory_ID'})
-
+//
 Item_Drawing.belongsTo(Inventory, {foreignKey: 'Inventory_ID'})
 Inventory.hasMany(Item_Drawing, {foreignKey: 'Inventory_ID'})
-
+//
 Transfer.belongsTo(Inventory, {foreignKey: 'Inventory_ID'})
 Inventory.hasMany(Transfer, {foreignKey: 'Inventory_ID'})
 

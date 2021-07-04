@@ -25,11 +25,13 @@ async function getAllUsersFromDB(next) {
 async function loginDB(Name, Password, next) {
 
     const user = await User.findOne({where: {Name}})
-    const Id = user.Id
-    const Status = user.Status
+    // const Id = user.Id
+    // const Status = user.Status  //TODO проверить подобные случаи и перенести вних после проверки есть ли юзер
     if (!user) {
         return next(ApiError.badRequest('User not found'))
     }
+    const Id = user.Id
+    const Status = user.Status
     let comparePasswordIfHashed = bcrypt.compareSync(Password, user.Password)
     let comparePassword = Password === user.Password
     if (!comparePassword && !comparePasswordIfHashed) {

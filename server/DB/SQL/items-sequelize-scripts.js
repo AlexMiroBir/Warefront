@@ -7,7 +7,7 @@ const {
     Item_Parameters,
     Transfer
 } = require('../models/models')
-const chalk = require('chalk')
+
 const {Op} = require("sequelize");
 const fs = require('fs')
 const path = require('path')
@@ -111,7 +111,7 @@ async function newItemToDB(Id, row, parametersTable, suppliersTable) {
                 Description,
                 Tool_Id
             })
-        await newItem.update({Inventory_BCode: `BC0000000000${newItem.Id}`})
+        await newItem.update({Inventory_BCode: `BC0000000${newItem.Id}`})
 
         await Inventory_Status.create(
             {
@@ -164,7 +164,8 @@ async function updateItemParameters(Id, parametersTable, parametersIdForDelete =
     for await (const param of parametersTable) {
 
         const Inventory_ID = param.Inventory_ID
-        const Type = param.Type
+        const Type = 1
+        // const Type = param.Type
         const Parameter_Name = param.Parameter_Name
         const Parameter_Value = param.Parameter_Value
 
@@ -239,7 +240,8 @@ async function deleteItemSuppliers(arrayWithId) {
 }
 
 async function addImageToDB(Id, Filename, Filepath) {
-    let General = '0x00'
+    // let General = 0
+    let General = '0'
     const allItemImages = await Item_Drawing.findAll({
         where: {
             Inventory_ID: Id
@@ -249,7 +251,8 @@ async function addImageToDB(Id, Filename, Filepath) {
 
     if (allItemImages.length < 1) {
 
-        General = '0x01'
+        // General = 1
+        General = '1'
     }
 
     await Item_Drawing.create({
@@ -269,7 +272,7 @@ async function getItemImagesFromDB(Id) {
 }
 
 async function getAvatarsFromDB() {
-    const isGeneral = '0x01'
+    const isGeneral = '1'
     return await Item_Drawing.findAll({
         where: {
             General: isGeneral
@@ -282,12 +285,12 @@ async function setAvatarDB(Id, PictId) {
     const oldAvatar = await Item_Drawing.findOne({
         where: {
             Inventory_ID: Id,
-            General: '0x01'
+            General: '1'
         }
     })
     if (oldAvatar) {
         await oldAvatar.update({
-            General: '0x00'
+            General: '0'
         })
     }
     const newAvatar = await Item_Drawing.findOne({
@@ -298,7 +301,7 @@ async function setAvatarDB(Id, PictId) {
     })
 
     await newAvatar.update({
-        General: '0x01'
+        General: '1'
     })
 }
 
@@ -307,12 +310,13 @@ async function deleteImageFromDB(Id) {
     const image = await Item_Drawing.findOne({
         where: {Id}
     })
+    console.log('image'+image)
 
     if (image) {
 
         const imageName = image.Filename
-
-        if (image.General === '0x01') {
+        console.log('image'+imageName)
+        if (image.General === '1') {
             const newAvatar = await Item_Drawing.findOne({
                 where: {
                     Inventory_ID: image.Inventory_ID,
@@ -320,15 +324,17 @@ async function deleteImageFromDB(Id) {
 
                 }
             })
-            await image.destroy()
-
-            deleteFileFromStaticFolder(imageName)
-
             if (newAvatar) {
                 await setAvatarDB(newAvatar.Inventory_ID, newAvatar.Id)
             }
         }
-    }
+            await image.destroy()
+
+            deleteFileFromStaticFolder(imageName)
+
+
+        }
+
 
 }
 

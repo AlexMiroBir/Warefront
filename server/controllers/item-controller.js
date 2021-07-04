@@ -1,4 +1,4 @@
-const chalk = require("chalk");
+
 const fs = require('fs')
 const uuid = require('uuid')
 const ApiError = require('../error/api-error')
@@ -173,9 +173,8 @@ class ItemController {
         try {
             const {Id} = req.body
             await deleteImageFromDB(Id)
-
-
             return res.json('image was removed')
+
         } catch (err) {
             return next(ApiError.internal(err.message))
         }
