@@ -24,7 +24,7 @@
   "scripts": {
     "start": "set process.env.NODE_ENV=production && node index.js ",
     "dev": "set process.env.NODE_ENV=development && nodemon index.js",
-    "server": "nodemon server.js",
+    "server": "node server.js",
     "client": "cd ../ && npm start --prefix client",
     "serverClient": "concurrently \"yarn run server\" \"yarn run client\""
   },
